@@ -14,6 +14,10 @@ import io.github.truenine.composeserver.depend.servlet.toReadableAttachment
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.generator.IOrderCodeGenerator
 import io.github.truenine.composeserver.oss.ObjectStorageService
+import io.github.truenine.composeserver.oss.PutObjectRequest
+import kotlinx.coroutines.runBlocking
+import java.io.ByteArrayInputStream
+import io.github.truenine.composeserver.enums.MediaTypes as MimeTypes
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.AuditTyping
 import io.github.truenine.composeserver.rds.enums.CertContentTyping
@@ -697,7 +701,17 @@ class CertService(
     return pairs.map { (dto, file) ->
       val attCode = bizCoder.nextString()
       val att = attService.recordUpload(file.toReadableAttachment()) { fr ->
-        val ossFile = oss.uploadObject(fr.inputStream!!, FileArgs.builder().dir(META_CERT).fileName(attCode).size(fr.size).mimeType(fr.mimeType!!).build())
+        val ossFile = runBlocking {
+          oss.putObject(
+            PutObjectRequest(
+              bucketName = META_CERT,
+              objectName = attCode,
+              inputStream = fr.inputStream!!,
+              size = fr.size,
+              contentType = fr.mimeType!!
+            )
+          ).getOrThrow()
+        }
         AttachmentService.ComputedUploadRecord(
           baseUrl = oss.exposedBaseUrl,
           baseUri = META_CERT,
@@ -709,8 +723,17 @@ class CertService(
       }
       val wmAtt = attService.recordUpload(file.toReadableAttachment()) { fr ->
         val gf = generateWatermark(fr.inputStream!!, attCode, fr.mimeType)
-        val uploadOssFile =
-          oss.uploadObject(gf.inputStream(), FileArgs.builder().dir(WM).fileName(attCode).size(gf.size.toLong()).mimeType(file.contentType!!).build())
+        val uploadOssFile = runBlocking {
+          oss.putObject(
+            PutObjectRequest(
+              bucketName = WM,
+              objectName = attCode,
+              inputStream = ByteArrayInputStream(gf),
+              size = gf.size.toLong(),
+              contentType = file.contentType!!
+            )
+          ).getOrThrow()
+        }
         AttachmentService.ComputedUploadRecord(
           baseUrl = oss.exposedBaseUrl,
           baseUri = uploadOssFile.bucketName,

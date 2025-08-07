@@ -3,23 +3,41 @@ package com.tnmaster.controller
 import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.annotation.SaCheckPermission
 import com.tnmaster.dto.cert.CertAdminCertifiedUserInfoSpec
-import com.tnmaster.dto.userinfo.*
-import com.tnmaster.entities.*
+import com.tnmaster.dto.userinfo.UserInfoAdminCertifiedView
+import com.tnmaster.dto.userinfo.UserInfoAdminPostDto
+import com.tnmaster.dto.userinfo.UserInfoAdminPutDto
+import com.tnmaster.dto.userinfo.UserInfoAdminSpec
+import com.tnmaster.dto.userinfo.UserInfoAdminView
+import com.tnmaster.dto.userinfo.UserInfoMemberView
+import com.tnmaster.dto.userinfo.UserInfoPutDto
+import com.tnmaster.entities.DisInfo
+import com.tnmaster.entities.UserInfo
+import com.tnmaster.entities.addressCode
+import com.tnmaster.entities.by
+import com.tnmaster.entities.id
 import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.service.UserAccountService
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
 import io.github.truenine.composeserver.domain.IPage
-import io.github.truenine.composeserver.rds.jimmerext.postgres.substr
+import io.github.truenine.composeserver.rds.jimmerextpostgres.substr
 import io.github.truenine.composeserver.rds.toFetcher
 import io.github.truenine.composeserver.toId
 import org.babyfish.jimmer.client.ApiIgnore
 import org.babyfish.jimmer.client.meta.Api
+import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.ast.expression.count
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.babyfish.jimmer.sql.kt.ast.expression.isNotNull
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * # 用户信息第二版接口
@@ -95,7 +113,7 @@ class UserInfoV2Api(
   fun putUserInfoAsMe(@RequestBody modifyUserInfo: UserInfoPutDto, @ApiIgnore auth: AuthRequestInfo): UserInfo {
     val infoId = userInfoRepo.findFirstByUserAccountIdOrNull(auth.userId, newFetcher(UserInfo::class).by {})?.id
     checkNotNull(infoId) { "未查询到当前用户的用户信息" }
-    return userInfoRepo.update(modifyUserInfo.toEntity { this.id = infoId })
+    return userInfoRepo.save(modifyUserInfo.toEntity { this.id = infoId }, SaveMode.UPDATE_ONLY)
   }
 
   /**
@@ -207,7 +225,6 @@ class UserInfoV2Api(
    * 根据传入的查询条件和分页参数，返回符合条件的分页用户信息列表。
    *
    * @param spec 用户信息查询条件，可为空
-   * @param pq 分页参数，默认为最大分页
    * @return 分页后的用户信息列表
    */
   @Api

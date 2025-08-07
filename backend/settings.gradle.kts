@@ -22,5 +22,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "backend"
 
-include("application", "infrastructure", "domain")
-findProject(":application")?.name = "app"
+include("app", "infrastructure", "domain")

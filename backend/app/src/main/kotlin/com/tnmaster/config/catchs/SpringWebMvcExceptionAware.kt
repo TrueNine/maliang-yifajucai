@@ -2,8 +2,7 @@ package com.tnmaster.config.catchs
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import io.github.truenine.composeserver.ErrorResponseEntity
-import io.github.truenine.composeserver.slf4j
-import io.github.truenine.composeserver.typing.HttpStatusTyping
+import io.github.truenine.composeserver.logger
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.ConstraintViolationException
 import org.springframework.beans.factory.annotation.Value
@@ -20,14 +19,15 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import java.sql.SQLException
+import io.github.truenine.composeserver.enums.HttpStatus as HttpStatusEnum
 
 @RestControllerAdvice
 class SpringWebMvcExceptionAware(
-  @Value("\${spring.profiles.active:default}") val profile: String,
+  @param:Value("\${spring.profiles.active:default}") val profile: String,
 ) {
   companion object {
     @JvmStatic
-    private val log = slf4j<SpringWebMvcExceptionAware>()
+    private val log = logger<SpringWebMvcExceptionAware>()
   }
 
   /**
@@ -43,17 +43,16 @@ class SpringWebMvcExceptionAware(
   }
 
   private fun Throwable.err(
-    errorBy: HttpStatusTyping? = HttpStatusTyping.UNKNOWN,
+    errorBy: HttpStatusEnum? = HttpStatusEnum.UNKNOWN,
     code: Int? = errorBy?.code,
     msg: String? = errorBy?.message,
-    alt: String? = errorBy?.alert,
   ): ErrorResponseEntity {
     if (profile == "dev") {
       log.error("msg: {}", this.message, this)
     } else {
       log.warn("msg: {}", this.message, this)
     }
-    return ErrorResponseEntity(errorBy = errorBy ?: HttpStatusTyping.UNKNOWN, code = code, msg = msg, alt = alt)
+    return ErrorResponseEntity(errorBy = errorBy ?: HttpStatusEnum.UNKNOWN, code = code, msg = msg)
   }
 
   /** 兜底异常 */
@@ -70,23 +69,22 @@ class SpringWebMvcExceptionAware(
     response: HttpServletResponse,
   ): ErrorResponseEntity {
     if (ex.message?.containsChinese() == true) {
-      response.status = HttpStatusTyping._400.value
+      response.status = HttpStatusEnum._400.value
       return ErrorResponseEntity(
-        errorBy = HttpStatusTyping._400,
+        errorBy = HttpStatusEnum._400,
         msg = ex.message,
-        alt = ex.message,
       )
     } else {
-      response.status = HttpStatusTyping.UNKNOWN.value
+      response.status = HttpStatusEnum.UNKNOWN.value
       log.warn("IllegalArgumentException", ex)
-      return ErrorResponseEntity(errorBy = HttpStatusTyping.UNKNOWN)
+      return ErrorResponseEntity(errorBy = HttpStatusEnum.UNKNOWN)
     }
   }
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MismatchedInputException::class)
-  fun mismatchedInputException(ex: MismatchedInputException) = ex.err(HttpStatusTyping._400)
+  fun mismatchedInputException(ex: MismatchedInputException) = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -97,28 +95,28 @@ class SpringWebMvcExceptionAware(
         return constraintViolationException(r)
       }
     }
-    return ex.err(HttpStatusTyping._400)
+    return ex.err(HttpStatusEnum._400)
   }
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(java.lang.IllegalStateException::class)
-  fun illegalStateException(ex: java.lang.IllegalStateException) = ex.err(HttpStatusTyping._400)
+  fun illegalStateException(ex: java.lang.IllegalStateException) = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(UninitializedPropertyAccessException::class)
-  fun uninitializedPropertyAccessException(ex: UninitializedPropertyAccessException) = ex.err(HttpStatusTyping._400)
+  fun uninitializedPropertyAccessException(ex: UninitializedPropertyAccessException) = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
   @ExceptionHandler(NotImplementedError::class)
-  fun notImplementedError(ex: NotImplementedError) = ex.err(HttpStatusTyping._501)
+  fun notImplementedError(ex: NotImplementedError) = ex.err(HttpStatusEnum._501)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoResourceFoundException::class)
-  fun noResourceFoundException(ex: NoResourceFoundException) = ex.err(HttpStatusTyping._404)
+  fun noResourceFoundException(ex: NoResourceFoundException) = ex.err(HttpStatusEnum._404)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -128,7 +126,7 @@ class SpringWebMvcExceptionAware(
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(InvalidDataAccessResourceUsageException::class)
-  fun invalidDataAccessResourceUsageException(ex: InvalidDataAccessResourceUsageException) = ex.err(HttpStatusTyping._400)
+  fun invalidDataAccessResourceUsageException(ex: InvalidDataAccessResourceUsageException) = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -140,12 +138,12 @@ class SpringWebMvcExceptionAware(
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(ConstraintViolationException::class)
-  fun constraintViolationException(ex: ConstraintViolationException): ErrorResponseEntity = ex.err(HttpStatusTyping._400)
+  fun constraintViolationException(ex: ConstraintViolationException): ErrorResponseEntity = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException::class)
-  fun methodArgumentNotValidException(ex: MethodArgumentNotValidException) = ex.err(HttpStatusTyping._400)
+  fun methodArgumentNotValidException(ex: MethodArgumentNotValidException) = ex.err(HttpStatusEnum._400)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -155,12 +153,12 @@ class SpringWebMvcExceptionAware(
   @ResponseBody
   @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
   @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
-  fun httpRequestMethodNotSupportedException(ex: HttpRequestMethodNotSupportedException) = ex.err(HttpStatusTyping._405)
+  fun httpRequestMethodNotSupportedException(ex: HttpRequestMethodNotSupportedException) = ex.err(HttpStatusEnum._405)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
   @ExceptionHandler(HttpMediaTypeNotAcceptableException::class)
-  fun httpMediaTypeNotAcceptableException(ex: HttpMediaTypeNotAcceptableException) = ex.err(HttpStatusTyping._406)
+  fun httpMediaTypeNotAcceptableException(ex: HttpMediaTypeNotAcceptableException) = ex.err(HttpStatusEnum._406)
 
   @ResponseBody
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

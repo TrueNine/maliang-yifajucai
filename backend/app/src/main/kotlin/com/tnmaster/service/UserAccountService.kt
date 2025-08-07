@@ -5,20 +5,43 @@ import com.tnmaster.dto.userinfo.UserInfoAdminCertifiedView
 import com.tnmaster.dto.userinfo.UserInfoAdminPostDto
 import com.tnmaster.dto.userinfo.UserInfoAdminPutDto
 import com.tnmaster.dto.userinfo.UserInfoPutDto
-import com.tnmaster.entities.*
+import com.tnmaster.entities.BankCard
+import com.tnmaster.entities.Cert
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.UserInfo
+import com.tnmaster.entities.auditStatus
+import com.tnmaster.entities.bankName
+import com.tnmaster.entities.by
+import com.tnmaster.entities.crd
+import com.tnmaster.entities.doType
+import com.tnmaster.entities.id
+import com.tnmaster.entities.idCard
+import com.tnmaster.entities.phone
+import com.tnmaster.entities.userAccountId
+import com.tnmaster.entities.userId
+import com.tnmaster.entities.userInfoId
+import com.tnmaster.entities.visible
 import com.tnmaster.repositories.ICertRepo
 import com.tnmaster.repositories.IUserAccountRepo
 import com.tnmaster.repositories.IUserInfoRepo
 import io.github.truenine.composeserver.RefId
+import io.github.truenine.composeserver.logger
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.CertTyping
 import io.github.truenine.composeserver.rds.fetchPq
 import io.github.truenine.composeserver.rds.toFetcher
-import io.github.truenine.composeserver.slf4j
 import io.github.truenine.composeserver.toId
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
-import org.babyfish.jimmer.sql.kt.ast.expression.*
+import org.babyfish.jimmer.sql.kt.ast.expression.desc
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.exists
+import org.babyfish.jimmer.sql.kt.ast.expression.isNotNull
+import org.babyfish.jimmer.sql.kt.ast.expression.ne
+import org.babyfish.jimmer.sql.kt.ast.expression.notExists
+import org.babyfish.jimmer.sql.kt.ast.expression.or
+import org.babyfish.jimmer.sql.kt.ast.expression.`valueIn?`
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Service
 
@@ -28,7 +51,7 @@ class UserAccountService(
 ) {
   companion object {
     @JvmStatic
-    private val log = slf4j<UserAccountService>()
+    private val log = logger<UserAccountService>()
   }
 
   /**
@@ -330,7 +353,7 @@ class UserAccountService(
         }
         val existsBankCardCert = subQuery(Cert::class) {
           where(
-            table.doType eq io.github.truenine.composeserver.rds.typing.CertTyping.BANK_CARD,
+            table.doType eq CertTyping.BANK_CARD,
             table.visible ne false,
           )
           select(table.id)

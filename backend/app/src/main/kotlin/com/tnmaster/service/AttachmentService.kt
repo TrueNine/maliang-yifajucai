@@ -6,22 +6,25 @@ import com.tnmaster.entities.by
 import com.tnmaster.repositories.IAttachmentRepo
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IReadableAttachment
-import io.github.truenine.composeserver.oss.FileArgs
-import io.github.truenine.composeserver.oss.Oss
+import io.github.truenine.composeserver.oss.ObjectStorageService
 import io.github.truenine.composeserver.rds.annotations.ACID
-import io.github.truenine.composeserver.rds.typing.AttachmentTyping
+import io.github.truenine.composeserver.rds.enums.AttachmentTyping
 import io.github.truenine.composeserver.slf4j
 import io.github.truenine.composeserver.toId
-import io.github.truenine.composeserver.typing.MimeTypes
+import kotlinx.coroutines.runBlocking
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.springframework.stereotype.Service
+import io.github.truenine.composeserver.enums.MediaTypes as MimeTypes
 
 /** 新附件服务 */
 @Service
-class AttachmentService(val attRepo: IAttachmentRepo, private val oss: Oss) {
+class AttachmentService(
+  val attRepo: IAttachmentRepo,
+  private val oss: ObjectStorageService,
+) {
   companion object {
     @JvmStatic
     private val log = slf4j<AttachmentService>()
@@ -54,7 +57,7 @@ class AttachmentService(val attRepo: IAttachmentRepo, private val oss: Oss) {
       checkNotNull(it.parentUrlAttachment.baseUri) { "parentUrlAttachment.baseUri is null" }
       checkNotNull(it.saveName)
       log.trace("[effectDeleteAllById] removing object with baseUri={}, saveName={}", it.parentUrlAttachment.baseUri, it.saveName)
-      oss.removeObject(FileArgs.builder().dir(it.parentUrlAttachment.baseUri).fileName(it.saveName).build())
+      runBlocking { oss.deleteObject(it.parentUrlAttachment.baseUri, it.saveName) }
       attRepo.deleteById(it.id.toId()!!)
       log.trace("[effectDeleteAllById] deleted attachment id={}", it.id)
     }

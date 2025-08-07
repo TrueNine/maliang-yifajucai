@@ -5,6 +5,7 @@ import com.tnmaster.entities.*
 import io.github.truenine.composeserver.Pq
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IPage
+import io.github.truenine.composeserver.enums.HttpMethod
 import io.github.truenine.composeserver.rds.IRepo
 import io.github.truenine.composeserver.rds.fetchPq
 import io.github.truenine.composeserver.rds.toFetcher
@@ -40,7 +41,7 @@ interface IApiRepo : IRepo<Api, RefId> {
       .map { ApiPermitVariantView(it) }
   }
 
-  fun findAllByApiPathInAndApiMethodIn(apiPaths: Set<String>, apiMethods: Set<HTTPMethod>, fetcher: Fetcher<Api> = allFetcher): List<Api> {
+  fun findAllByApiPathInAndApiMethodIn(apiPaths: Set<String>, apiMethods: Set<HttpMethod>, fetcher: Fetcher<Api> = allFetcher): List<Api> {
     return sql
       .createQuery(Api::class) {
         where += table.apiPath valueIn apiPaths

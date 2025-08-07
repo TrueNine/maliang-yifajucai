@@ -1,10 +1,15 @@
 package com.tnmaster.repositories
 
 import com.tnmaster.dto.attachment.AttachmentView
-import com.tnmaster.entities.*
+import com.tnmaster.entities.Attachment
+import com.tnmaster.entities.attType
+import com.tnmaster.entities.baseUri
+import com.tnmaster.entities.baseUrl
+import com.tnmaster.entities.by
+import com.tnmaster.entities.id
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.IRepo
-import io.github.truenine.composeserver.rds.typing.AttachmentTyping
+import io.github.truenine.composeserver.rds.enums.AttachmentTyping
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.babyfish.jimmer.sql.kt.ast.expression.valueIn
