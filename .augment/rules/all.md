@@ -13,7 +13,7 @@ type: "always_apply"
   - application/ - 应用层（Spring Boot应用入口）
   - domain/ - 领域层（领域模型和业务逻辑）
   - infrastructure/ - 基础设施层
-  - buildSrc/ - Gradle构建脚本
+  - build-logic/ - Gradle构建脚本
 
 - **技术栈**：
   - Spring Boot 3.x + Kotlin 
