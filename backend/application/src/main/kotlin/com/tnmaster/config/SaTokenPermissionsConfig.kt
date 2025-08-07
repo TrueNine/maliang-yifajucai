@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class SaTokenPermissionsConfig(
   private val authService: UserAuthService,
-  private val saService: SaTokenService
+  private val saService: SaTokenService,
 ) : StpInterface {
 
   /** ## 判断是否被封禁 */

@@ -4,7 +4,12 @@ import com.tnmaster.entities.converter.PhoneSensitiveJsonConverter
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.entities.IEntity
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Default
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToMany
+import org.babyfish.jimmer.sql.ManyToOne
 
 /** 个人银行卡
  * @param region 我的

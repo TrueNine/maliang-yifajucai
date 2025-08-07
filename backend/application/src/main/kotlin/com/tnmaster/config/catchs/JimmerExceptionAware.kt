@@ -1,6 +1,5 @@
 package com.tnmaster.config.catchs
 
-
 import io.github.truenine.composeserver.ErrorResponseEntity
 import io.github.truenine.composeserver.SystemLogger
 import io.github.truenine.composeserver.slf4j

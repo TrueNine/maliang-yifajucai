@@ -1,6 +1,10 @@
 package com.tnmaster.rules.ctx.job
 
-import com.tnmaster.entities.*
+import com.tnmaster.entities.DisInfo
+import com.tnmaster.entities.Job
+import com.tnmaster.entities.JobSeeker
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.UserInfo
 import io.github.truenine.composeserver.RefId
 
 data class JobContext(

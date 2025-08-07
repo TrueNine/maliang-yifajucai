@@ -8,10 +8,19 @@ import com.tnmaster.entities.resolvers.UserInfoAddressResolver
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.date
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.GenderTyping
+import io.github.truenine.composeserver.rds.enums.GenderTyping
 import org.babyfish.jimmer.Formula
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OnDissociate
+import org.babyfish.jimmer.sql.OneToMany
+import org.babyfish.jimmer.sql.OneToOne
+import org.babyfish.jimmer.sql.Transient
 
 /** # 自然人用户信息 */
 @Entity

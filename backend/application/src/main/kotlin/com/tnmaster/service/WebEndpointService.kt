@@ -1,11 +1,11 @@
 package com.tnmaster.service
 
 import com.tnmaster.entities.Api
-import io.swagger.v3.oas.annotations.Operation
 import io.github.truenine.composeserver.consts.ICacheNames
+import io.github.truenine.composeserver.enums.HttpMethod
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.slf4j
-import io.github.truenine.composeserver.typing.HTTPMethod
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CacheEvict
@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Service
 class WebEndpointService(
   private val mappingHandlers: List<RequestMappingHandlerMapping>,
-  @Qualifier(ICacheNames.IRedis.CACHE_MANAGER) private val cm: CacheManager,
+  @param:Qualifier(ICacheNames.IRedis.CACHE_MANAGER) private val cm: CacheManager,
   private val newApiService: ApiService,
 ) {
   data class WebEndpoint(val uri: String, val method: String, val protocol: String, val summary: String? = null, val description: String? = null)
@@ -63,7 +63,7 @@ class WebEndpointService(
       endpoints.map {
         Api {
           apiPath = it.uri
-          apiMethod = HTTPMethod[it.method]
+          apiMethod = HttpMethod[it.method]
           apiProtocol = it.protocol
           name = it.summary
           doc = it.description

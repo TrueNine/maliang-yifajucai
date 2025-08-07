@@ -5,10 +5,14 @@ import com.tnmaster.entities.JobSeekerDisNominalTaxVideo
 import com.tnmaster.repositories.IJobSeekerDisNominalTaxVideoRepo
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
-import io.github.truenine.composeserver.rds.typing.AuditTyping
+import io.github.truenine.composeserver.rds.enums.AuditTyping
 import org.babyfish.jimmer.client.ApiIgnore
 import org.babyfish.jimmer.client.meta.Api
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /** # 第2版个税视频接口 */
 @Api

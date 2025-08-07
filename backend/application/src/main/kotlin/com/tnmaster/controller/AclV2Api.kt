@@ -10,15 +10,33 @@ import com.tnmaster.dto.menu.MenuAdminSpec
 import com.tnmaster.dto.menu.MenuView
 import com.tnmaster.dto.permissions.PermissionsAdminPostDto
 import com.tnmaster.dto.permissions.PermissionsAdminSpec
-import com.tnmaster.dto.role.*
-import com.tnmaster.dto.rolegroup.*
+import com.tnmaster.dto.role.RoleAdminSpec
+import com.tnmaster.dto.role.RolePermissionsAdminSpec
+import com.tnmaster.dto.role.RolePermissionsPutDto
+import com.tnmaster.dto.role.RolePostDto
+import com.tnmaster.dto.role.RolePutDto
+import com.tnmaster.dto.rolegroup.RoleGroupAdminSpec
+import com.tnmaster.dto.rolegroup.RoleGroupPostDto
+import com.tnmaster.dto.rolegroup.RoleGroupPutDto
+import com.tnmaster.dto.rolegroup.RoleGroupRoleAdminSpec
+import com.tnmaster.dto.rolegroup.RoleGroupRoleDeleteDto
+import com.tnmaster.dto.rolegroup.RoleGroupRolePutDto
 import com.tnmaster.dto.useraccount.UserAccountAdminView
 import com.tnmaster.dto.useraccount.UserAccountRoleGroupAdminSpec
 import com.tnmaster.dto.useraccount.UserAccountRoleGroupDeleteDto
 import com.tnmaster.dto.useraccount.UserAccountRoleGroupPutDto
-import com.tnmaster.entities.*
-import com.tnmaster.repositories.*
-import jakarta.validation.Valid
+import com.tnmaster.entities.Menu
+import com.tnmaster.entities.Permissions
+import com.tnmaster.entities.Role
+import com.tnmaster.entities.RoleGroup
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.pattern
+import com.tnmaster.repositories.IApiRepo
+import com.tnmaster.repositories.IMenuRepo
+import com.tnmaster.repositories.IPermissionsRepo
+import com.tnmaster.repositories.IRoleGroupRepo
+import com.tnmaster.repositories.IRoleRepo
+import com.tnmaster.repositories.IUserAccountRepo
 import io.github.truenine.composeserver.Pr
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IPage
@@ -29,10 +47,19 @@ import io.github.truenine.composeserver.rds.toFetcher
 import io.github.truenine.composeserver.security.crypto.base64
 import io.github.truenine.composeserver.security.crypto.sha256
 import io.github.truenine.composeserver.slf4j
+import jakarta.validation.Valid
 import org.babyfish.jimmer.client.meta.Api
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * # 访问控制 API
@@ -80,7 +107,7 @@ class AclV2Api(
   @Api
   @DeleteMapping("user_account_role_groups")
   fun deleteUserAccountRoleGroupAsAdmin(
-    @RequestBody dto: UserAccountRoleGroupDeleteDto
+    @RequestBody dto: UserAccountRoleGroupDeleteDto,
   ): UserAccount {
     return userAccountRepo.save(dto, SaveMode.UPDATE_ONLY, AssociatedSaveMode.REPLACE)
   }

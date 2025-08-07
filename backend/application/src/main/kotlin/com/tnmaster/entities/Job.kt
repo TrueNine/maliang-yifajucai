@@ -7,11 +7,18 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.decimal
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import io.github.truenine.composeserver.rds.typing.DegreeTyping
-import io.github.truenine.composeserver.rds.typing.GenderTyping
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.DegreeTyping
+import io.github.truenine.composeserver.rds.enums.GenderTyping
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.JoinTable
+import org.babyfish.jimmer.sql.ManyToMany
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OneToMany
+import org.babyfish.jimmer.sql.OneToOne
 import java.time.Period
 
 /** 职位 */

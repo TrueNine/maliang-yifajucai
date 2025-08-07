@@ -13,19 +13,17 @@ import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.servlet.toReadableAttachment
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.generator.IOrderCodeGenerator
-import io.github.truenine.composeserver.oss.FileArgs
-import io.github.truenine.composeserver.oss.Oss
+import io.github.truenine.composeserver.oss.ObjectStorageService
 import io.github.truenine.composeserver.rds.annotations.ACID
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.CertContentTyping
+import io.github.truenine.composeserver.rds.enums.CertPointTyping
+import io.github.truenine.composeserver.rds.enums.CertPointTyping.*
+import io.github.truenine.composeserver.rds.enums.CertTyping
+import io.github.truenine.composeserver.rds.enums.CertTyping.*
 import io.github.truenine.composeserver.rds.toFetcher
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import io.github.truenine.composeserver.rds.typing.CertContentTyping
-import io.github.truenine.composeserver.rds.typing.CertPointTyping
-import io.github.truenine.composeserver.rds.typing.CertPointTyping.*
-import io.github.truenine.composeserver.rds.typing.CertTyping
-import io.github.truenine.composeserver.rds.typing.CertTyping.*
 import io.github.truenine.composeserver.slf4j
 import io.github.truenine.composeserver.toId
-import io.github.truenine.composeserver.typing.MimeTypes
 import org.babyfish.jimmer.Input
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
@@ -42,7 +40,7 @@ import kotlin.math.min
 class CertService(
   private val userInfoRepo: IUserInfoRepo,
   private val certRepo: ICertRepo,
-  private val oss: Oss,
+  private val oss: ObjectStorageService,
   private val bankCardRepo: IBankCardRepo,
   private val attService: AttachmentService,
   private val bizCoder: IOrderCodeGenerator,
@@ -66,7 +64,7 @@ class CertService(
 
   @ACID
   fun fixAllImagedCertTypingMarkForUserInfoOrAccount(
-    userInfoId: RefId? = null, userAccountId: RefId? = null
+    userInfoId: RefId? = null, userAccountId: RefId? = null,
   ): List<Cert> {
     log.trace("[fixAllImagedCertTypingMarkForUserInfoOrAccount] called with userInfoId={}, userAccountId={}", userInfoId, userAccountId)
     require(

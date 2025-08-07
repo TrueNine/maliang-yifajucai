@@ -5,8 +5,12 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.decimal
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import org.babyfish.jimmer.sql.*
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OneToOne
 
 /** 简历的入职状态 */
 @Entity

@@ -3,11 +3,18 @@ package com.tnmaster.entities
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import io.github.truenine.composeserver.rds.typing.CertContentTyping
-import io.github.truenine.composeserver.rds.typing.CertPointTyping
-import io.github.truenine.composeserver.rds.typing.CertTyping
-import org.babyfish.jimmer.sql.*
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.CertContentTyping
+import io.github.truenine.composeserver.rds.enums.CertPointTyping
+import io.github.truenine.composeserver.rds.enums.CertTyping
+import org.babyfish.jimmer.sql.Default
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OnDissociate
 
 /** 用户证件 */
 @Entity

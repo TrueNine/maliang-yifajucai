@@ -6,7 +6,11 @@ import com.tnmaster.entities.Address
 import com.tnmaster.repositories.IAddressRepo
 import com.tnmaster.service.AddressService
 import org.babyfish.jimmer.client.meta.Api
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /** ## 第2版地址 API */
 @Api

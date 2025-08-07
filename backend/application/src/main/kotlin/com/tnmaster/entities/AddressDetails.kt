@@ -7,7 +7,11 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.entities.IEntity
 import org.babyfish.jimmer.Formula
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.Transient
 
 /**
  * 地址详情

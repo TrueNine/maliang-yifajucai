@@ -2,9 +2,16 @@ package com.tnmaster.entities
 
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AttachmentTyping
+import io.github.truenine.composeserver.rds.enums.AttachmentTyping
 import org.babyfish.jimmer.Formula
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OnDissociate
+import org.babyfish.jimmer.sql.OneToMany
 
 /** 附件 以及 附件链接 */
 @Entity

@@ -3,10 +3,16 @@ package com.tnmaster.entities
 import com.tnmaster.entities.converter.DisCardSensitiveJsonConverter
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.DisTyping
+import io.github.truenine.composeserver.rds.enums.DisTyping
 import org.babyfish.jimmer.Formula
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.OnDissociate
+import org.babyfish.jimmer.sql.OneToOne
 
 /** 残疾证信息 */
 @Entity

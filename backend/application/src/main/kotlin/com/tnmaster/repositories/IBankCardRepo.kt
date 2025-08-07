@@ -1,7 +1,12 @@
 package com.tnmaster.repositories
 
 import com.tnmaster.dto.bankcard.BankCardView
-import com.tnmaster.entities.*
+import com.tnmaster.entities.BankCard
+import com.tnmaster.entities.available
+import com.tnmaster.entities.code
+import com.tnmaster.entities.id
+import com.tnmaster.entities.orderWeight
+import com.tnmaster.entities.userAccountId
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.IRepo
 import org.babyfish.jimmer.sql.fetcher.Fetcher

@@ -9,15 +9,21 @@ import com.tnmaster.entities.UserAccount
 import com.tnmaster.repositories.IUserAccountRepo
 import com.tnmaster.service.SaTokenService
 import com.tnmaster.service.UserAuthService
-import jakarta.servlet.http.HttpServletRequest
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.rds.fetchPq
 import io.github.truenine.composeserver.slf4j
+import jakarta.servlet.http.HttpServletRequest
 import org.babyfish.jimmer.client.ApiIgnore
 import org.babyfish.jimmer.client.meta.Api
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -37,7 +43,7 @@ import kotlin.jvm.optionals.getOrNull
 @RequestMapping("v2/auth")
 class AuthApi(
   private val authService: UserAuthService,
-  private val userAccountRepo: IUserAccountRepo
+  private val userAccountRepo: IUserAccountRepo,
 ) {
   companion object {
     @JvmStatic

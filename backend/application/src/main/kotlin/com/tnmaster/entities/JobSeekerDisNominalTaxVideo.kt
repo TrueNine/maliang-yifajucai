@@ -3,7 +3,7 @@ package com.tnmaster.entities
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AuditTyping
+import io.github.truenine.composeserver.rds.enums.AuditTyping
 import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.IdView
 import org.babyfish.jimmer.sql.JoinColumn

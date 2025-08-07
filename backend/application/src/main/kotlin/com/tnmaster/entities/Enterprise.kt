@@ -6,9 +6,14 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.date
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.decimal
+import io.github.truenine.composeserver.enums.ISO4217
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.typing.ISO4217
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OneToMany
+import org.babyfish.jimmer.sql.Transient
 
 /**
  * 企业

@@ -16,31 +16,31 @@ import org.springframework.stereotype.Service
 
 @Service
 class AddressService(
-        private val addressRepo: IAddressRepo,
-        private val lazyService: ILazyAddressService,
+  private val addressRepo: IAddressRepo,
+  private val lazyService: ILazyAddressService,
 ) {
 
   @ACID
   fun initProvince(): List<Address> {
     return fetchRootAddressNode()?.let { root ->
       addressRepo
-              .sql
-              .createDelete(Address::class) { where(table.id valueNotIn listOf(root.id)) }
-              .execute()
+        .sql
+        .createDelete(Address::class) { where(table.id valueNotIn listOf(root.id)) }
+        .execute()
       lazyService
-              .fetchAllProvinces()
-              .map { addr ->
-                Address {
-                  rpi = root.id
-                  name = addr.name
-                  code = addr.code.code
-                  yearVersion = addr.yearVersion.toIntOrNull()
-                  level = 1
-                }
-              }
-              .let { addressRepo.saveAll(it) }
+        .fetchAllProvinces()
+        .map { addr ->
+          Address {
+            rpi = root.id
+            name = addr.name
+            code = addr.code.code
+            yearVersion = addr.yearVersion.toIntOrNull()
+            level = 1
+          }
+        }
+        .let { addressRepo.saveAll(it) }
     }
-            ?: emptyList()
+      ?: emptyList()
   }
 
   @ACID
@@ -55,23 +55,23 @@ class AddressService(
     lazyService.traverseChildrenRecursive(code, c.level + 1) { children, depth, parentDistrict ->
       val parentId = parentDistrict?.code?.code?.let { addressRepo.findIdByCode(it) }
       val saveEntities =
-              children.map {
-                Address {
-                  rpi = parentId
-                  name = it.name
-                  this.code = it.code.code
-                  level = it.level
-                  yearVersion = it.yearVersion.toIntOrNull()
-                }
-              }
+        children.map {
+          Address {
+            rpi = parentId
+            name = it.name
+            this.code = it.code.code
+            level = it.level
+            yearVersion = it.yearVersion.toIntOrNull()
+          }
+        }
       allSavedEntities += saveEntities
       parentDistrict?.level == c.level + 1
     }
     val allSaveEntities = addressRepo.saveAll(allSavedEntities)
     return allSaveEntities
-            .filter { it.level == c.level + 1 && it.code.startsWith(c.code) }
-            .distinctBy { it.code }
-            .sortedBy { it.code }
+      .filter { it.level == c.level + 1 && it.code.startsWith(c.code) }
+      .distinctBy { it.code }
+      .sortedBy { it.code }
   }
 
   /** ## 查询直接子级 */
@@ -80,13 +80,13 @@ class AddressService(
       return emptyList()
     }
     return addressRepo
-            .sql
-            .createQuery(Address::class) {
-              where(table.rpi eq parentId)
-              orderBy(table.code)
-              select(table.fetch(fetcher))
-            }
-            .execute()
+      .sql
+      .createQuery(Address::class) {
+        where(table.rpi eq parentId)
+        orderBy(table.code)
+        select(table.fetch(fetcher))
+      }
+      .execute()
   }
 
   /** ## 查询所有省份 */

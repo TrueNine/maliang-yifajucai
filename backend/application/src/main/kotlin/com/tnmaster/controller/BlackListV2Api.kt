@@ -12,9 +12,9 @@ import io.github.truenine.composeserver.Pq
 import io.github.truenine.composeserver.Pr
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
-import io.github.truenine.composeserver.rds.jimmerext.postgres.substr
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.jimmerextpostgres.substr
 import io.github.truenine.composeserver.rds.toFetcher
-import io.github.truenine.composeserver.rds.typing.AuditTyping
 import org.babyfish.jimmer.client.ApiIgnore
 import org.babyfish.jimmer.client.meta.Api
 import org.babyfish.jimmer.sql.kt.ast.expression.count

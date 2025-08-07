@@ -1,6 +1,12 @@
 package com.tnmaster.repositories
 
-import com.tnmaster.entities.*
+import com.tnmaster.entities.RoleGroup
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.account
+import com.tnmaster.entities.by
+import com.tnmaster.entities.fetchBy
+import com.tnmaster.entities.id
+import com.tnmaster.entities.lastLoginTime
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.IRepo

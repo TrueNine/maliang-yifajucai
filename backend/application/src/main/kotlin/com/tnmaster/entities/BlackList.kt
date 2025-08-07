@@ -4,9 +4,16 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.date
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import io.github.truenine.composeserver.rds.typing.RelationItemTyping
-import org.babyfish.jimmer.sql.*
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.RelationItemTyping
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.ManyToMany
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OnDissociate
+import org.babyfish.jimmer.sql.OneToMany
 
 @Entity
 interface BlackList : IEntity {

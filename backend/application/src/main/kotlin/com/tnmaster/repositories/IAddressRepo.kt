@@ -1,7 +1,11 @@
 package com.tnmaster.repositories
 
 import com.tnmaster.dto.address.AddressFullPathView
-import com.tnmaster.entities.*
+import com.tnmaster.entities.Address
+import com.tnmaster.entities.code
+import com.tnmaster.entities.id
+import com.tnmaster.entities.level
+import com.tnmaster.entities.rpi
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.consts.IDbNames.Rbac
 import io.github.truenine.composeserver.data.extract.domain.CnDistrictCode

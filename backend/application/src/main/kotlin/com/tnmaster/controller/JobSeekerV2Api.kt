@@ -1,7 +1,6 @@
 package com.tnmaster.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
-import cn.hutool.core.util.DesensitizedUtil.email
 import com.tnmaster.dto.jobseeker.JobSeekerAdminSpec
 import com.tnmaster.entities.JobSeeker
 import com.tnmaster.entities.by

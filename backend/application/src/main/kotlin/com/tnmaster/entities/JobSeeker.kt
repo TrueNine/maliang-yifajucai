@@ -4,8 +4,13 @@ import com.tnmaster.entities.embeddable.ExSalaryRange
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.DegreeTyping
-import org.babyfish.jimmer.sql.*
+import io.github.truenine.composeserver.rds.enums.DegreeTyping
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OneToMany
+import org.babyfish.jimmer.sql.OneToOne
 
 @Entity
 interface JobSeeker : IEntity {

@@ -1,9 +1,15 @@
 package com.tnmaster.entities
 
 import io.github.truenine.composeserver.RefId
+import io.github.truenine.composeserver.enums.HttpMethod
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.typing.HTTPMethod
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.DissociateAction
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OnDissociate
 
 @Entity
 interface Api : IEntity {
@@ -14,7 +20,7 @@ interface Api : IEntity {
   val apiPath: String?
 
   @Key
-  val apiMethod: HTTPMethod?
+  val apiMethod: HttpMethod?
 
   val apiProtocol: String?
 

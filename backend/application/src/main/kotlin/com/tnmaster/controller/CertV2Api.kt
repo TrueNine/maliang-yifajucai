@@ -4,7 +4,11 @@ import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.annotation.SaCheckPermission
 import com.tnmaster.dto.bankcard.BankCardDto
 import com.tnmaster.dto.bankcard.BankCardView
-import com.tnmaster.dto.cert.*
+import com.tnmaster.dto.cert.CertAdminPostDto
+import com.tnmaster.dto.cert.CertAdminPutAuditStatusDto
+import com.tnmaster.dto.cert.CertAdminSpec
+import com.tnmaster.dto.cert.CertCreatedInfoDto
+import com.tnmaster.dto.cert.CertView
 import com.tnmaster.dto.disinfo.DisInfoPostMeDto
 import com.tnmaster.dto.userinfo.UserInfoPutDto
 import com.tnmaster.entities.Bank
@@ -20,7 +24,15 @@ import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.toId
 import org.babyfish.jimmer.client.ApiIgnore
 import org.babyfish.jimmer.client.meta.Api
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 /**
@@ -50,7 +62,7 @@ class CertV2Api(
   @PatchMapping("compress_cert_marker")
   fun patchCertTypingMarkersAsAdmin(
     @RequestParam userInfoId: RefId?,
-    @RequestParam userAccountId: RefId?
+    @RequestParam userAccountId: RefId?,
   ): List<Cert> {
     return certService.fixAllImagedCertTypingMarkForUserInfoOrAccount(userInfoId, userAccountId)
   }

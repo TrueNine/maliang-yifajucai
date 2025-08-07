@@ -1,7 +1,7 @@
 package com.tnmaster.entities
 
 import io.github.truenine.composeserver.rds.entities.IEntity
-import io.github.truenine.composeserver.rds.typing.PlatformType
+import io.github.truenine.composeserver.rds.enums.PlatformType
 import org.babyfish.jimmer.sql.Entity
 import org.babyfish.jimmer.sql.Key
 import org.babyfish.jimmer.sql.ManyToMany

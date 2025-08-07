@@ -1,8 +1,8 @@
 package com.tnmaster.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import jakarta.annotation.Resource
 import io.github.truenine.composeserver.depend.jackson.autoconfig.JacksonAutoConfiguration
+import jakarta.annotation.Resource
 import org.babyfish.jimmer.jackson.ImmutableModule
 import org.babyfish.jimmer.sql.kt.cfg.KCustomizer
 import org.babyfish.jimmer.sql.kt.cfg.KSqlClientDsl

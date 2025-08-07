@@ -7,7 +7,15 @@ import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.entities.IEntity
 import org.babyfish.jimmer.Formula
 import org.babyfish.jimmer.jackson.JsonConverter
-import org.babyfish.jimmer.sql.*
+import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.IdView
+import org.babyfish.jimmer.sql.JoinColumn
+import org.babyfish.jimmer.sql.JoinTable
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.ManyToMany
+import org.babyfish.jimmer.sql.ManyToOne
+import org.babyfish.jimmer.sql.OneToMany
+import org.babyfish.jimmer.sql.OneToOne
 
 /**
  * # 用户账号

@@ -3,11 +3,11 @@ package com.tnmaster.controller
 import cn.dev33.satoken.annotation.SaCheckPermission
 import com.tnmaster.entities.CommonKvConfigDbCache
 import com.tnmaster.service.CommonKvConfigDbCacheService
+import io.github.truenine.composeserver.Pq
+import io.github.truenine.composeserver.Pr
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import io.github.truenine.composeserver.Pq
-import io.github.truenine.composeserver.Pr
 import org.babyfish.jimmer.client.meta.Api
 import org.springframework.web.bind.annotation.*
 

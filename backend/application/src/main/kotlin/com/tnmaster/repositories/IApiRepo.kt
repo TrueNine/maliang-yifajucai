@@ -8,7 +8,6 @@ import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.rds.IRepo
 import io.github.truenine.composeserver.rds.fetchPq
 import io.github.truenine.composeserver.rds.toFetcher
-import io.github.truenine.composeserver.typing.HTTPMethod
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.babyfish.jimmer.sql.kt.ast.expression.*
 import org.babyfish.jimmer.sql.kt.ast.query.specification.KSpecification

@@ -1,6 +1,10 @@
 package com.tnmaster.entities.resolvers
 
-import com.tnmaster.entities.*
+import com.tnmaster.entities.Address
+import com.tnmaster.entities.Enterprise
+import com.tnmaster.entities.addressCode
+import com.tnmaster.entities.code
+import com.tnmaster.entities.id
 import io.github.truenine.composeserver.RefId
 import org.babyfish.jimmer.sql.kt.KSqlClient
 import org.babyfish.jimmer.sql.kt.KTransientResolver

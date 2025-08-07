@@ -6,10 +6,10 @@ import io.github.truenine.composeserver.Pq
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.rds.IRepo
+import io.github.truenine.composeserver.rds.enums.AuditTyping
+import io.github.truenine.composeserver.rds.enums.CertPointTyping
+import io.github.truenine.composeserver.rds.enums.CertTyping
 import io.github.truenine.composeserver.rds.fetchPq
-import io.github.truenine.composeserver.rds.typing.AuditTyping
-import io.github.truenine.composeserver.rds.typing.CertPointTyping
-import io.github.truenine.composeserver.rds.typing.CertTyping
 import org.babyfish.jimmer.sql.fetcher.Fetcher
 import org.babyfish.jimmer.sql.kt.ast.expression.*
 import org.babyfish.jimmer.sql.kt.ast.query.specification.KSpecification

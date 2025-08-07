@@ -8,12 +8,18 @@ import com.tnmaster.entities.orderedWeight
 import com.tnmaster.repositories.IJobRepo
 import io.github.truenine.composeserver.Pr
 import io.github.truenine.composeserver.RefId
+import io.github.truenine.composeserver.rds.enums.AuditTyping
 import io.github.truenine.composeserver.rds.fetchPq
-import io.github.truenine.composeserver.rds.typing.AuditTyping
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.client.meta.Api
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import kotlin.jvm.optionals.getOrNull
 
 /** 第二版职位 api */

@@ -1,16 +1,33 @@
 package com.tnmaster.repositories
 
-import com.tnmaster.entities.*
+import com.tnmaster.entities.DisInfo
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.UserInfo
+import com.tnmaster.entities.account
+import com.tnmaster.entities.by
+import com.tnmaster.entities.certCode
+import com.tnmaster.entities.disInfo
+import com.tnmaster.entities.email
+import com.tnmaster.entities.id
+import com.tnmaster.entities.idCard
+import com.tnmaster.entities.phone
+import com.tnmaster.entities.pri
+import com.tnmaster.entities.userAccountId
+import com.tnmaster.entities.wechatOpenid
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IDisCode
 import io.github.truenine.composeserver.domain.IIdcard2Code
 import io.github.truenine.composeserver.rds.IRepo
 import io.github.truenine.composeserver.rds.annotations.ACID
-import io.github.truenine.composeserver.rds.jimmerext.postgres.substr
-import io.github.truenine.composeserver.rds.typing.DisTyping
-import io.github.truenine.composeserver.rds.typing.GenderTyping
+import io.github.truenine.composeserver.rds.enums.DisTyping
+import io.github.truenine.composeserver.rds.enums.GenderTyping
+import io.github.truenine.composeserver.rds.jimmerextpostgres.substr
 import org.babyfish.jimmer.sql.fetcher.Fetcher
-import org.babyfish.jimmer.sql.kt.ast.expression.*
+import org.babyfish.jimmer.sql.kt.ast.expression.eq
+import org.babyfish.jimmer.sql.kt.ast.expression.`eq?`
+import org.babyfish.jimmer.sql.kt.ast.expression.isNotNull
+import org.babyfish.jimmer.sql.kt.ast.expression.isNull
+import org.babyfish.jimmer.sql.kt.ast.expression.`valueIn?`
 import org.babyfish.jimmer.sql.kt.ast.query.specification.KSpecification
 import org.babyfish.jimmer.sql.kt.exists
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
@@ -22,7 +39,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface IUserInfoRepo : IRepo<UserInfo, RefId> {
   fun existsByEmail(
-    email: String? = null
+    email: String? = null,
   ): Boolean {
     return sql.createQuery(
       UserInfo::class
@@ -195,7 +212,7 @@ interface IUserInfoRepo : IRepo<UserInfo, RefId> {
 
   fun findFirstIdByUserAccountId(
     userAccountId: RefId,
-    isPrimary: Boolean? = null
+    isPrimary: Boolean? = null,
   ): RefId? {
     return sql
       .createQuery(UserInfo::class) {

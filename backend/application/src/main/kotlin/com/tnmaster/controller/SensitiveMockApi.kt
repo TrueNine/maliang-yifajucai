@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("v2/sensitiveMock")
 class SensitiveMockApi(private val repo: IUserInfoRepo) {
   private fun randomGeneratePhone(): String {
-    val therePhoneNumber = (13000000000 .. 13999999999).random().toString()
-    val forePhoneNumber = (14700000000 .. 14799999999).random().toString()
-    val five1PhoneNumber = (15000000000 .. 15399999999).random().toString()
-    val five2PhoneNumber = (15500000000 .. 15999999999).random().toString()
-    val sixPhoneNumber = (16300000000 .. 16399999999).random().toString()
-    val sevenPhoneNumber = (17000000000 .. 17999999999).random().toString()
-    val eightPhoneNumber = (18000000000 .. 18999999999).random().toString()
-    val ninePhoneNumber = (1920000000 .. 1929999999).random().toString()
+    val therePhoneNumber = (13000000000..13999999999).random().toString()
+    val forePhoneNumber = (14700000000..14799999999).random().toString()
+    val five1PhoneNumber = (15000000000..15399999999).random().toString()
+    val five2PhoneNumber = (15500000000..15999999999).random().toString()
+    val sixPhoneNumber = (16300000000..16399999999).random().toString()
+    val sevenPhoneNumber = (17000000000..17999999999).random().toString()
+    val eightPhoneNumber = (18000000000..18999999999).random().toString()
+    val ninePhoneNumber = (1920000000..1929999999).random().toString()
     return listOf(therePhoneNumber, forePhoneNumber, five1PhoneNumber, five2PhoneNumber, sixPhoneNumber, sevenPhoneNumber, eightPhoneNumber, ninePhoneNumber)
       .random()
   }

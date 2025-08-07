@@ -1,11 +1,11 @@
 package com.tnmaster.config.catchs
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import jakarta.servlet.http.HttpServletResponse
-import jakarta.validation.ConstraintViolationException
 import io.github.truenine.composeserver.ErrorResponseEntity
 import io.github.truenine.composeserver.slf4j
 import io.github.truenine.composeserver.typing.HttpStatusTyping
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.validation.ConstraintViolationException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessResourceUsageException
@@ -23,7 +23,7 @@ import java.sql.SQLException
 
 @RestControllerAdvice
 class SpringWebMvcExceptionAware(
-  @Value("\${spring.profiles.active:default}") val profile: String
+  @Value("\${spring.profiles.active:default}") val profile: String,
 ) {
   companion object {
     @JvmStatic
@@ -67,7 +67,7 @@ class SpringWebMvcExceptionAware(
   @ExceptionHandler(IllegalArgumentException::class)
   fun illegalArgumentException(
     ex: IllegalArgumentException,
-    response: HttpServletResponse
+    response: HttpServletResponse,
   ): ErrorResponseEntity {
     if (ex.message?.containsChinese() == true) {
       response.status = HttpStatusTyping._400.value
