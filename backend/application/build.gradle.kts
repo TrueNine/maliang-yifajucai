@@ -10,7 +10,7 @@ plugins {
   alias(cs.plugins.com.diffplug.spotless)
   alias(cs.plugins.com.google.devtools.ksp)
   alias(cs.plugins.io.spring.dependency.management)
-  `repositories-conventions`
+  id("repositories-conventions")
 }
 
 group = "com.tnmaster"

@@ -1,5 +1,5 @@
 plugins {
   java
   alias(cs.plugins.org.jetbrains.kotlin.jvm)
-  `repositories-conventions`
+  id("repositories-conventions")
 }

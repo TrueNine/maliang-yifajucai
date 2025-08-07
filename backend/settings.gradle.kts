@@ -3,6 +3,7 @@ pluginManagement {
     mavenCentral()
     gradlePluginPortal()
   }
+  includeBuild("build-logic")
 }
 
 plugins {
@@ -16,10 +17,10 @@ dependencyResolutionManagement {
     mavenLocal()
     mavenCentral()
   }
-  versionCatalogs { create("cs") { from("io.github.truenine:composeserver-version-catalog:0.0.10") } }
+  versionCatalogs { create("cs") { from("io.github.truenine:composeserver-version-catalog:0.0.20") } }
 }
 
-rootProject.name = "tnmaster"
+rootProject.name = "backend"
 
 include("application", "infrastructure", "domain")
-findProject(":application")?.name = "tnmaster-server"
+findProject(":application")?.name = "app"
