@@ -45,14 +45,14 @@ dependencies {
 
   implementation(cs.io.github.truenine.composeserver.cacheable)
 
-   implementation(cs.io.github.truenine.composeserver.security.oauth2)
-   implementation(cs.io.github.truenine.composeserver.security.crypto)
-   implementation(cs.io.github.truenine.composeserver.rds.crud)
-   implementation(cs.io.github.truenine.composeserver.rds.flyway.migration.postgresql)
-   implementation(cs.io.github.truenine.composeserver.oss.minio)
+  implementation(cs.io.github.truenine.composeserver.security.oauth2)
+  implementation(cs.io.github.truenine.composeserver.security.crypto)
+  implementation(cs.io.github.truenine.composeserver.rds.crud)
+  implementation(cs.io.github.truenine.composeserver.rds.flyway.migration.postgresql)
+  implementation(cs.io.github.truenine.composeserver.oss.minio)
   implementation(cs.io.github.truenine.composeserver.data.extract)
   implementation(cs.io.github.truenine.composeserver.data.crawler)
-   implementation(cs.io.github.truenine.composeserver.depend.servlet)
+  implementation(cs.io.github.truenine.composeserver.depend.servlet)
   implementation(cs.org.springframework.boot.spring.boot.starter.validation)
 
   ksp(cs.org.babyfish.jimmer.jimmer.ksp)
