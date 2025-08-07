@@ -7,13 +7,13 @@ compose:
           app-id: ${WXPA_APP_ID}
           app-secret: ${WXPA_APP_SECRET}
   oss:
-    base-url: minio
-    expose-base-url: https://${GLOBAL_DOMAIN}/ressources_oss/
-    port: ${MINIO_PORT}
+    endpoint: minio
+    exposed-base-url: https://${GLOBAL_DOMAIN}/ressources_oss/
     minio:
-      enable-https: false
+      port: ${MINIO_PORT}
       secret-key: ${MINIO_PASSWORD}
       access-key: ${MINIO_USER}
+      enable-ssl: false
 spring:
   jpa:
     properties:

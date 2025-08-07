@@ -9,14 +9,19 @@ compose:
           app-id: ${WXPA_APP_ID}
           app-secret: ${WXPA_APP_SECRET}
   oss:
-    base-url: ${GLOBAL_DOMAIN}
-    expose-base-url: http://${GLOBAL_DOMAIN}:9000
-    port: ${MINIO_PORT}
+    endpoint: ${GLOBAL_DOMAIN}
+    exposed-base-url: http://${GLOBAL_DOMAIN}:9000
     minio:
-      enable-https: false
+      port: ${MINIO_PORT}
       secret-key: ${MINIO_PASSWORD}
       access-key: ${MINIO_USER}
+      enable-ssl: false
+
 spring:
+  docker:
+    compose:
+      enabled: true
+      file: classpath:compose.yaml
   data:
     redis:
       host: ${GLOBAL_IP}

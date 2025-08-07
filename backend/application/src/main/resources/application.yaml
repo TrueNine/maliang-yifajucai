@@ -9,7 +9,6 @@ spring:
     ansi:
       enabled: always
   main:
-    show-banner: false
     banner-mode: off
   flyway:
     enabled: true

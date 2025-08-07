@@ -29,6 +29,8 @@ composeGradle {
 sourceSets { main { resources { exclude("config/data/**") } } }
 
 dependencies {
+  implementation(cs.org.springframework.boot.spring.boot.docker.compose)
+
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
   implementation(platform(cs.org.springframework.cloud.spring.cloud.dependencies))
@@ -89,18 +91,17 @@ kotlin {
 }
 
 spotless {
+  val rootDirPath = rootProject
+    .layout
+    .projectDirectory
+    .file("../.idea/codeStyles/Project.xml").asFile.absolutePath
+  val targetPattern = "**/db/migration/**.sql"
+  println(rootDirPath)
+  println(targetPattern)
   sql {
     lineEndings = LineEnding.UNIX
-    target("**/**.sql")
-    idea()
-      .codeStyleSettingsPath(
-        rootProject
-          .layout
-          .projectDirectory
-          .file(".idea/codeStyles/Project.xml")
-          .asFile
-          .absolutePath
-      )
+    target(targetPattern)
+    idea().codeStyleSettingsPath(rootDirPath)
   }
 }
 
