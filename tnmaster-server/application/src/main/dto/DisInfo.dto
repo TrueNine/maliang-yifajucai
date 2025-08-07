@@ -1,0 +1,15 @@
+export com.tnmaster.entities.DisInfo
+  -> package com.tnmaster.dto.disinfo
+
+specification DisInfoAdminSpec {
+  eq(userInfoId)
+  eq(dsType)
+  eq(level)
+  eq(certCode)
+}
+
+input DisInfoPostMeDto {
+  dsType
+  level
+  certCode
+}

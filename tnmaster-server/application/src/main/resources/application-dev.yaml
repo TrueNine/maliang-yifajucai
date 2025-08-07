@@ -1,0 +1,61 @@
+server:
+  port: 8080
+compose:
+  security:
+    oauth2:
+      wechat:
+        wxpa:
+          verify-token: ${WXPA_VERIFY_TOKEN}
+          app-id: ${WXPA_APP_ID}
+          app-secret: ${WXPA_APP_SECRET}
+  oss:
+    base-url: ${GLOBAL_DOMAIN}
+    expose-base-url: http://${GLOBAL_DOMAIN}:9000
+    port: ${MINIO_PORT}
+    minio:
+      enable-https: false
+      secret-key: ${MINIO_PASSWORD}
+      access-key: ${MINIO_USER}
+spring:
+  data:
+    redis:
+      host: ${GLOBAL_IP}
+      password: ${REDIS_PASSWORD}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${GLOBAL_IP}:${PG_PORT}/${PG_DB}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+jimmer:
+  show-sql: true
+  pretty-sql: true
+  inline-sql-variables: true
+  client:
+    ts:
+      path: /ts.zip
+      indent: 2
+      mutable: true
+      is-enum-ts-style: false
+    openapi:
+      path: /jimmer.yaml
+      ui-path: /jimmer.html
+      properties:
+        info:
+          title: My Web Service
+          description: |
+            Restore the DTO explosion that was 
+            eliminated by server-side developers
+          version: 1.0
+  dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
+sa-token:
+  is-log: true
+  is-color-log: true
+  log-level: TRACE
+logging:
+  config: classpath:logback-dev.xml
+  level:
+    root: error
+    org.flywaydb: error
+    org.babyfish.jimmer: info
+    net.yan100: info
+    com.tnmaster: trace

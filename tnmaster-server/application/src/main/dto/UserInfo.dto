@@ -1,0 +1,209 @@
+export com.tnmaster.entities.UserInfo
+  -> package com.tnmaster.dto.userinfo
+
+input UserInfoCitizenVerifiedDto {
+  id
+  idCard
+  phone
+  disInfo {
+    certCode
+  }
+}
+
+UserInfoAdminView {
+  id
+  name
+  firstName
+  lastName
+  idCard
+  certs {
+    wmCode
+    coType
+    poType
+    doType
+    createUserAccount {
+      account
+    }
+    createDatetime
+    waterMarkerAttachment {
+      mimeType
+      fullAccessUrl
+      metaName
+    }
+  }
+  account {
+    id
+    account
+    nickName
+    lastLoginTime
+    crd
+  }
+  addressCode
+  address {
+    fullPath
+  }
+  phone
+  age
+  gender
+  birthday
+  jobSeeker {
+    rqGotoWork
+    rqSocial
+  }
+  disInfo {
+    dsType
+    level
+    certCode
+  }
+  sparePhone
+  primaryUserInfo
+  isBlacked
+  wechatOpenid
+}
+
+UserInfoMemberView {
+  id
+  idCard
+  pri
+  remark
+  remarkName
+  account {
+    nickName
+    account
+  }
+  disInfo {
+    certCode
+    dsType
+    level
+  }
+  age
+  birthday
+  name
+  phone
+}
+
+UserInfoAdminAssignAccountView {
+  pri
+  createUserId
+  wechatOpenid
+  qqOpenid
+  account {
+    roleGroups {
+      name
+    }
+    createUserId
+    nickName
+    account
+    pwdEnc
+  }
+}
+
+UserInfoAdminPostFormView {
+  firstName
+  lastName
+  disInfo {
+    certCode
+    dsType
+    level
+  }
+  idCard
+  phone
+  sparePhone
+  gender
+  email
+  birthday
+  addressCode
+}
+
+input UserInfoPutDto {
+  firstName
+  lastName
+  idCard
+  phone
+  sparePhone
+  gender
+  email
+  birthday
+  addressCode
+}
+
+input UserInfoAdminPutDto {
+  id!
+  firstName
+  lastName
+  disInfo {
+    certCode
+    dsType
+    level
+  }
+  idCard
+  phone
+  sparePhone
+  gender
+  email
+  birthday
+  addressCode
+}
+
+input UserInfoAdminPostDto {
+  firstName
+  lastName
+  disInfo {
+    certCode
+    dsType
+    level
+  }
+  idCard
+  phone
+  sparePhone
+  gender
+  email
+  birthday
+  addressCode
+}
+
+specification UserInfoAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  eq(isBlacked)
+  eq(id)
+  ge(age)
+  le(age)
+  like/^(addressCode)
+  like/^(name)
+  like/^(firstName)
+  like/^(lastName)
+  like/^(phone)
+  like/^(sparePhone)
+  flat(disInfo) {
+    valueIn(dsType) as disInfoTypeIn
+    valueIn(level) as disInfoLevelIn
+    like/^(certCode) as disInfoCertCode
+  }
+  like/^(idCard)
+
+  /**
+   * 所持有的银行卡
+   */
+  certsBankGroupValueIn: List<String>?
+  o: Int?
+  s: Int?
+}
+
+// 已上传证件的比对账号信息
+UserInfoAdminCertifiedView {
+  id
+  account {
+    metadataAccount
+  }
+  metadataName
+  metadataIdCard
+  metadataPhone
+  gender
+  address {
+    fullPath
+  }
+  disInfo {
+    metadataCertCode
+    dsType
+    level
+  }
+}

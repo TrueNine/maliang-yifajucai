@@ -1,0 +1,27 @@
+export com.tnmaster.entities.JobSeeker
+  -> package com.tnmaster.dto.jobseeker
+
+specification JobSeekerAdminSpec {
+  id
+  like/^(exAddressCode)
+  like/^(regAddressCode)
+  le(createDatetime)
+  degree
+  flat(userAccount) {
+    as (^ -> account) {
+      like/^(nickName)
+      eq(account)
+    }
+  }
+  flat(userInfo) {
+    as (^ -> userInfo) {
+      le(age)
+      flat(disInfo) {
+        as (^ -> disInfo) {
+          eq(dsType)
+          eq(level)
+        }
+      }
+    }
+  }
+}

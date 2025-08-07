@@ -1,0 +1,51 @@
+server:
+  port: 8080
+liteflow:
+  print-banner: false
+jimmer:
+  language: kotlin
+spring:
+  output:
+    ansi:
+      enabled: always
+  main:
+    show-banner: false
+    banner-mode: off
+  flyway:
+    enabled: true
+    baseline-version: 3000
+    baseline-on-migrate: true
+    out-of-order: true
+  threads:
+    virtual:
+      enabled: true
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+  data:
+    redis:
+      repositories:
+        enabled: false # 关闭仓库扫描
+      database: 0
+      lettuce:
+        pool:
+          enabled: true
+          min-idle: 8
+          max-idle: 16
+          max-active: 32
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      leak-detection-threshold: 50000
+      idle-timeout: 300000
+      connection-timeout: 5000
+      connection-test-query: SELECT 1
+      read-only: false
+      max-lifetime: 600000
+      auto-commit: false
+      pool-name: MasterPool

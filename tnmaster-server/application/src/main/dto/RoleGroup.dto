@@ -1,0 +1,65 @@
+export com.tnmaster.entities.RoleGroup
+  -> package com.tnmaster.dto.rolegroup
+
+specification RoleGroupRoleAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  eq(id)
+  like/^(name)
+  like/^(doc)
+  flat(roles) {
+    as (^ -> roles) {
+      eq(id)
+      eq(name)
+      like/^(doc)
+    }
+  }
+  o: Int?
+  s: Int?
+}
+
+specification RoleGroupAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  like/^(name)
+  like/^(doc)
+  o: Int?
+  s: Int?
+}
+
+input RoleGroupPostDto {
+  name
+  doc
+}
+
+input RoleGroupPutDto {
+  id
+  name
+  doc
+}
+
+input RoleGroupRolePutDto {
+  id
+  roles {
+    id
+  }
+}
+
+input RoleGroupRoleDeleteDto {
+  id
+  roles {
+    id
+  }
+}
+
+RoleGroupAdminView {
+  id
+  name
+  doc
+  roles {
+    id
+    name
+    doc
+    permissions {
+      id
+      name
+      doc
+    }
+  }
+}

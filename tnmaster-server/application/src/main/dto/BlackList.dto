@@ -1,0 +1,65 @@
+export com.tnmaster.entities.BlackList
+  -> package com.tnmaster.dto.blacklist
+
+specification BlackListEventDocSpec {
+  like(eventDoc)
+  ge(onDate)
+  le(onDate)
+  flat(blackUserInfo) {
+    as (^ -> blackUserInfo) {
+      phone
+      name
+      idCard
+      flat(disInfo) {
+        as (^ -> disInfo) {
+          certCode
+          dsType
+          level
+        }
+      }
+    }
+  }
+}
+
+input BlackListAdminPostDto {
+  eventDoc
+  blackListRelations {
+    refId
+    userInfoId
+    reItemType
+    reType
+  }
+  reportUserInfoId
+  reportUserId
+  blackUserInfoId
+  reItemType
+}
+
+BlackListEventDocView {
+  eventDoc
+  onDate
+  blackUserInfo {
+    phone
+    name
+    idCard
+    disInfo {
+      certCode
+      dsType
+      level
+    }
+  }
+}
+
+BlackListAdminView {
+  auditStatus
+  eventDoc
+  reItemType
+  blackUserInfo {
+    metadataName
+    metadataPhone
+    metadataIdCard
+    account {
+      account
+    }
+  }
+}
