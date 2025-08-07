@@ -98,11 +98,6 @@ spotless {
   val targetPattern = "**/db/migration/**.sql"
   println(rootDirPath)
   println(targetPattern)
-  sql {
-    lineEndings = LineEnding.UNIX
-    target(targetPattern)
-    idea().codeStyleSettingsPath(rootDirPath)
-  }
 }
 
 tasks {
