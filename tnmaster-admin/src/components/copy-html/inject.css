@@ -1,0 +1,12 @@
+.compose-meta-ui-copy-html tr:first-child td {
+  border-top: 2px solid gray;
+}
+.compose-meta-ui-copy-html tr:last-child td {
+  border-bottom: 2px solid gray;
+}
+.compose-meta-ui-copy-html td:first-child {
+  border-left: 2px solid gray;
+}
+.compose-meta-ui-copy-html td:last-child {
+  border-right: 2px solid gray;
+}

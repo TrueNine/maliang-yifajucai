@@ -1,0 +1,19 @@
+{
+  "extends": ["@tsconfig/node22/tsconfig.json", "@compose/tsconfig/tsconfig.json"],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.config.tsbuildinfo",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": [
+    "env.d.ts",
+    "vite.config.*",
+    "vitest.config.*",
+    "vitest.workspace.*",
+    "playwright.config.*",
+    "uno.config.*",
+    "eslint.config.*"
+  ]
+}

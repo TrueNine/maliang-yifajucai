@@ -1,0 +1,30 @@
+{
+  "extends": "@compose/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.ts.tsbuildinfo",
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "lib": ["ESNext", "ES2023", "ES2024"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "env.d.ts",
+    "project.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist/**",
+    "node_modules/**",
+    "**/__tests__/**",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}

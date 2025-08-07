@@ -1,0 +1,27 @@
+{
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "./tsconfig.ts.json"],
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vue.tsbuildinfo",
+    "lib": ["ESNext", "ES2023", "ES2024", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "allowJs": true
+  },
+  "include": [
+    "env.d.ts",
+    "project.d.ts",
+    "imports-auto.d.ts",
+    "imports-comp.d.ts",
+    "typed-router.d.ts",
+    "src/**/*.vue"
+  ],
+  "exclude": [
+    "**/__tests__/**",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}

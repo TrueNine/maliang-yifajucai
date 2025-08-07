@@ -1,0 +1,55 @@
+.DS_Store
+.thumbs.db
+target/
+node_modules
+vite.config.ts.**
+vitest.config.ts.**
+test-results/
+# Quasar core related directories
+.quasar
+dist
+
+# Cordova related directories and files
+src-cordova/node_modules
+src-cordova/platforms
+src-cordova/plugins
+src-cordova/www
+
+# Capacitor related directories and files
+src-capacitor/www
+src-capacitor/node_modules
+
+# BEX related directories and files
+src-bex/www
+src-bex/js/core
+
+# Log files
+npm-debug.log*
+yarn.lock
+package-lock.json
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+project.config.json
+project.private.config.json
+
+.eslintrc-auto-import.json
+*imports-*
+typed-router.d.ts
+playwright-report
+
+### jimmer generated apis
+__generated/
+
+### AI Coding ###
+/.cursor/
+.cursorrules
+.cursorignore
