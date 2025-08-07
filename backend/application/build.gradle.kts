@@ -92,7 +92,15 @@ spotless {
   sql {
     lineEndings = LineEnding.UNIX
     target("**/**.sql")
-    dbeaver().configFile(rootProject.layout.projectDirectory.file(".compose-config/.spotless_format_config.properties"))
+    idea()
+      .codeStyleSettingsPath(
+        rootProject
+          .layout
+          .projectDirectory
+          .file(".idea/codeStyles/Project.xml")
+          .asFile
+          .absolutePath
+      )
   }
 }
 
