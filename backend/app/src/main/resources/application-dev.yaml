@@ -13,9 +13,9 @@ compose:
     endpoint: ${GLOBAL_DOMAIN}
     exposed-base-url: http://${GLOBAL_DOMAIN}:9000
     minio:
-      port: ${MINIO_PORT}
-      secret-key: ${MINIO_PASSWORD}
-      access-key: ${MINIO_USER}
+      port: ${MINIO_PORT:9000}
+      secret-key: ${MINIO_PASSWORD:minio123}
+      access-key: ${MINIO_USER:minio}
       enable-ssl: false
 
 spring:
@@ -26,7 +26,7 @@ spring:
   data:
     redis:
       host: ${GLOBAL_IP}
-      password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD:redis123}
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${GLOBAL_IP}:${PG_PORT}/${PG_DB}
