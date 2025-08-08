@@ -10,7 +10,7 @@ services:
     ports:
       - "${PG_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-postgres} -d ${PG_DB:-maliang}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${PG_USER:-postgres} -d ${PG_DB:-maliang}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +28,7 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -50,7 +50,7 @@ services:
       - "9001:9001"
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       interval: 30s
       timeout: 20s
       retries: 3
