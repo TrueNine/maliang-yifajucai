@@ -18,8 +18,8 @@ specification ApiAdminSpec implements io.github.truenine.composeserver.domain.IP
   like/(apiPath)
   like/(name)
   like/(doc)
-  flat(permissions) {
-    as (^ -> permissions) {
+  flat(permissions){
+    as(^ -> permissions) {
       eq(id)
       eq(name)
       like/(doc)

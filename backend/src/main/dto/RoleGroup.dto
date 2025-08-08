@@ -5,8 +5,8 @@ specification RoleGroupRoleAdminSpec implements io.github.truenine.composeserver
   eq(id)
   like/^(name)
   like/^(doc)
-  flat(roles) {
-    as (^ -> roles) {
+  flat(roles){
+    as(^ -> roles) {
       eq(id)
       eq(name)
       like/^(doc)

@@ -7,8 +7,8 @@ specification UserAccountAdminSpec implements io.github.truenine.composeserver.d
   eq(id)
   eq(account)
   like/^(nickName)
-  flat(createUserAccount) {
-    as (^ -> createUserAccount) {
+  flat(createUserAccount){
+    as(^ -> createUserAccount) {
       eq(id)
       eq(account)
       like/^(nickName)

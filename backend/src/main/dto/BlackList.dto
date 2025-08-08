@@ -5,13 +5,13 @@ specification BlackListEventDocSpec {
   like(eventDoc)
   ge(onDate)
   le(onDate)
-  flat(blackUserInfo) {
-    as (^ -> blackUserInfo) {
+  flat(blackUserInfo){
+    as(^ -> blackUserInfo) {
       phone
       name
       idCard
-      flat(disInfo) {
-        as (^ -> disInfo) {
+      flat(disInfo){
+        as(^ -> disInfo) {
           certCode
           dsType
           level

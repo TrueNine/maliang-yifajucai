@@ -27,8 +27,8 @@ specification RolePermissionsAdminSpec implements io.github.truenine.composeserv
   eq(id)
   eq(name)
   like/^(doc)
-  flat(permissions) {
-    as (^ -> permissions) {
+  flat(permissions){
+    as(^ -> permissions) {
       eq(id)
       eq(name)
       like/^(doc)

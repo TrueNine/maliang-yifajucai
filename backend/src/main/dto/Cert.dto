@@ -46,13 +46,13 @@ CertAdminView {
 }
 
 input CertAdminPostDto {
-  flat(userAccount) {
-    as (^ -> userAccount) {
+  flat(userAccount){
+    as(^ -> userAccount) {
       id
     }
   }
-  flat(userInfo) {
-    as (^ -> userInfo) {
+  flat(userInfo){
+    as(^ -> userInfo) {
       id
     }
   }
@@ -69,7 +69,7 @@ specification CertAdminCertifiedUserInfoSpec {
 }
 
 CertAdminCertifiedUserInfoView {
-  flat(userInfo) {
+  flat(userInfo){
     id
     account {
       metadataAccount

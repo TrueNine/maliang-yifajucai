@@ -7,17 +7,17 @@ specification JobSeekerAdminSpec {
   like/^(regAddressCode)
   le(createDatetime)
   degree
-  flat(userAccount) {
-    as (^ -> account) {
+  flat(userAccount){
+    as(^ -> account) {
       like/^(nickName)
       eq(account)
     }
   }
-  flat(userInfo) {
-    as (^ -> userInfo) {
+  flat(userInfo){
+    as(^ -> userInfo) {
       le(age)
-      flat(disInfo) {
-        as (^ -> disInfo) {
+      flat(disInfo){
+        as(^ -> disInfo) {
           eq(dsType)
           eq(level)
         }
