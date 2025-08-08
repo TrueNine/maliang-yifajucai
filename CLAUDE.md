@@ -102,18 +102,6 @@ pnpm upload-dist
 - 数据库连接池：HikariCP，最小空闲连接5，最大连接数15
 - 事务管理：默认关闭自动提交，使用手动事务控制
 
-## 关键业务领域
-
-- 用户管理 (UserAccount, UserInfo)
-- 就业服务 (Job, JobSeeker)
-- 证件管理 (Cert, BankCard)  
-- 地址服务 (Address, AddressDetails)
-- 黑名单管理 (BlackList)
-- 审核流程 (Audit相关实体)
-- 权限控制 (Role, RoleGroup, Permissions)
-- 附件管理 (Attachment, 支持水印处理)
-- 审核流程 (各种Audit状态和AuditTyping枚举)
-
 ## 开发规范和约束
 
 ### 后端开发规范

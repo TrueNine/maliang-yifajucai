@@ -1,4 +1,4 @@
-package com.tnmaster.application.controller
+package com.tnmaster.application.apis
 
 import cn.dev33.satoken.annotation.SaIgnore
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaSignature

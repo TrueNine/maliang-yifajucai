@@ -1,6 +1,5 @@
-package com.tnmaster.application.controller
+package com.tnmaster.application.apis
 
-import com.tnmaster.application.service.UserAuthService
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaSignature
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
 import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService

@@ -1,4 +1,4 @@
-package com.tnmaster.application.controller
+package com.tnmaster.application.apis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tnmaster.application.config.TestWebMvcConfiguration
