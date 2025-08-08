@@ -2,21 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 项目概述
-
-这是一个名为 maliang-yifajucai 的全栈就业服务平台项目，包含后端服务和前端管理系统。
-
-## 架构结构
-
-### 后端架构 (backend/)
-- **分层架构**：采用DDD（领域驱动设计）分层架构
-  - application/ - 应用层（Spring Boot应用入口）
-  - domain/ - 领域层（领域模型和业务逻辑）
-  - infrastructure/ - 基础设施层
-  - build-logic/ - Gradle构建脚本
-
 - **技术栈**：
-  - Spring Boot 3.x + Kotlin 
+  - Spring Boot 3.x + Kotlin
   - JDK 24 (启用 Java 预览特性)
   - Jimmer ORM 框架
   - PostgreSQL + Flyway数据库迁移
@@ -26,6 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - Testcontainers测试
 
 ### 前端架构 (frontend/)
+
 - **技术栈**：Vue 3 + TypeScript + Vite
 - **UI框架**：Vuetify + Element Plus + Naive UI
 - **状态管理**：Pinia
@@ -34,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 关键开发命令
 
 ### 后端 (backend/)
+
 ```bash
 # 构建项目
 ./gradlew build
@@ -64,6 +53,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```
 
 ### 前端 (frontend/)
+
 ```bash
 # 开发环境运行 (端口3000)
 pnpm dev
@@ -105,6 +95,7 @@ pnpm upload-dist
 ## 开发规范和约束
 
 ### 后端开发规范
+
 - JDK 24 + 启用预览特性（--enable-preview）
 - Kotlin编译目标：JVM_24，启用JSR305严格模式
 - 使用虚拟线程：Spring Boot已启用虚拟线程支持
@@ -114,6 +105,7 @@ pnpm upload-dist
 - 代码格式化：Spotless插件强制执行
 
 ### 测试组织规范
+
 - 使用@Nested内部类组织相关测试
 - 测试方法名使用反引号包围的中文描述：`fun \`测试场景描述\`()`
 - 测试分类：正常、边界、异常用例
@@ -121,14 +113,17 @@ pnpm upload-dist
 - 数据库测试使用@RDBRollback自动回滚
 
 ### 前端开发规范
-- Node.js 24+ + pnpm 10.12.1+
+
+- Node.js 24+ + pnpm 10.14+
 - 组件自动导入：支持Element Plus、Naive UI、Vuetify、Quasar
 - 路由：基于文件系统的自动路由生成
 - 构建优化：Terser压缩、Gzip压缩、文件名哈希
 - 开发工具：Vue DevTools、ESLint、TypeScript严格模式
 
 ### 环境配置
-- 后端支持.env文件自动加载（项目根目录../.env）
+
+- 后端开发服务器 docker-compose 由springboot启动，文件位于 `backend/src/main/resources/compose.yaml`
+- 环境变量文件：`.env` 不应进入版本控制，由用户按照 `.env.example` 统一管理
 - 前端环境配置位于./src/config/env/
 - 文件上传限制：2GB
 - 数据库：PostgreSQL（开发/测试使用Testcontainers）
