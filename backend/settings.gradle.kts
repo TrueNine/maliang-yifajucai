@@ -22,4 +22,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "backend"
 
-include("app", "infrastructure", "domain")
+// 已重构为单模块项目，不再需要子模块
+// include("app", "infrastructure", "domain")
