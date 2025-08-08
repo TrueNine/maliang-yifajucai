@@ -7,12 +7,14 @@ import cn.dev33.satoken.stp.StpUtil
 import com.tnmaster.service.AclService
 import io.github.truenine.composeserver.consts.IMethods
 import io.github.truenine.composeserver.slf4j
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
+@ConditionalOnProperty(name = ["app.interceptors.sa-token-admin.enabled"], havingValue = "true", matchIfMissing = true)
 class SaTokenAdminInterceptor(private val aclService: AclService) : WebMvcConfigurer {
   companion object {
     private val log = slf4j<SaTokenAdminInterceptor>()

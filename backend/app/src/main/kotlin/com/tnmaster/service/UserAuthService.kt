@@ -15,7 +15,7 @@ import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.toFetcher
 import io.github.truenine.composeserver.security.crypto.base64Decode
 import io.github.truenine.composeserver.security.crypto.uuid
-import io.github.truenine.composeserver.security.oauth2.service.WxpaService
+import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService
 import jakarta.servlet.http.HttpServletRequest
 import org.babyfish.jimmer.sql.ast.mutation.AssociatedSaveMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -62,20 +62,20 @@ class UserAuthService(
     request: HttpServletRequest,
   ): SaTokenService.SaTokenLoginView? {
     log.trace("loginOrRegisteredByWxpaJsApiCodeOrThrow called, jsApiCode={}, authRequestInfo={}, remoteAddr={}", jsApiCode, authRequestInfo, request.remoteAddr)
-    val userInfoResp = wxpaService.fetchUserInfoByAccessToken(jsApiCode)
+    val userInfoResp = wxpaService.getUserInfoByAuthCode(jsApiCode)
     log.trace("userInfoResp: {}", userInfoResp)
     if (null == userInfoResp) {
       log.debug("loginOrRegisteredByWxpaJsApiCodeOrThrow failed: userInfoResp is null, jsApiCode={}", jsApiCode)
       return null
     }
-    val registeredUserAccount = fetchRegisteredAccountByWxpaOpenId(userInfoResp.openId!!)
+    val registeredUserAccount = fetchRegisteredAccountByWxpaOpenId(userInfoResp.openId)
     log.trace("registeredUserAccount: {}", registeredUserAccount)
     if (null != registeredUserAccount) {
       log.debug("loginOrRegisteredByWxpaJsApiCodeOrThrow: user already registered, openId={}", userInfoResp.openId)
       return loginByAccountOrThrow(registeredUserAccount.account, request, authRequestInfo)
     } else {
       log.debug("loginOrRegisteredByWxpaJsApiCodeOrThrow: registering new user, openId={}", userInfoResp.openId)
-      val newAssignAccount = registerAccountByWxpaOpenId(openId = userInfoResp.openId!!, wechatNickName = userInfoResp.nickName!!)
+      val newAssignAccount = registerAccountByWxpaOpenId(openId = userInfoResp.openId, wechatNickName = userInfoResp.nickname ?: "微信用户")
       checkNotNull(newAssignAccount) {
         log.debug("公众号注册失败, openId={}", userInfoResp.openId)
         "公众号注册失败"

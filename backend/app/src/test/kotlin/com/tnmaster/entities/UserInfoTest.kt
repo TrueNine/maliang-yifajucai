@@ -5,7 +5,7 @@ import com.tnmaster.repositories.IBlackListRepo
 import com.tnmaster.repositories.IUserInfoRepo
 import jakarta.annotation.Resource
 import io.github.truenine.composeserver.rds.annotations.ACID
-import io.github.truenine.composeserver.rds.typing.RelationItemTyping
+import io.github.truenine.composeserver.rds.enums.RelationItemTyping
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer

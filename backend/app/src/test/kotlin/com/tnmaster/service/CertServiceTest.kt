@@ -12,7 +12,7 @@ import com.tnmaster.repositories.IUserInfoRepo
 import jakarta.annotation.Resource
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.annotations.ACID
-import io.github.truenine.composeserver.rds.typing.*
+import io.github.truenine.composeserver.rds.enums.*
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.log
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer

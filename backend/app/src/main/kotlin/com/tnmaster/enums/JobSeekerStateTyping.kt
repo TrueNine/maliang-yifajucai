@@ -1,4 +1,4 @@
-package com.tnmaster.typing
+package com.tnmaster.enums
 
 import com.fasterxml.jackson.annotation.JsonValue
 import io.github.truenine.composeserver.IIntTyping

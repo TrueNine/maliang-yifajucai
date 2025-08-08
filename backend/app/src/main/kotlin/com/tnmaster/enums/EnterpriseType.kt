@@ -1,4 +1,4 @@
-package com.tnmaster.typing
+package com.tnmaster.enums
 
 import io.github.truenine.composeserver.IIntTyping
 import org.babyfish.jimmer.sql.EnumItem

@@ -1,6 +1,7 @@
 package com.tnmaster.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.tnmaster.config.TestWebMvcConfiguration
 import com.tnmaster.entities.RoleGroup
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo
@@ -17,8 +18,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -28,8 +31,14 @@ import javax.sql.DataSource
 
 
 @RDBRollback
-@SpringBootTest
+@SpringBootTest(
+    properties = [
+        "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
+    ]
+)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
+@Import(TestWebMvcConfiguration::class)
 class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
   // 公共扩展函数，自动加 user-agent 和 ip
   fun MockHttpServletRequestBuilder.withCommonHeaders(

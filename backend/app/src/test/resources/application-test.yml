@@ -1,0 +1,22 @@
+app:
+  interceptors:
+    sa-token-admin:
+      enabled: false
+
+compose:
+  psdk:
+    wxpa:
+      wxpa:
+        app-id: test-app-id
+        app-secret: test-app-secret
+        verify-token: test-verify-token
+        enable-auto-refresh: false
+
+spring:
+  autoconfigure:
+    exclude:
+      - io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration
+
+logging:
+  level:
+    com.tnmaster: DEBUG

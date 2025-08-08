@@ -3,16 +3,14 @@ package com.tnmaster.service
 import com.tnmaster.entities.*
 import com.tnmaster.repositories.IAttachmentRepo
 import jakarta.annotation.Resource
-import io.github.truenine.composeserver.bool
 import io.github.truenine.composeserver.domain.IReadableAttachment
-import io.github.truenine.composeserver.i64
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.string
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import io.github.truenine.composeserver.toId
-import io.github.truenine.composeserver.typing.MimeTypes
+import io.github.truenine.composeserver.enums.MediaTypes
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.ast.expression.count
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
@@ -50,14 +48,14 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         Attachment {
           baseUrl = "test-url"
           baseUri = "test-uri"
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.BASE_URL
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.BASE_URL
         }, SaveMode.INSERT_ONLY
       )
 
       val attachment = attachmentRepo.save(
         Attachment {
           parentUrlAttachment = baseUrlAttachment
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.ATTACHMENT
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.ATTACHMENT
           saveName = "test.jpg"
           metaName = "test.jpg"
           mimeType = "image/jpeg"
@@ -89,7 +87,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         Attachment {
           baseUrl = "test-url"
           baseUri = "test-uri"
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.BASE_URL
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.BASE_URL
         }, SaveMode.INSERT_ONLY
       )
 
@@ -97,7 +95,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         attachmentRepo.save(
           Attachment {
             parentUrlAttachment = baseUrlAttachment
-            attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.ATTACHMENT
+            attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.ATTACHMENT
             saveName = "test1.jpg"
             metaName = "test1.jpg"
             mimeType = "image/jpeg"
@@ -106,7 +104,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         ), attachmentRepo.save(
           Attachment {
             parentUrlAttachment = baseUrlAttachment
-            attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.ATTACHMENT
+            attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.ATTACHMENT
             saveName = "test2.jpg"
             metaName = "test2.jpg"
             mimeType = "image/jpeg"
@@ -144,7 +142,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         Attachment {
           baseUrl = url
           baseUri = uri
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.BASE_URL
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.BASE_URL
         })
 
       // 执行查询
@@ -180,7 +178,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         Attachment {
           baseUrl = url
           baseUri = uri
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.BASE_URL
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.BASE_URL
         })
 
       // 定义只查询 id 的 Fetcher
@@ -244,12 +242,12 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "test data".toByteArray().inputStream()
         override val name: string get() = "test.jpg"
-        override val empty: bool get() = false
-        override val size: i64 get() = 1000
+        override val empty: Boolean get() = false
+        override val size: Long get() = 1000
       }
 
       val computed = AttachmentService.ComputedUploadRecord(
-        metaName = "test.jpg", baseUrl = "test-url", baseUri = "test-uri", saveName = "test.jpg", size = 1000L, mimeType = MimeTypes.JPEG
+        metaName = "test.jpg", baseUrl = "test-url", baseUri = "test-uri", saveName = "test.jpg", size = 1000L, mimeType = MediaTypes.JPEG
       )
 
       // 执行上传
@@ -274,7 +272,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val existingAttachment = attachmentRepo.save(
         Attachment {
           parentUrlAttachment = existingParent
-          attType = io.github.truenine.composeserver.rds.typing.AttachmentTyping.ATTACHMENT
+          attType = io.github.truenine.composeserver.rds.enums.AttachmentTyping.ATTACHMENT
           saveName = "existing.txt"
           metaName = "existing.txt"
           mimeType = "text/plain"
@@ -286,8 +284,8 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "new data".toByteArray().inputStream() // 内容不同，但记录的关键信息相同
         override val name: string get() = "new_name_ignored.txt" // 这个名字理论上会被 computed 覆盖
-        override val empty: bool get() = false
-        override val size: i64 get() = 600 // 大小也不同
+        override val empty: Boolean get() = false
+        override val size: Long get() = 600 // 大小也不同
       }
 
       val computed = AttachmentService.ComputedUploadRecord(
@@ -296,7 +294,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
         baseUri = "existing-uri",   // 与现有记录相同
         saveName = "existing.txt", // 与现有记录相同
         size = 500L,               // 与现有记录相同
-        mimeType = MimeTypes.TEXT // 与现有记录相同
+        mimeType = MediaTypes.TEXT // 与现有记录相同
       )
 
       // Capture initial count
@@ -342,13 +340,13 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "".toByteArray().inputStream()
         override val name: string get() = "empty.txt"
-        override val empty: bool get() = true
-        override val size: i64 get() = 0 // Size is 0
+        override val empty: Boolean get() = true
+        override val size: Long get() = 0 // Size is 0
       }
 
       val computed = AttachmentService.ComputedUploadRecord(
         metaName = "empty.txt", baseUrl = "test-url-size0", baseUri = "test-uri-size0", saveName = "empty_saved.txt", size = 0L, // Computed size is 0
-        mimeType = MimeTypes.TEXT
+        mimeType = MediaTypes.TEXT
       )
 
       val result = attachmentService.recordUpload(readableAttachment) { computed }
@@ -368,13 +366,13 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "data".toByteArray().inputStream()
         override val name: string get() = "original.txt"
-        override val empty: bool get() = false
-        override val size: i64 get() = 4
+        override val empty: Boolean get() = false
+        override val size: Long get() = 4
       }
 
       val computed = AttachmentService.ComputedUploadRecord(
         metaName = "", // Empty metaName
-        baseUrl = "test-url-empty-meta", baseUri = "test-uri-empty-meta", saveName = "saved_empty_meta.txt", size = 4L, mimeType = MimeTypes.TEXT
+        baseUrl = "test-url-empty-meta", baseUri = "test-uri-empty-meta", saveName = "saved_empty_meta.txt", size = 4L, mimeType = MediaTypes.TEXT
       )
 
       val result = attachmentService.recordUpload(readableAttachment) { computed }
@@ -389,13 +387,13 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "data".toByteArray().inputStream()
         override val name: string get() = "original.txt"
-        override val empty: bool get() = false
-        override val size: i64 get() = 4
+        override val empty: Boolean get() = false
+        override val size: Long get() = 4
       }
 
       val computed = AttachmentService.ComputedUploadRecord(
         metaName = "meta_empty_save.txt", baseUrl = "test-url-empty-save", baseUri = "test-uri-empty-save", saveName = "", // Empty saveName
-        size = 4L, mimeType = MimeTypes.TEXT
+        size = 4L, mimeType = MediaTypes.TEXT
       )
 
       val result = attachmentService.recordUpload(readableAttachment) { computed }

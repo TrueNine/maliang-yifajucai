@@ -1,9 +1,9 @@
 package com.tnmaster.controller
 
 import cn.dev33.satoken.annotation.SaIgnore
-import io.github.truenine.composeserver.security.oauth2.api.IWxpaWebClient
-import io.github.truenine.composeserver.security.oauth2.property.WxpaProperty
-import io.github.truenine.composeserver.security.oauth2.service.WxpaService
+import io.github.truenine.composeserver.psdk.wxpa.model.WxpaSignature
+import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
+import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService
 import org.babyfish.jimmer.client.meta.Api
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -24,47 +24,47 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
   @Api
   @SaIgnore
   @GetMapping("user_info")
-  fun getUserInfoByCode(@RequestParam code: String): IWxpaWebClient.WxpaWebsiteUserInfoResp? {
-    return wxpaService.fetchUserInfoByAccessToken(code)
+  fun getUserInfoByCode(@RequestParam code: String): WxpaUserInfo? {
+    return wxpaService.getUserInfoByAuthCode(code)
   }
 
   /** ## 微信消息验证接口 */
   @Api
   @SaIgnore
   @GetMapping("")
-  fun verifyBasicConfig(body: WxpaService.WxpaVerifyDto): String {
-    return wxpaService.verifyBasicConfigOrThrow(body)
+  fun verifyBasicConfig(
+    @RequestParam signature: String,
+    @RequestParam timestamp: String,
+    @RequestParam nonce: String,
+    @RequestParam echostr: String,
+  ): String? {
+    val request = WxpaService.ServerVerificationRequest(signature, timestamp, nonce, echostr)
+    return wxpaService.verifyServerConfiguration(request) ?: throw IllegalStateException("服务器验证失败")
   }
 
-  /** ## 获取 当前服务器的 access_token */
+  /** ## 获取Token状态信息 */
   @Api
   @SaIgnore
-  @GetMapping("access_token")
-  fun getAccessToken(): String? {
-    return wxpaService.wxpaConfigInfo.accessToken
+  @GetMapping("token_status")
+  fun getTokenStatus(): Map<String, String> {
+    val status = wxpaService.getTokenStatus()
+    return status.mapValues { it.value.toString() }
   }
 
-  /** ## 获取票证 */
+  /** ## 强制刷新所有Token */
   @Api
   @SaIgnore
-  @GetMapping("js_api_ticket")
-  fun getTicket(): String? {
-    return wxpaService.wxpaConfigInfo.jsapiTicket
-  }
-
-  /** ## 获取配置的 app id */
-  @Api
-  @SaIgnore
-  @GetMapping("app_id")
-  fun getAppId(): String? {
-    return wxpaService.wxpaConfigInfo.appId
+  @GetMapping("refresh_tokens")
+  fun refreshTokens(): String {
+    wxpaService.forceRefreshTokens()
+    return "Token刷新成功"
   }
 
   /** ## 对当前 url 进行签名 */
   @Api
   @SaIgnore
   @GetMapping("js_api_signature")
-  fun getJsApiUrlSignature(@RequestParam url: String, @RequestParam(required = false) nonceString: String?): WxpaProperty.WxpaSignatureResp {
-    return wxpaService.fetchJsApiSignature(url, nonceString)
+  fun getJsApiUrlSignature(@RequestParam url: String, @RequestParam(required = false) nonceString: String?): WxpaSignature? {
+    return wxpaService.generateJsapiSignature(url, nonceString)
   }
 }
