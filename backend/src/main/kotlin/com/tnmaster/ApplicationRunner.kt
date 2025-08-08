@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableCaching
 @EnableScheduling
 @SpringBootApplication
-@EnableJimmerRepositories(basePackages = ["com.tnmaster.application.repositories"])
+@EnableJimmerRepositories(basePackages = ["com.tnmaster.repositories"])
 internal class TnMasterRunner
 
 /**
