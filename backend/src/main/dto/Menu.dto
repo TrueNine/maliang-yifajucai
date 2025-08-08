@@ -1,0 +1,43 @@
+export com.tnmaster.entities.Menu
+  -> package com.tnmaster.dto.menu
+
+MenuView {
+  #allScalars
+  roles {
+    id
+    name
+  }
+  permissions {
+    id
+    name
+  }
+}
+
+specification MenuAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  eq(pattern)
+  eq(platformType)
+  like/^(title)
+  like/^(doc)
+  o: Int?
+  s: Int?
+}
+
+specification MenuAdminMenuVersionSpec {
+  eq(platformType)
+}
+
+input MenuAdminPutDto {
+  pattern
+  title
+  doc
+  requireLogin
+  platformType
+  roles {
+    id
+    name
+  }
+  permissions {
+    id
+    name
+  }
+}

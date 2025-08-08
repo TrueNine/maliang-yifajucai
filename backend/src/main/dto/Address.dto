@@ -1,0 +1,8 @@
+export com.tnmaster.entities.Address
+  -> package com.tnmaster.dto.address
+
+AddressFullPathView {
+  id
+  code
+  fullPath
+}

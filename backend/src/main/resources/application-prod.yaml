@@ -1,0 +1,35 @@
+compose:
+  psdk:
+    wxpa:
+      wxpa:
+        verifyToken: ${WXPA_VERIFY_TOKEN}
+        appId: ${WXPA_APP_ID}
+        appSecret: ${WXPA_APP_SECRET}
+  oss:
+    provider: minio
+    endpoint: minio
+    exposed-base-url: https://${GLOBAL_DOMAIN}/ressources_oss/
+    minio:
+      port: ${MINIO_PORT}
+      secret-key: ${MINIO_PASSWORD}
+      access-key: ${MINIO_USER}
+      enable-ssl: false
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+  data:
+    redis:
+      host: redis
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+  datasource:
+    hikari:
+      schema: public
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:${PG_PORT}/${PG_DB}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+jimmer:
+  dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect

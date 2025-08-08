@@ -1,0 +1,55 @@
+export com.tnmaster.entities.UserAccount
+  -> package com.tnmaster.dto.useraccount
+
+import jakarta.validation.constraints.{ NotEmpty, Size }
+
+specification UserAccountAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  eq(id)
+  eq(account)
+  like/^(nickName)
+  flat(createUserAccount) {
+    as (^ -> createUserAccount) {
+      eq(id)
+      eq(account)
+      like/^(nickName)
+    }
+  }
+  o: Int?
+  s: Int?
+}
+
+/**
+ * 用户账号 -> 角色组
+ */
+input UserAccountRoleGroupPutDto {
+  id
+  roleGroups {
+    id
+  }
+}
+
+input UserAccountRoleGroupDeleteDto {
+  id
+  roleGroups {
+    id
+  }
+}
+
+/**
+ * @param roleGroupIds 角色组 id 集合
+ */
+specification UserAccountRoleGroupAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  @NotEmpty(message = "角色组不能为空")
+  associatedIdIn(roleGroups) as roleGroupIds
+  o: Int?
+  s: Int?
+}
+
+UserAccountAdminView {
+  id
+  metadataAccount
+  nickName
+  createUserAccount {
+    id
+  }
+}

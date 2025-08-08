@@ -1,0 +1,32 @@
+export com.tnmaster.entities.Attachment
+  -> package com.tnmaster.dto.attachment
+
+AttachmentView {
+  id
+  metaName
+  saveName
+  size
+  mimeType
+  fullAccessUrl
+  parentUrlAttachment {
+    id
+    baseUrl
+    baseUri
+  }
+}
+
+AttachmentUrlView {
+  id
+  baseUrl
+  baseUri
+}
+
+specification AttachmentExistsSpec {
+  eq(attType)
+  eq(metaName)
+  eq(saveName)
+  eq(size)
+  eq(mimeType)
+  eq(baseUrl)
+  eq(baseUri)
+}

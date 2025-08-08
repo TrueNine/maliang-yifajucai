@@ -1,0 +1,11 @@
+package com.tnmaster.application.repositories
+
+import com.tnmaster.entities.AnonymousCertGroup
+import io.github.truenine.composeserver.RefId
+import io.github.truenine.composeserver.rds.IRepo
+import org.springframework.context.annotation.Primary
+import org.springframework.stereotype.Repository
+
+@Primary
+@Repository
+interface IAnonymousCertGroupRepo : IRepo<AnonymousCertGroup, RefId>

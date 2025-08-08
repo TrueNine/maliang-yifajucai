@@ -1,0 +1,15 @@
+export com.tnmaster.entities.Job
+  -> package com.tnmaster.dto.job
+
+specification JobAdminSpec implements io.github.truenine.composeserver.domain.IPageParam {
+  eq(auditStatus)
+  o: Int?
+  s: Int?
+}
+
+specification CostomerFetchSpec {
+  id
+  like/^(title)
+  like/^(doc)
+  like/^(addressCode)
+}
