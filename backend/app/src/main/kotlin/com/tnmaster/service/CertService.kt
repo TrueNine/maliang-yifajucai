@@ -13,6 +13,7 @@ import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.servlet.toReadableAttachment
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.generator.IOrderCodeGenerator
+import org.springframework.beans.factory.annotation.Qualifier
 import io.github.truenine.composeserver.oss.ObjectStorageService
 import io.github.truenine.composeserver.oss.PutObjectRequest
 import kotlinx.coroutines.runBlocking
@@ -47,7 +48,7 @@ class CertService(
   private val oss: ObjectStorageService,
   private val bankCardRepo: IBankCardRepo,
   private val attService: AttachmentService,
-  private val bizCoder: IOrderCodeGenerator,
+  @Qualifier("bizCode") private val bizCoder: IOrderCodeGenerator,
 ) {
 
   /**
