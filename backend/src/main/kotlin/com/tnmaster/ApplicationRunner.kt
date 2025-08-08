@@ -1,4 +1,4 @@
-package com.tnmaster.application.application
+package com.tnmaster
 
 import org.babyfish.jimmer.spring.repository.EnableJimmerRepositories
 import org.springframework.boot.autoconfigure.SpringBootApplication
