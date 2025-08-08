@@ -46,9 +46,6 @@ project.private.config.json
 typed-router.d.ts
 playwright-report
 
-### jimmer generated apis
-__generated/
-
 ### AI Coding ###
 /.cursor/
 .cursorrules
