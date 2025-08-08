@@ -1,11 +1,11 @@
 package com.tnmaster.application.service
 
-import com.tnmaster.dto.userinfo.UserInfoAdminAssignAccountView
 import com.tnmaster.entities.UserInfo
 import com.tnmaster.application.repositories.IDisInfoRepo
 import com.tnmaster.application.repositories.IUserAccountRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
-import io.github.truenine.composeserver.domain.AuthRequestInfo
+import com.tnmaster.service.SaTokenService
+import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
 import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService
 import io.mockk.every

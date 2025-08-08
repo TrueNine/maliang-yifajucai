@@ -2,6 +2,7 @@ package com.tnmaster.application.service
 
 import com.tnmaster.entities.*
 import com.tnmaster.application.repositories.IAttachmentRepo
+import com.tnmaster.service.AttachmentService
 import jakarta.annotation.Resource
 import io.github.truenine.composeserver.domain.IReadableAttachment
 import io.github.truenine.composeserver.rds.annotations.ACID

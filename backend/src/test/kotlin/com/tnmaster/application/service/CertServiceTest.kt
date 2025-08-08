@@ -9,6 +9,7 @@ import com.tnmaster.entities.UserInfo
 import com.tnmaster.application.repositories.ICertRepo
 import com.tnmaster.application.repositories.IUserAccountRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.service.CertService
 import jakarta.annotation.Resource
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.rds.annotations.ACID

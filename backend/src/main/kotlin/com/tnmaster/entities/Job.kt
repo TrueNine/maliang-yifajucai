@@ -2,7 +2,7 @@ package com.tnmaster.entities
 
 import com.tnmaster.entities.converter.PeriodToStringConverter
 import com.tnmaster.entities.embeddable.StartEndDateRange
-import com.tnmaster.application.enums.EnterpriseType
+import com.tnmaster.enums.EnterpriseType
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.decimal

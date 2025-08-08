@@ -10,6 +10,10 @@ import com.tnmaster.entities.userId
 import com.tnmaster.application.repositories.IBankCardRepo
 import com.tnmaster.application.repositories.ICertRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.service.BankService
+import com.tnmaster.service.CertService
+import com.tnmaster.service.UserAccountService
+import com.tnmaster.service.UserAuthService
 import jakarta.annotation.Resource
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer

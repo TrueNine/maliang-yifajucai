@@ -1,7 +1,7 @@
 package com.tnmaster.entities
 
 import com.tnmaster.entities.resolvers.EnterpriseAddressResolver
-import com.tnmaster.application.enums.EnterpriseType
+import com.tnmaster.enums.EnterpriseType
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.date
 import io.github.truenine.composeserver.datetime

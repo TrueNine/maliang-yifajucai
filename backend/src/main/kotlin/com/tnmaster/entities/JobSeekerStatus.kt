@@ -1,6 +1,6 @@
 package com.tnmaster.entities
 
-import com.tnmaster.application.enums.JobSeekerStateTyping
+import com.tnmaster.enums.JobSeekerStateTyping
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.decimal

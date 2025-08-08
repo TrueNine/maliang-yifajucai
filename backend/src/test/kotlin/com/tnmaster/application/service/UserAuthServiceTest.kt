@@ -4,6 +4,7 @@ import cn.dev33.satoken.context.mock.SaTokenContextMockUtil
 import cn.dev33.satoken.servlet.util.SaTokenContextJakartaServletUtil
 import com.tnmaster.application.repositories.IUserAccountRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.service.UserAuthService
 import io.mockk.every
 import io.mockk.mockk
 import jakarta.annotation.Resource
