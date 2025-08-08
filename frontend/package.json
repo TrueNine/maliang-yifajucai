@@ -2,12 +2,12 @@
   "name": "tnmaster-admin",
   "type": "module",
   "version": "1.0.0",
-  "packageManager": "pnpm@10.12.1",
+  "packageManager": "pnpm@10.14.0",
   "description": "no desc",
   "author": "TrueNine",
   "engines": {
-    "node": ">= 24.0.1",
-    "pnpm": ">= 10.12.1"
+    "node": ">= 24.5.0",
+    "pnpm": ">= 10.14.0"
   },
   "scripts": {
     "api": "node ./scripts/generate-api.js",
@@ -84,14 +84,12 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.15.0",
     "@compose/config-common": "^0.0.3",
     "@compose/config-prettier": "^0.0.41",
     "@compose/config-stylelint": "^1.1.36",
     "@compose/config-theme": "^0.1.26",
     "@compose/config-uno": "^1.0.3",
     "@compose/config-vite-fragment": "^1.0.12",
-    "@compose/eslint9-config": "^1.0.12",
     "@compose/tsconfig": "^1.0.5",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.29.0",
@@ -100,6 +98,7 @@
     "@quasar/extras": "^1.17.0",
     "@quasar/vite-plugin": "^1.9.0",
     "@rushstack/eslint-patch": "^1.11.0",
+    "@truenine/eslint9-config": "^1.0.15",
     "@tsconfig/node20": "^20.1.6",
     "@tsconfig/node22": "^22.0.2",
     "@types/core-js": "^2.5.8",
