@@ -10,7 +10,6 @@ plugins {
   alias(cs.plugins.com.diffplug.spotless)
   alias(cs.plugins.com.google.devtools.ksp)
   alias(cs.plugins.io.spring.dependency.management)
-  id("repositories-conventions")
 }
 
 group = "com.tnmaster"
@@ -21,6 +20,11 @@ idea {
     isDownloadSources = true
     isDownloadJavadoc = true
   }
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
 }
 
 composeGradle {
@@ -99,16 +103,6 @@ kotlin {
   jvmToolchain(24)
 }
 
-spotless {
-  val rootDirPath = rootProject
-    .layout
-    .projectDirectory
-    .file("../.idea/codeStyles/Project.xml").asFile.absolutePath
-  val targetPattern = "**/db/migration/**.sql"
-  println(rootDirPath)
-  println(targetPattern)
-}
-
 tasks {
   withType<Test> {
     useJUnitPlatform()
@@ -120,15 +114,15 @@ tasks {
 
 
 // 从根目录 .env 加载并注入到常见运行类任务（Test/JavaExec/BootRun/run 等）
-fun parseDotenv(file: java.io.File): Map<String, String> {
+fun parseDotenv(file: File): Map<String, String> {
   if (!file.exists() || !file.canRead()) return emptyMap()
   val result = mutableMapOf<String, String>()
-  file.readLines().forEachIndexed { idx, raw ->
+  file.readLines().forEach { raw ->
     val line = raw.trim()
-    if (line.isEmpty() || line.startsWith("#")) return@forEachIndexed
+    if (line.isEmpty() || line.startsWith("#")) return@forEach
     val i = line.indexOf('=')
-    if (i <= 0) return@forEachIndexed
-    val key = line.substring(0, i).trim()
+    if (i <= 0) return@forEach
+    val key = line.take(i).trim()
     var value = line.substring(i + 1).trim()
     if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
       value = value.substring(1, value.length - 1)
@@ -145,24 +139,20 @@ fun parseDotenv(file: java.io.File): Map<String, String> {
   return result
 }
 
-val rootDotenv = rootProject.layout.projectDirectory .file("../.env").asFile?.let {
-  logger.error("[dotenv] filePath $it ")
+val rootDotenv = rootProject.layout.projectDirectory.file("../.env").asFile.takeIf { it.exists() }?.let {
   parseDotenv(it)
 }
 
 if (rootDotenv?.isNotEmpty() == true) {
-  logger.warn("[dotenv] 从根目录 .env 加载 ${rootDotenv.size} 个环境变量并注入到任务")
-
   tasks.withType(org.springframework.boot.gradle.tasks.run.BootRun::class.java).configureEach {
     rootDotenv.forEach { (k, v) -> environment(k, v) }
   }
-  tasks.withType(org.gradle.api.tasks.testing.Test::class.java).configureEach {
+  tasks.withType(Test::class.java).configureEach {
     rootDotenv.forEach { (k, v) -> environment(k, v) }
   }
-  tasks.withType(org.gradle.api.tasks.JavaExec::class.java).configureEach {
+  tasks.withType(JavaExec::class.java).configureEach {
     rootDotenv.forEach { (k, v) -> environment(k, v) }
   }
-
 } else {
   logger.error("[dotenv] 根目录 ../.env 未找到或为空，跳过注入")
 }
