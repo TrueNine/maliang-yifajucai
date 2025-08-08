@@ -1,9 +1,9 @@
 package com.tnmaster.application.service
 
-import com.tnmaster.entities.UserInfo
 import com.tnmaster.application.repositories.IDisInfoRepo
 import com.tnmaster.application.repositories.IUserAccountRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.entities.UserInfo
 import com.tnmaster.service.SaTokenService
 import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
@@ -40,7 +40,7 @@ class UserAuthServiceWxpaTest {
     saService = mockk()
     wxpaService = mockk()
     mockRequest = mockk()
-    
+
     userAuthService = UserAuthService(
       userAccountRepo,
       userInfoRepo,
@@ -63,14 +63,14 @@ class UserAuthServiceWxpaTest {
       val jsApiCode = "test_js_api_code"
       val openId = "test_open_id"
       val nickname = "测试用户"
-      
+
       val wxpaUserInfo = WxpaUserInfo(
         openId = openId,
         nickname = nickname,
         privilege = emptyList(),
         unionId = "test_union_id"
       )
-      
+
       val existingUserAccount = mockk<com.tnmaster.entities.UserAccount>()
       every { existingUserAccount.account } returns "test_account"
 
@@ -104,19 +104,19 @@ class UserAuthServiceWxpaTest {
       val jsApiCode = "test_js_api_code"
       val openId = "new_open_id"
       val nickname = "新用户"
-      
+
       val wxpaUserInfo = WxpaUserInfo(
         openId = openId,
         nickname = nickname,
         privilege = emptyList(),
         unionId = "test_union_id"
       )
-      
+
       val newUserInfo = mockk<UserInfo>()
       val mockAccount = mockk<com.tnmaster.entities.UserAccount>()
       every { newUserInfo.account } returns mockAccount
       every { mockAccount.account } returns "new_account"
-      
+
       val expectedLoginView = SaTokenService.SaTokenLoginView(
         getHeaderName = "Authorization",
         tokenTimeout = null,
@@ -162,19 +162,19 @@ class UserAuthServiceWxpaTest {
       // Given
       val jsApiCode = "test_js_api_code"
       val openId = "test_open_id"
-      
+
       val wxpaUserInfo = WxpaUserInfo(
         openId = openId,
         nickname = null, // 昵称为空
         privilege = emptyList(),
         unionId = "test_union_id"
       )
-      
+
       val newUserInfo = mockk<UserInfo>()
       val mockAccount = mockk<com.tnmaster.entities.UserAccount>()
       every { newUserInfo.account } returns mockAccount
       every { mockAccount.account } returns "new_account"
-      
+
       val expectedLoginView = SaTokenService.SaTokenLoginView(
         getHeaderName = "Authorization",
         tokenTimeout = null,

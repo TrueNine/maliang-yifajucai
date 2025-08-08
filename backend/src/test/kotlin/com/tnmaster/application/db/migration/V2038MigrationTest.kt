@@ -1,7 +1,7 @@
 package com.tnmaster.application.db.migration
 
-import jakarta.annotation.Resource
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import jakarta.annotation.Resource
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.springframework.boot.test.context.SpringBootTest

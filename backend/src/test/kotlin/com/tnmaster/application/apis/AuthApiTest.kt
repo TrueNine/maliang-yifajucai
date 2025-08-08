@@ -2,17 +2,17 @@ package com.tnmaster.application.apis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tnmaster.application.config.TestWebMvcConfiguration
-import com.tnmaster.entities.RoleGroup
-import com.tnmaster.entities.UserAccount
-import com.tnmaster.entities.UserInfo
 import com.tnmaster.application.repositories.IRoleGroupRepo
 import com.tnmaster.application.repositories.IUserAccountRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
-import jakarta.annotation.Resource
+import com.tnmaster.entities.RoleGroup
+import com.tnmaster.entities.UserAccount
+import com.tnmaster.entities.UserInfo
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import jakarta.annotation.Resource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,12 +29,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import javax.sql.DataSource
 
-
 @RDBRollback
 @SpringBootTest(
-    properties = [
-        "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
-    ]
+  properties = [
+    "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
+  ]
 )
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -43,14 +42,13 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
   // 公共扩展函数，自动加 user-agent 和 ip
   fun MockHttpServletRequestBuilder.withCommonHeaders(
     userAgent: String = "tnmaster-test-agent",
-    ip: String = "127.0.0.1"
+    ip: String = "127.0.0.1",
   ): MockHttpServletRequestBuilder {
     return this
       .header("User-Agent", userAgent)
       .header("X-Forwarded-For", ip)
       .header("X-Real-IP", ip)
   }
-
 
   companion object {
     @JvmStatic

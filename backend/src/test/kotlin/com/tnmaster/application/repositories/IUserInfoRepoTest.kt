@@ -4,10 +4,10 @@ import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo
 import com.tnmaster.entities.by
 import com.tnmaster.entities.name
-import jakarta.annotation.Resource
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.ast.LikeMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.ast.expression.like

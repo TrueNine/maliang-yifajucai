@@ -1,14 +1,14 @@
 package com.tnmaster.entities
 
-import com.tnmaster.dto.userinfo.UserInfoAdminSpec
 import com.tnmaster.application.repositories.IBlackListRepo
 import com.tnmaster.application.repositories.IUserInfoRepo
-import jakarta.annotation.Resource
+import com.tnmaster.dto.userinfo.UserInfoAdminSpec
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.RelationItemTyping
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
+import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher
 import org.junit.jupiter.api.Nested
