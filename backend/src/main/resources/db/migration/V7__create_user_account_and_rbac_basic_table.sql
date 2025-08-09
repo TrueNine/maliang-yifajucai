@@ -1,19 +1,19 @@
 create
-    table
-    if not exists usr (
-                          create_user_id  bigint        default null,
-                          account         varchar(255)  default null,
-                          nick_name       varchar(2047) default null,
-                          doc             text          default null,
-                          pwd_enc         varchar(2047) default null,
-                          ban_time        timestamp     default null,
-                          last_login_time timestamp     default now(),
-                          unique (account)
-                      );
+  table
+  if not exists usr (
+                      create_user_id  bigint        default null,
+                      account         varchar(255)  default null,
+                      nick_name       varchar(2047) default null,
+                      doc             text          default null,
+                      pwd_enc         varchar(2047) default null,
+                      ban_time        timestamp     default null,
+                      last_login_time timestamp     default now(),
+                      unique (account)
+                    );
 
 comment on
-    table
-    usr is '用户';
+  table
+  usr is '用户';
 
 select add_base_struct('usr');
 
@@ -47,91 +47,91 @@ from (values (0,
                                       pwd_enc,
                                       last_login_time,
                                       doc
-    )
+  )
 where not exists(select 1
                  from usr u
                  where u.account = tmp.account
                    and u.pwd_enc = tmp.pwd_enc);
 
 create
-    table
-    if not exists user_info (
-                                user_id            bigint        default null,
-                                create_user_id     bigint        default null,
-                                pri                boolean       default true,
-                                avatar_img_id      bigint        default null,
-                                first_name         varchar(4095) default null,
-                                last_name          varchar(4095) default null,
-                                email              varchar(255)  default null,
-                                birthday           timestamp     default null,
-                                address_details_id bigint        default null,
-                                phone              varchar(255)  default null,
-                                spare_phone        varchar(255)  default null,
-                                id_card            varchar(255)  default null,
-                                gender             int           default null,
-                                wechat_openid      varchar(255)  default null,
-                                wechat_account     varchar(255)  default null,
-                                wechat_authid      varchar(255)  default null,
-                                qq_openid          varchar(255)  default null,
-                                qq_account         varchar(255)  default null,
-                                address_code       varchar(127)  default null,
-                                address_id         bigint        default null
-                            );
+  table
+  if not exists user_info (
+                            user_id            bigint        default null,
+                            create_user_id     bigint        default null,
+                            pri                boolean       default true,
+                            avatar_img_id      bigint        default null,
+                            first_name         varchar(4095) default null,
+                            last_name          varchar(4095) default null,
+                            email              varchar(255)  default null,
+                            birthday           timestamp     default null,
+                            address_details_id bigint        default null,
+                            phone              varchar(255)  default null,
+                            spare_phone        varchar(255)  default null,
+                            id_card            varchar(255)  default null,
+                            gender             int           default null,
+                            wechat_openid      varchar(255)  default null,
+                            wechat_account     varchar(255)  default null,
+                            wechat_authid      varchar(255)  default null,
+                            qq_openid          varchar(255)  default null,
+                            qq_account         varchar(255)  default null,
+                            address_code       varchar(127)  default null,
+                            address_id         bigint        default null
+                          );
 
 comment on
-    table
-    user_info is '用户信息';
+  table
+  user_info is '用户信息';
 
 select add_base_struct('user_info');
 
 select ct_idx(
-           'user_info',
-           'user_id'
+         'user_info',
+         'user_id'
        );
 
 select ct_idx(
-           'user_info',
-           'create_user_id'
+         'user_info',
+         'create_user_id'
        );
 
 select ct_idx(
-           'user_info',
-           'phone'
+         'user_info',
+         'phone'
        );
 
 select ct_idx(
-           'user_info',
-           'email'
+         'user_info',
+         'email'
        );
 
 select ct_idx(
-           'user_info',
-           'id_card'
+         'user_info',
+         'id_card'
        );
 
 select ct_idx(
-           'user_info',
-           'address_details_id'
+         'user_info',
+         'address_details_id'
        );
 
 select ct_idx(
-           'user_info',
-           'address_details_id'
+         'user_info',
+         'address_details_id'
        );
 
 select ct_idx(
-           'user_info',
-           'avatar_img_id'
+         'user_info',
+         'avatar_img_id'
        );
 
 select ct_idx(
-           'user_info',
-           'wechat_openid'
+         'user_info',
+         'wechat_openid'
        );
 
 select ct_idx(
-           'user_info',
-           'wechat_authid'
+         'user_info',
+         'wechat_authid'
        );
 
 insert
@@ -152,8 +152,8 @@ from (values (0,
               'OOT',
               'g@g.com',
               to_timestamp(
-                  '1997-11-04',
-                  'YYYY-MM-DD'
+                '1997-11-04',
+                'YYYY-MM-DD'
               ),
               '13711111111',
               1),
@@ -164,8 +164,8 @@ from (values (0,
               'SR',
               'g@g.com',
               to_timestamp(
-                  '1997-11-04',
-                  'YYYY-MM-DD'
+                '1997-11-04',
+                'YYYY-MM-DD'
               ),
               '13722222222',
               1)) as tmp(
@@ -178,21 +178,21 @@ from (values (0,
                          birthday,
                          phone,
                          gender
-    )
+  )
 where not exists(select 1
                  from user_info i
                  where i.id = tmp.id);
 
 create
-    table
-    if not exists role (
-                           name varchar(255) not null,
-                           doc  text
-                       );
+  table
+  if not exists role (
+                       name varchar(255) not null,
+                       doc  text
+                     );
 
 comment on
-    table
-    role is '角色';
+  table
+  role is '角色';
 
 select add_base_struct('role');
 
@@ -213,21 +213,21 @@ from (values (0,
                                                       id,
                                                       name,
                                                       doc
-    )
+  )
 where not exists(select 1
                  from role r
                  where r.id = tmp.id);
 
 create
-    table
-    if not exists permissions (
-                                  name varchar(255) not null,
-                                  doc  text
-                              );
+  table
+  if not exists permissions (
+                              name varchar(255) not null,
+                              doc  text
+                            );
 
 comment on
-    table
-    permissions is '权限';
+  table
+  permissions is '权限';
 
 select add_base_struct('permissions');
 
@@ -248,21 +248,21 @@ from (values (0,
                                                       id,
                                                       name,
                                                       doc
-    )
+  )
 where not exists(select 1
                  from permissions p
                  where p.id = tmp.id);
 
 create
-    table
-    if not exists role_group (
-                                 name varchar(255) not null,
-                                 doc  text
-                             );
+  table
+  if not exists role_group (
+                             name varchar(255) not null,
+                             doc  text
+                           );
 
 comment on
-    table
-    role_group is '角色组';
+  table
+  role_group is '角色组';
 
 select add_base_struct('role_group');
 
@@ -283,32 +283,32 @@ from (values (0,
                                                         id,
                                                         name,
                                                         doc
-    )
+  )
 where not exists(select 1
                  from role_group r
                  where r.id = tmp.id);
 
 create
-    table
-    if not exists role_permissions (
-                                       role_id        bigint not null,
-                                       permissions_id bigint not null
-                                   );
+  table
+  if not exists role_permissions (
+                                   role_id        bigint not null,
+                                   permissions_id bigint not null
+                                 );
 
 comment on
-    table
-    role_permissions is '角色  权限';
+  table
+  role_permissions is '角色  权限';
 
 select add_base_struct('role_permissions');
 
 select ct_idx(
-           'role_permissions',
-           'role_id'
+         'role_permissions',
+         'role_id'
        );
 
 select ct_idx(
-           'role_permissions',
-           'permissions_id'
+         'role_permissions',
+         'permissions_id'
        );
 
 insert
@@ -337,32 +337,32 @@ from (values (0,
                          id,
                          role_id,
                          permissions_id
-    )
+  )
 where not exists(select 1
                  from role_permissions r
                  where r.id = tmp.id);
 
 create
-    table
-    if not exists role_group_role (
-                                      role_group_id bigint not null,
-                                      role_id       bigint not null
-                                  );
+  table
+  if not exists role_group_role (
+                                  role_group_id bigint not null,
+                                  role_id       bigint not null
+                                );
 
 comment on
-    table
-    role_group_role is '角色组  角色';
+  table
+  role_group_role is '角色组  角色';
 
 select add_base_struct('role_group_role');
 
 select ct_idx(
-           'role_group_role',
-           'role_group_id'
+         'role_group_role',
+         'role_group_id'
        );
 
 select ct_idx(
-           'role_group_role',
-           'role_id'
+         'role_group_role',
+         'role_id'
        );
 
 insert
@@ -391,32 +391,32 @@ from (values (0,
                          id,
                          role_group_id,
                          role_id
-    )
+  )
 where not exists(select 1
                  from role_group_role r
                  where r.id = tmp.id);
 
 create
-    table
-    if not exists user_role_group (
-                                      user_id       bigint not null,
-                                      role_group_id bigint not null
-                                  );
+  table
+  if not exists user_role_group (
+                                  user_id       bigint not null,
+                                  role_group_id bigint not null
+                                );
 
 comment on
-    table
-    user_role_group is '用户  角色组';
+  table
+  user_role_group is '用户  角色组';
 
 select add_base_struct('user_role_group');
 
 select ct_idx(
-           'user_role_group',
-           'role_group_id'
+         'user_role_group',
+         'role_group_id'
        );
 
 select ct_idx(
-           'user_role_group',
-           'user_id'
+         'user_role_group',
+         'user_id'
        );
 
 insert
@@ -439,34 +439,34 @@ from (values (0,
                          id,
                          user_id,
                          role_group_id
-    )
+  )
 where not exists(select 1
                  from user_role_group u
                  where u.id = tmp.id);
 
 create
-    table
-    if not exists dept (
-                           name varchar(255) not null,
-                           doc  text         null
-                       );
+  table
+  if not exists dept (
+                       name varchar(255) not null,
+                       doc  text         null
+                     );
 
 comment on
-    table
-    dept is '部门';
+  table
+  dept is '部门';
 
 select add_base_struct('dept');
 
 create
-    table
-    if not exists user_dept (
-                                user_id bigint not null,
-                                dept_id bigint not null
-                            );
+  table
+  if not exists user_dept (
+                            user_id bigint not null,
+                            dept_id bigint not null
+                          );
 
 comment on
-    table
-    user_dept is '用户  部门';
+  table
+  user_dept is '用户  部门';
 
 select add_base_struct('user_dept');
 

@@ -23,17 +23,17 @@ select rm_base_struct('menu_permissions');
 select all_to_nullable('menu_permissions');
 
 drop
-    table
-    if exists audit;
+  table
+  if exists audit;
 
 drop
-    table
-    if exists audit_attachment;
+  table
+  if exists audit_attachment;
 
 drop
-    table
-    if exists table_row_delete_record;
+  table
+  if exists table_row_delete_record;
 
 drop
-    table
-    if exists table_row_change_record;
+  table
+  if exists table_row_change_record;
