@@ -35,8 +35,10 @@ class ApiCallRecordService(private val jimmerApiCallRecordRepo: IApiCallRecordRe
   @Scheduled(fixedDelay = 1000 * 60 * 2, initialDelay = 1000 * 60)
   fun scheduledCacheSaveToDatabase() {
     val cacheData = redisTemplate.opsForSet().members(CACHE_KEY)?.filterNotNull()
-    if (null != cacheData) {
-      jimmerApiCallRecordRepo.sql.save(cacheData, SaveMode.INSERT_IF_ABSENT)
+    if (null != cacheData && cacheData.isNotEmpty()) {
+      cacheData.forEach { record ->
+        jimmerApiCallRecordRepo.sql.save(record, SaveMode.INSERT_IF_ABSENT)
+      }
       clearCachedRecords()
     }
   }
