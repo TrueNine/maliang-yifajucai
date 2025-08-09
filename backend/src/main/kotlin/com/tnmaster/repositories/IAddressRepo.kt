@@ -78,7 +78,13 @@ interface IAddressRepo : IRepo<Address, RefId> {
   }
 
   fun findRootAddressNode(rootId: RefId = Rbac.ROOT_ID): Address? {
-    return findById(rootId).getOrNull()
+    return sql
+      .createQuery(Address::class) {
+        where(table.id eq rootId)
+        select(table)
+      }
+      .execute()
+      .firstOrNull()
   }
 
   fun findAllFullPathByCodesIn(codes: List<String>): List<AddressFullPathView> {
