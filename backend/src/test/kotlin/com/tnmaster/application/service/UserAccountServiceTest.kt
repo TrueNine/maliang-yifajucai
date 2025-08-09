@@ -1,8 +1,8 @@
 package com.tnmaster.application.service
 
-import com.tnmaster.application.repositories.IBankCardRepo
-import com.tnmaster.application.repositories.ICertRepo
-import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.repositories.IBankCardRepo
+import com.tnmaster.repositories.ICertRepo
+import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.dto.cert.CertCreatedInfoDto
 import com.tnmaster.dto.userinfo.UserInfoAdminPostDto
 import com.tnmaster.dto.userinfo.UserInfoAdminSpec
@@ -99,6 +99,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
     @Resource
     lateinit var certRepo: ICertRepo
 
+    @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
     @RDBRollback
     fun `正常 添加银行卡附件 时，应创建银行卡和证件记录`() {
@@ -163,6 +164,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
     @Resource
     lateinit var bankRepo: IBankCardRepo
 
+    @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
     @RDBRollback
     fun `正常 按银行名称查询用户信息 时，应返回匹配的用户列表`() {

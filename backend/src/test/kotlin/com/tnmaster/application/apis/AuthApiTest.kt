@@ -1,10 +1,11 @@
 package com.tnmaster.application.apis
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.tnmaster.apis.AuthApi
 import com.tnmaster.application.config.TestWebMvcConfiguration
-import com.tnmaster.application.repositories.IRoleGroupRepo
-import com.tnmaster.application.repositories.IUserAccountRepo
-import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.repositories.IRoleGroupRepo
+import com.tnmaster.repositories.IUserAccountRepo
+import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.entities.RoleGroup
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo

@@ -3,6 +3,7 @@ package com.tnmaster.application.repositories
 import com.tnmaster.entities.Address
 import com.tnmaster.entities.by
 import com.tnmaster.entities.code
+import com.tnmaster.repositories.IAddressRepo
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import io.github.truenine.composeserver.toId

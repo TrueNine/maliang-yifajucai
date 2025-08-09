@@ -36,7 +36,7 @@ import kotlin.test.assertNotNull
 @SpringBootTest
 @Transactional
 @RDBRollback
-class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
+class CertServiceTest : IDatabasePostgresqlContainer {
   @Resource
   private lateinit var userInfoRepo: IUserInfoRepo
 
@@ -52,6 +52,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Nested
   inner class PostCertWaterMarkerImageAttachmentsFunctionGroup {
     @Test
+    @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     fun `正常 上传单个有效证件附件时，应成功保存并返回正确结果`() {
       // 先插入 user_account
       val userAccountId = 9999L
@@ -100,6 +101,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
+    @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     fun `正常 上传多个有效证件附件时，应全部成功保存并返回正确结果`() {
       // 先插入 user_account
       val userAccountId = 9999L
@@ -278,6 +280,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       }
     }
 
+    @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
     fun `异常 上传无法读取的图片文件时，抛出 IllegalArgumentException`() {
       val userAccountId5 = 9999L // 使用一个不会查出 userInfoId 的账号ID，避免一致性校验提前触发

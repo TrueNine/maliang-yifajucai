@@ -1,6 +1,6 @@
 package com.tnmaster.application.service
 
-import com.tnmaster.application.repositories.IAttachmentRepo
+import com.tnmaster.repositories.IAttachmentRepo
 import com.tnmaster.entities.*
 import com.tnmaster.service.AttachmentService
 import io.github.truenine.composeserver.domain.IReadableAttachment
@@ -27,7 +27,7 @@ import kotlin.test.assertNull
 
 @SpringBootTest
 @RDBRollback
-class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
+class AttachmentServiceTest : IDatabasePostgresqlContainer {
   @Resource
   private lateinit var attachmentService: AttachmentService
 

@@ -1,5 +1,6 @@
 package com.tnmaster.application.apis
 
+import com.tnmaster.apis.WechatPublicAccountApi
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaSignature
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
 import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService

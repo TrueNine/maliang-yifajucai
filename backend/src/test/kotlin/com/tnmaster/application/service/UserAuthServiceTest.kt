@@ -2,11 +2,10 @@ package com.tnmaster.application.service
 
 import cn.dev33.satoken.context.mock.SaTokenContextMockUtil
 import cn.dev33.satoken.servlet.util.SaTokenContextJakartaServletUtil
-import com.tnmaster.application.repositories.IUserAccountRepo
-import com.tnmaster.application.repositories.IUserInfoRepo
+import com.tnmaster.repositories.IUserAccountRepo
+import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
-import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import io.mockk.every
 import io.mockk.mockk
@@ -23,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @SpringBootTest
-class UserAuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
+class UserAuthServiceTest : IDatabasePostgresqlContainer {
 
   @Resource
   lateinit var userAuthService: UserAuthService

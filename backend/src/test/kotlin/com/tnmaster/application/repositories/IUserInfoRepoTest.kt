@@ -4,6 +4,7 @@ import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo
 import com.tnmaster.entities.by
 import com.tnmaster.entities.name
+import com.tnmaster.repositories.IUserInfoRepo
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
