@@ -1,7 +1,6 @@
 ---
 alwaysApply: true
 ---
-
 # TnMaster 项目架构概览
 
 这是一个全栈企业级应用，采用前后端分离架构。
