@@ -1,0 +1,60 @@
+---
+alwaysApply: true
+---
+
+# TnMaster 项目架构概览
+
+这是一个全栈企业级应用，采用前后端分离架构。
+
+## 项目结构
+
+- **后端 (backend/)**：Spring Boot 3.x + Kotlin + JDK 24
+- **前端 (frontend/)**：Vue 3 + TypeScript + Vite
+
+## 核心技术栈
+
+### 后端技术栈
+- **框架**：Spring Boot 3.x + Kotlin
+- **JDK版本**：JDK 24（启用预览特性）
+- **ORM**：Jimmer（类型安全的查询构建）
+- **数据库**：PostgreSQL + Flyway 迁移
+- **缓存**：Redis
+- **存储**：MinIO 对象存储
+- **安全**：Sa-Token 安全框架
+- **流程引擎**：LiteFlow
+- **测试**：Testcontainers + JUnit 5
+
+### 前端技术栈
+- **框架**：Vue 3 + TypeScript
+- **构建工具**：Vite + pnpm
+- **UI框架**：Vuetify + Element Plus + Naive UI + Quasar
+- **状态管理**：Pinia
+- **路由**：Vue Router（基于文件系统自动生成）
+- **样式**：UnoCSS + Sass
+- **工具链**：ESLint + Prettier + TypeScript
+
+## 关键文件
+
+- **后端入口**：[ApplicationRunner.kt](mdc:backend/src/main/kotlin/com/tnmaster/ApplicationRunner.kt)
+- **前端入口**：[main.ts](mdc:frontend/src/main.ts)
+- **后端构建配置**：[build.gradle.kts](mdc:backend/build.gradle.kts)
+- **前端构建配置**：[vite.config.ts](mdc:frontend/vite.config.ts)
+- **前端包管理**：[package.json](mdc:frontend/package.json)
+
+## 开发环境要求
+
+- **Node.js**：24.5.0+
+- **pnpm**：10.14.0+
+- **JDK**：24（启用预览特性）
+- **Kotlin**：目标 JVM 24
+- **数据库**：PostgreSQL（开发环境使用 Docker Compose）
+- **缓存**：Redis
+- **对象存储**：MinIO
+
+## 项目特点
+
+- 使用虚拟线程提升并发性能
+- 类型安全的数据库查询（Jimmer）
+- 组件自动导入和路由自动生成
+- 容器化测试环境
+- 严格的代码格式化和类型检查

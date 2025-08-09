@@ -1,0 +1,91 @@
+---
+globs: backend/**/*.kt,backend/**/*.kts,backend/**/*.sql,backend/**/*.yaml,backend/**/*.yml
+---
+
+# 后端开发规范 (Kotlin + Spring Boot)
+
+## 技术要求
+
+- **JDK 24** + 启用预览特性 (`--enable-preview`)
+- **Kotlin** 编译目标：JVM_24，启用 JSR305 严格模式
+- **Spring Boot 3.x** + 虚拟线程支持
+- **Jimmer ORM** 用于类型安全的数据库操作
+
+## 代码规范
+
+### Kotlin 编码风格
+- 使用 4 空格缩进
+- 类名使用 PascalCase
+- 函数和变量名使用 camelCase
+- 常量使用 UPPER_SNAKE_CASE
+- 包名使用小写，用点分隔
+
+### 注解使用规范
+- **实体类**：使用 Jimmer 的 `@Entity` 注解
+- **服务类**：使用 `@Service` 注解
+- **控制器**：使用 `@RestController` 注解
+- **事务管理**：使用 `@Transactional` + `@ACID` 注解
+- **缓存**：使用 `@Cacheable`、`@CacheEvict` 等注解
+
+### 数据库操作
+- 优先使用 Jimmer 的类型安全查询构建器
+- 复杂查询可以使用原生 SQL，但要注意 SQL 注入防护
+- 所有数据库变更必须通过 Flyway 迁移脚本
+- 迁移脚本命名：`V{version}__{description}.sql`
+
+### 异常处理
+- 使用具体的异常类型，避免使用通用 Exception
+- 业务异常继承自 RuntimeException
+- 在控制器层统一处理异常，返回标准化错误响应
+
+### 测试规范
+- 测试类名以 `Test` 结尾
+- 使用 `@Nested` 内部类组织相关测试
+- 测试方法名使用反引号包围的中文描述：`fun \`正常情况下应该返回预期结果\`()`
+- 数据库测试使用 `@RDBRollback` 自动回滚
+- 使用 Testcontainers 进行集成测试
+
+## 项目结构
+
+```
+backend/src/main/kotlin/com/tnmaster/
+├── entities/          # Jimmer 实体类
+├── repositories/      # 数据访问层
+├── services/          # 业务逻辑层
+├── apis/             # REST API 控制器
+├── config/           # 配置类
+└── ApplicationRunner.kt  # 应用入口
+```
+
+## 常用命令
+
+```bash
+# 构建项目
+./gradlew build
+
+# 运行应用
+./gradlew bootRun
+
+# 运行测试
+./gradlew test
+
+# 代码格式化
+./gradlew spotlessApply
+
+# 代码格式化检查
+./gradlew spotlessCheck
+```
+
+## 依赖管理
+
+- 使用 Gradle Kotlin DSL ([build.gradle.kts](mdc:backend/build.gradle.kts))
+- 版本管理通过 Gradle 版本目录
+- 优先使用 Spring Boot 的依赖管理
+- 测试依赖使用 `testImplementation`
+
+## 安全考虑
+
+- 使用 Sa-Token 进行身份认证和授权
+- 敏感信息通过环境变量配置
+- API 接口需要适当的权限控制
+- 数据库连接使用连接池，避免连接泄露
