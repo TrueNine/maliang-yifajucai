@@ -3,12 +3,13 @@ package com.tnmaster.application.apis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tnmaster.apis.AuthApi
 import com.tnmaster.application.config.TestWebMvcConfiguration
-import com.tnmaster.repositories.IRoleGroupRepo
-import com.tnmaster.repositories.IUserAccountRepo
-import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.entities.RoleGroup
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo
+import com.tnmaster.repositories.IRoleGroupRepo
+import com.tnmaster.repositories.IUserAccountRepo
+import com.tnmaster.repositories.IUserInfoRepo
+import io.github.truenine.composeserver.logger
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
@@ -53,7 +54,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
 
   companion object {
     @JvmStatic
-    private val log = io.github.truenine.composeserver.slf4j<AuthApiTest>()
+    private val log = logger<AuthApiTest>()
   }
 
   @Resource
@@ -129,7 +130,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
 
   @Test
   @ACID
-  fun `loginBySystemAccount 正常登录`() {
+  fun `loginBySystemAccount_正常登录`() {
     val dto = AuthApi.AccountDto(account = "user1", password = "cGFzc3dvcmQ=")
     mockMvc.perform(
       MockMvcRequestBuilders.post("/v2/auth/login/account")
