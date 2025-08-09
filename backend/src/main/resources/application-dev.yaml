@@ -20,13 +20,13 @@ compose:
 spring:
   docker:
     compose:
-      enabled: true
+      enabled: false
       file: classpath:compose.yaml
   data:
     redis:
+      password: redis123
       host: 127.0.0.1
       port: 6379
-      password: redis123
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${GLOBAL_IP}:${PG_PORT}/${PG_DB}
