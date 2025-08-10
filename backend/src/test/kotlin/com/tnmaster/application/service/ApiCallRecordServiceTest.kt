@@ -6,6 +6,7 @@ import com.tnmaster.service.ApiCallRecordService
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertTrue
 
 @SpringBootTest
-class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
+class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
 
   @Resource
   lateinit var service: ApiCallRecordService

@@ -6,6 +6,7 @@ import com.tnmaster.service.ApiService
 import io.github.truenine.composeserver.enums.HttpMethod
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,7 +16,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 
 @SpringBootTest
-class ApiServiceTest : IDatabasePostgresqlContainer {
+class ApiServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var apiService: ApiService

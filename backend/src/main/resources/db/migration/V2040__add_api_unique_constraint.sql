@@ -7,7 +7,17 @@ where ctid not in (select max(ctid)
                    from api
                    group by api_path, api_method);
 
--- 添加复合唯一约束
-alter table api
-  add constraint uk_api_path_method
-    unique (api_path, api_method);
+-- 添加复合唯一约束（如果不存在）
+do $$
+begin
+  if not exists (
+    select 1 
+    from information_schema.table_constraints 
+    where constraint_name = 'uk_api_path_method' 
+    and table_name = 'api'
+  ) then
+    alter table api
+      add constraint uk_api_path_method
+        unique (api_path, api_method);
+  end if;
+end $$;

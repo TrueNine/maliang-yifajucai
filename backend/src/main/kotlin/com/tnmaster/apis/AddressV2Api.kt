@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.address.AddressFullPathView
 import com.tnmaster.entities.Address
 import com.tnmaster.repositories.IAddressRepo
@@ -51,7 +51,7 @@ class AddressV2Api(
    * TODO ROOT 权限
    */
   @Api
-  @SaCheckPermission("ROOT")
+  @RequirePermission("ROOT")
   @PostMapping("init_provinces")
   fun postInitProvincesAsAdmin() {
     addressService.initProvince()

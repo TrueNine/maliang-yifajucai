@@ -9,7 +9,7 @@ dependencyResolutionManagement {
     mavenLocal()
     mavenCentral()
   }
-  versionCatalogs { create("cs") { from("io.github.truenine:composeserver-version-catalog:0.0.24") } }
+  versionCatalogs { create("cs") { from("io.github.truenine:composeserver-version-catalog:0.0.25") } }
 }
 
 rootProject.name = "backend"

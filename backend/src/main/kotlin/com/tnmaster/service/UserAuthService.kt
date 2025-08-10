@@ -35,7 +35,7 @@ class UserAuthService(
   private val userInfoRepo: IUserInfoRepo,
   private val passwordEncoder: PasswordEncoder,
   private val disInfoRepo: IDisInfoRepo,
-  private val saService: SaTokenService,
+  private val authService: AuthService,
   private val wxpaService: WxpaService,
 ) {
   companion object {
@@ -60,7 +60,7 @@ class UserAuthService(
     jsApiCode: String,
     authRequestInfo: AuthRequestInfo? = null,
     request: HttpServletRequest,
-  ): SaTokenService.SaTokenLoginView? {
+  ): AuthService.AuthTokenView? {
     log.trace("loginOrRegisteredByWxpaJsApiCodeOrThrow called, jsApiCode={}, authRequestInfo={}, remoteAddr={}", jsApiCode, authRequestInfo, request.remoteAddr)
     val userInfoResp = wxpaService.getUserInfoByAuthCode(jsApiCode)
     log.trace("userInfoResp: {}", userInfoResp)
@@ -92,7 +92,7 @@ class UserAuthService(
    */
   fun setCurrentSessionLogout(authInfo: AuthRequestInfo? = null, request: HttpServletRequest) {
     log.trace("setCurrentSessionLogout called, userId={}, remoteAddr={}", authInfo?.userId, request.remoteAddr)
-    saService.setCurrentSessionToLogout()
+    authInfo?.account?.let { authService.logoutByAccount(it) }
     log.debug("setCurrentSessionLogout success, userId={}", authInfo?.userId)
   }
 
@@ -104,7 +104,7 @@ class UserAuthService(
    * @param authRequestInfo 已登录信息
    */
   @ACID
-  internal fun loginByAccountOrThrow(account: String, request: HttpServletRequest, authRequestInfo: AuthRequestInfo? = null): SaTokenService.SaTokenLoginView {
+  internal fun loginByAccountOrThrow(account: String, request: HttpServletRequest, authRequestInfo: AuthRequestInfo? = null): AuthService.AuthTokenView {
     log.trace("loginByAccountOrThrow called, account={}, remoteAddr={}, isLogin={}", account, request.remoteAddr, authRequestInfo?.isLogin)
     if (authRequestInfo?.isLogin == true) {
       log.debug("loginByAccountOrThrow: already logged in, account={}", account)
@@ -114,23 +114,47 @@ class UserAuthService(
       log.debug("loginByAccountOrThrow failed: account is blank")
       "account is blank"
     }
-    saService.setCurrentSessionToLogin(account)
+    // 检查账号是否被封禁
     ifAccountBanned(account) {
       log.debug("loginByAccountOrThrow: account banned, account={}, duration={}s", account, it.seconds)
-      saService.setCurrentSessionToDisabled(account)
+      authService.disableUser(account)
       error { "账号已被封禁，请于 " + it.seconds + " 后重试" }
     }
-    saService.setCurrentSessionLoginState(account, request)
+    
+    // 获取用户权限信息并设置登录状态
+    val userId = userAccountRepo.findIdByAccount(account) ?: error("用户不存在")
+    val roles = userAccountRepo.findAllRoleNameByAccount(account)
+    val permissions = userAccountRepo.findAllPermissionsNameByAccount(account)
+    val sessionId = authService.setUserLoginState(account, userId, request, roles, permissions)
     userAccountRepo.updateLastLoginTimeToNowByAccount(account)
-    val result = fetchCurrentLoginInfo()!!.copy(roles = fetchRoleNamesByAccount(account), permissions = fetchPermissionsNamesByAccount(account))
-    log.debug("loginByAccountOrThrow success, account={}, roles={}, permissions={}", account, result.roles, result.permissions)
+    val result = AuthService.AuthTokenView(
+      sessionId = sessionId,
+      login = true,
+      sessionTimeout = null, // session 过期时间由 Redis 管理
+      roles = fetchRoleNamesByAccount(account),
+      permissions = fetchPermissionsNamesByAccount(account),
+      account = account,
+      userId = userId
+    )
+    log.debug("loginByAccountOrThrow success, account={}, sessionId={}, roles={}, permissions={}", account, sessionId, result.roles, result.permissions)
     return result
   }
 
   /** ## 获取当前登录的信息 */
-  fun fetchCurrentLoginInfo(): SaTokenService.SaTokenLoginView? {
+  fun fetchCurrentLoginInfo(): AuthService.AuthTokenView? {
     log.trace("fetchCurrentLoginInfo called")
-    val result = saService.currentSessionTokenInfo
+    val currentUser = authService.getCurrentUser()
+    val result = currentUser?.let { user ->
+      AuthService.AuthTokenView(
+        sessionId = null, // sessionId 在登录时单独返回
+        login = true,
+        sessionTimeout = null, // session 过期时间由 Redis 管理
+        roles = user.roles,
+        permissions = user.permissions,
+        account = user.account,
+        userId = user.userId
+      )
+    }
     log.debug("fetchCurrentLoginInfo result: {}", result)
     return result
   }
@@ -205,7 +229,7 @@ class UserAuthService(
    * @param request 请求
    * @return 登录信息
    */
-  fun loginByAccountAndBase64PasswordOrThrow(account: String, base64Password: String, request: HttpServletRequest): SaTokenService.SaTokenLoginView {
+  fun loginByAccountAndBase64PasswordOrThrow(account: String, base64Password: String, request: HttpServletRequest): AuthService.AuthTokenView {
     log.trace("loginByAccountAndBase64PasswordOrThrow called, account={}, base64Password=****, remoteAddr={}", account, request.remoteAddr)
     require(account.isNotBlank()) {
       log.debug("loginByAccountAndBase64PasswordOrThrow failed: account is blank")

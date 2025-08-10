@@ -14,6 +14,7 @@ import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -28,19 +29,17 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.testcontainers.junit.jupiter.Testcontainers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import javax.sql.DataSource
 
 @RDBRollback
-@SpringBootTest(
-  properties = [
-    "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration"
-  ]
-)
+@SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(TestWebMvcConfiguration::class)
-class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
+@Testcontainers
+class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
   // 公共扩展函数，自动加 user-agent 和 ip
   fun MockHttpServletRequestBuilder.withCommonHeaders(
     userAgent: String = "tnmaster-test-agent",
@@ -140,7 +139,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
     )
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.account").value("user1"))
-      .andExpect(jsonPath("$.token").exists())
+      .andExpect(jsonPath("$.sessionId").exists())
       .andExpect(jsonPath("$.login").value(true))
   }
 

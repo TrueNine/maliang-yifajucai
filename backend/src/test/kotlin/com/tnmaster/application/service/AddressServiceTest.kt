@@ -7,6 +7,7 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.consts.IDbNames.Rbac
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Nested
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,7 +17,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @SpringBootTest
-class AddressServiceTest : IDatabasePostgresqlContainer {
+class AddressServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var addressService: AddressService

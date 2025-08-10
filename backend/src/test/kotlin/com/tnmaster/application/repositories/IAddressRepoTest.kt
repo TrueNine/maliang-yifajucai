@@ -6,6 +6,7 @@ import com.tnmaster.entities.code
 import com.tnmaster.repositories.IAddressRepo
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import io.github.truenine.composeserver.toId
 import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.kt.ast.expression.ne
@@ -20,7 +21,7 @@ import kotlin.test.*
 @SpringBootTest
 @Transactional
 @RDBRollback
-class IAddressRepoTest : IDatabasePostgresqlContainer {
+class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   private lateinit var addressRepo: IAddressRepo

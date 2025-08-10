@@ -7,7 +7,17 @@ where ctid not in (select min(ctid)
                    from user_role_group
                    group by user_id, role_group_id);
 
--- 添加复合唯一约束
-alter table user_role_group
-  add constraint uk_user_role_group_user_id_role_group_id
-    unique (user_id, role_group_id);
+-- 添加复合唯一约束（如果不存在）
+do $$
+begin
+  if not exists (
+    select 1 
+    from information_schema.table_constraints 
+    where constraint_name = 'uk_user_role_group_user_id_role_group_id' 
+    and table_name = 'user_role_group'
+  ) then
+    alter table user_role_group
+      add constraint uk_user_role_group_user_id_role_group_id
+        unique (user_id, role_group_id);
+  end if;
+end $$;

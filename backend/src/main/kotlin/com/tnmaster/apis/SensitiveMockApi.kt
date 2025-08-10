@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.entities.UserInfo
 import com.tnmaster.entities.phone
 import com.tnmaster.repositories.IUserInfoRepo
@@ -37,7 +37,7 @@ class SensitiveMockApi(private val repo: IUserInfoRepo) {
 
   /** ## 获取一个当前数据库内不存在的随机电话号码 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("global_user_info_unique_phone")
   fun getGlobalNowUserInfoUniquePhone(): String {
     var generatedRandomPhoneNumber = randomGeneratePhone()

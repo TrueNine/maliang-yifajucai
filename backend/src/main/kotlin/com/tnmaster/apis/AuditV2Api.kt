@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.entities.AnonymousCertGroup
 import com.tnmaster.repositories.IAnonymousCertGroupRepo
 import io.github.truenine.composeserver.Pq
@@ -30,7 +30,7 @@ class AuditV2Api(
    * @return 包含匿名证件组的分页响应结果
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("anonymous_certs")
   fun getAllAnonymousCerts(@RequestBody pq: Pq? = Pq.DEFAULT_MAX): Pr<AnonymousCertGroup> {
     return repo.findAll(pq.toPageable()).toPr()

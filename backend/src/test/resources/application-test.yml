@@ -1,6 +1,6 @@
 app:
   interceptors:
-    sa-token-admin:
+    casbin-admin:
       enabled: false
 
 compose:
@@ -13,10 +13,29 @@ compose:
         enable-auto-refresh: false
 
 spring:
-  autoconfigure:
-    exclude:
-      - io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: true
+    baseline-version: 3000
+    baseline-on-migrate: true
+    out-of-order: true
+  data:
+    redis:
+      repositories:
+        enabled: false
+  test:
+    database:
+      replace: none
+
+jimmer:
+  show-sql: false
+  pretty-sql: false
+  inline-sql-variables: false
+  dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
 
 logging:
   level:
     com.tnmaster: DEBUG
+    org.springframework.test: DEBUG
+    org.testcontainers: DEBUG

@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.entities.JobSeekerDisNominalTaxVideo
 import com.tnmaster.repositories.IJobSeekerDisNominalTaxVideoRepo
 import io.github.truenine.composeserver.RefId
@@ -27,7 +27,7 @@ class TaxVideoV2Api(private val repo: IJobSeekerDisNominalTaxVideoRepo) {
    * @param auditStatus 审核状态
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PatchMapping("admin/auditStatus/{id}")
   fun patchAuditStatusById(@PathVariable id: RefId, @RequestParam auditStatus: AuditTyping, @ApiIgnore auth: AuthRequestInfo): JobSeekerDisNominalTaxVideo {
     return repo.update(

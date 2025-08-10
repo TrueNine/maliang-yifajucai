@@ -1,10 +1,8 @@
 package com.tnmaster.interceptors
 
-import cn.dev33.satoken.`fun`.SaParamFunction
-import cn.dev33.satoken.interceptor.SaInterceptor
-import cn.dev33.satoken.stp.StpUtil
 import com.tnmaster.holders.UserInfoContextHolder
-import io.github.truenine.composeserver.RefId
+import com.tnmaster.security.UserContextHolder
+import com.tnmaster.service.AuthService
 import io.github.truenine.composeserver.depend.servlet.deviceId
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.domain.AuthRequestInfo
@@ -17,35 +15,31 @@ import org.springframework.web.servlet.HandlerInterceptor
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-private val log = slf4j<SaTokenToUserInfoHolderInterceptor>()
+private val log = slf4j<UserInfoHolderInterceptor>()
 
 @Configuration
-class SaTokenToUserInfoHolderInterceptor : WebMvcConfigurer {
+class UserInfoHolderInterceptor(private val authService: AuthService) : WebMvcConfigurer {
   init {
-    log.trace("register sa token interceptor")
+    log.trace("register user info holder interceptor")
   }
 
-  class InternalInterceptor(private val saTokenInterceptorHandler: SaInterceptor = SaInterceptor(), authFunction: SaParamFunction<Any?>) :
-    HandlerInterceptor by saTokenInterceptorHandler {
-    init {
-      saTokenInterceptorHandler.setAuth(authFunction)
-    }
+  inner class InternalInterceptor : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
       val authInfo = try {
-        if (StpUtil.isLogin()) {
-          val account = StpUtil.getSession()["login_account"] as? String
-          val enabled = StpUtil.isDisable(account)
+        // 从 UserContextHolder 获取当前用户信息
+        val currentUser = UserContextHolder.getCurrentUser()
+        if (currentUser != null) {
           AuthRequestInfo(
-            account = account!!,
-            loginIpAddr = StpUtil.getSession()["login_remote_request_ip"] as? String,
-            roles = StpUtil.getRoleList(),
-            permissions = StpUtil.getPermissionList(),
-            enabled = enabled,
-            nonLocked = !enabled,
-            nonExpired = StpUtil.getTokenTimeout() <= 0,
-            userId = StpUtil.getSession()["login_user_id"] as RefId,
-            deviceId = request.deviceId,
+            account = currentUser.account,
+            loginIpAddr = currentUser.loginIpAddr,
+            roles = currentUser.roles.toList(),
+            permissions = currentUser.permissions.toList(),
+            enabled = currentUser.enabled,
+            nonLocked = currentUser.enabled,
+            nonExpired = currentUser.nonExpired,
+            userId = currentUser.userId,
+            deviceId = currentUser.deviceId,
             currentIpAddr = request.remoteRequestIp,
           )
         } else {
@@ -55,8 +49,9 @@ class SaTokenToUserInfoHolderInterceptor : WebMvcConfigurer {
         log.error("get auth info error", ex)
         null
       }
+      
       UserInfoContextHolder.set(authInfo)
-      return saTokenInterceptorHandler.preHandle(request, response, handler)
+      return true
     }
 
     override fun afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: Any, ex: Exception?) {
@@ -66,8 +61,8 @@ class SaTokenToUserInfoHolderInterceptor : WebMvcConfigurer {
 
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry
-      .addInterceptor(InternalInterceptor {})
-      .order(Ordered.HIGHEST_PRECEDENCE)
+      .addInterceptor(InternalInterceptor())
+      .order(Ordered.HIGHEST_PRECEDENCE + 1) // 在认证拦截器之后执行
       .addPathPatterns("/**")
       .excludePathPatterns("/v1/user/wxpa/login/**", "/v2/auth/login/**", "/v2/auth/logout/**")
   }

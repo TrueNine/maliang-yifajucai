@@ -27,7 +27,7 @@ import kotlin.test.assertNull
 
 @SpringBootTest
 @RDBRollback
-class AttachmentServiceTest : IDatabasePostgresqlContainer {
+class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Resource
   private lateinit var attachmentService: AttachmentService
 

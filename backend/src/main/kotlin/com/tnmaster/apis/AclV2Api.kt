@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.api.ApiAdminDto
 import com.tnmaster.dto.api.ApiAdminSpec
 import com.tnmaster.dto.api.ApiPatchPermissionsDto
@@ -71,7 +71,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @Api
 @RestController
-@SaCheckPermission("ADMIN")
+@RequirePermission("ADMIN")
 @RequestMapping("v2/acl")
 class AclV2Api(
   private val apiRepo: IApiRepo,
@@ -174,7 +174,7 @@ class AclV2Api(
 
   /** ## 创建角色组 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PostMapping("role_group")
   fun postRoleGroupAsAdmin(@RequestBody dto: RoleGroupPostDto): RoleGroup {
     return roleGroupRepo.save(dto, SaveMode.INSERT_ONLY, AssociatedSaveMode.REPLACE)
@@ -203,7 +203,7 @@ class AclV2Api(
 
   /** ## 根据 id 删除角色组 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @DeleteMapping("role_group")
   fun deleteRoleGroupByIdAsAdmin(@RequestParam id: RefId) {
     roleGroupRepo.deleteById(id)
@@ -211,7 +211,7 @@ class AclV2Api(
 
   /** ## 根据 id 删除权限 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @DeleteMapping("permissions")
   fun deletePermissionsByIdAsAdmin(@RequestParam id: RefId) {
     permissionsRepo.deleteById(id)
@@ -223,7 +223,7 @@ class AclV2Api(
    * @param spec 查询参数
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("menus")
   fun getMenus(spec: MenuAdminSpec): IPage<Menu> {
     return menuRepo.sql
@@ -237,7 +237,7 @@ class AclV2Api(
 
   /** ## 获取所有角色 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("roles")
   fun getRolesAsAdmin(spec: RoleAdminSpec): IPage<Role> {
     return roleRepo.sql
@@ -312,7 +312,7 @@ class AclV2Api(
    * @param dto 角色信息
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PostMapping("role")
   fun postRoleAsAdmin(@RequestBody dto: RolePostDto): Role {
     return roleRepo.saveCommand(dto).execute().modifiedEntity
@@ -324,7 +324,7 @@ class AclV2Api(
    * @param dto 更新的角色信息
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PutMapping("role")
   fun putRoleAsAdmin(@RequestBody dto: RolePutDto): Role {
     return roleRepo.saveCommand(dto, SaveMode.UPDATE_ONLY).execute().modifiedEntity
@@ -332,7 +332,7 @@ class AclV2Api(
 
   /** ## 更新角色组信息 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PutMapping("role_group")
   fun putRoleGroupAsAdmin(@RequestBody dto: RoleGroupPutDto): RoleGroup {
     return roleGroupRepo.saveCommand(dto) {}.execute().modifiedEntity

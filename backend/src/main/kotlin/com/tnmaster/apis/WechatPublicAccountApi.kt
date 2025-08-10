@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaIgnore
+import com.tnmaster.security.annotations.IgnoreAuth
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaSignature
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
 import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService
@@ -22,7 +22,7 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
    * @param code 获取用户信息的 code
    */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @GetMapping("user_info")
   fun getUserInfoByCode(@RequestParam code: String): WxpaUserInfo? {
     return wxpaService.getUserInfoByAuthCode(code)
@@ -30,7 +30,7 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
 
   /** ## 微信消息验证接口 */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @GetMapping("")
   fun verifyBasicConfig(
     @RequestParam signature: String,
@@ -44,7 +44,7 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
 
   /** ## 获取Token状态信息 */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @GetMapping("token_status")
   fun getTokenStatus(): Map<String, String> {
     val status = wxpaService.getTokenStatus()
@@ -53,7 +53,7 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
 
   /** ## 强制刷新所有Token */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @GetMapping("refresh_tokens")
   fun refreshTokens(): String {
     wxpaService.forceRefreshTokens()
@@ -62,7 +62,7 @@ class WechatPublicAccountApi(private val wxpaService: WxpaService) {
 
   /** ## 对当前 url 进行签名 */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @GetMapping("js_api_signature")
   fun getJsApiUrlSignature(@RequestParam url: String, @RequestParam(required = false) nonceString: String?): WxpaSignature? {
     return wxpaService.generateJsapiSignature(url, nonceString)

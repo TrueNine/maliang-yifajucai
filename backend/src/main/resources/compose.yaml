@@ -20,17 +20,12 @@ services:
     restart: unless-stopped
     networks:
       - maliang-network
-    env_file:
-      - ../../../../.env
   redis:
     image: redis:7-alpine
     container_name: maliang-redis
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-redis123}
-    command:
-      - redis-server
-      - -requirepass redis123
-      - -appendonly yes
+    command: ["redis-server", "--requirepass", "redis123", "--appendonly", "yes"]
     ports:
       - "${REDIS_PORT:-6379}:6379"
     healthcheck:
@@ -42,8 +37,6 @@ services:
     restart: unless-stopped
     networks:
       - maliang-network
-    env_file:
-      - ../../../../.env
 
   minio:
     image: minio/minio:latest
@@ -65,8 +58,6 @@ services:
     restart: unless-stopped
     networks:
       - maliang-network
-    env_file:
-      - ../../../../.env
 
 networks:
   maliang-network:

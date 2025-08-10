@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckLogin
+import com.tnmaster.security.annotations.RequireLogin
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.service.UserAccountService
 import io.github.truenine.composeserver.domain.AuthRequestInfo
@@ -37,7 +37,7 @@ class AccountApi(
    * @return 更新后的用户账户信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PatchMapping("me/nick_name")
   fun patchNickNameAsMe(@RequestParam newNickName: String, @ApiIgnore authInfo: AuthRequestInfo): UserAccount {
     // 通过认证信息获取用户ID，并调用服务层更新昵称

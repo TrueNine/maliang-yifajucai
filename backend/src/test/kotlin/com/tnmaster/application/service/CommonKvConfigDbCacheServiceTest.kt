@@ -4,6 +4,7 @@ import com.tnmaster.repositories.ICommonKvConfigDbCacheRepo
 import com.tnmaster.service.CommonKvConfigDbCacheService
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -13,7 +14,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @SpringBootTest
-class CommonKvConfigDbCacheServiceTest : IDatabasePostgresqlContainer {
+class CommonKvConfigDbCacheServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var cacheService: CommonKvConfigDbCacheService

@@ -1,7 +1,7 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckLogin
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequireLogin
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.cert.CertAdminCertifiedUserInfoSpec
 import com.tnmaster.dto.userinfo.UserInfoAdminCertifiedView
 import com.tnmaster.dto.userinfo.UserInfoAdminPostDto
@@ -63,7 +63,7 @@ class UserInfoV2Api(
    * @return 当前用户的残疾信息，如果不存在则返回null
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/dis_info")
   fun getDisInfoAsMe(@ApiIgnore authInfo: AuthRequestInfo): DisInfo? {
     return userInfoRepo.findFirstDisInfoByUserAccountId(userAccountId = authInfo.userId)
@@ -79,7 +79,7 @@ class UserInfoV2Api(
    * @return 认证用户信息的视图，如果未找到则返回 `null`
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("certified_user_info")
   fun getCertifiedUserInfoViewAsAdmin(spec: CertAdminCertifiedUserInfoSpec): UserInfoAdminCertifiedView? {
     return userAccountService.fetchUserInfoCertifyViewByUserAccountId(spec)
@@ -95,7 +95,7 @@ class UserInfoV2Api(
    * @return 返回用户实名认证状态（true：已认证，false：未认证）
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/citizen_verified")
   fun getCitizenVerified(@ApiIgnore authInfo: AuthRequestInfo): Boolean {
     return userAccountService.fetchUserInfoIsCitizenVerifiedByUserAccountId(authInfo.userId)
@@ -108,7 +108,7 @@ class UserInfoV2Api(
    * @return 修改后的用户信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PutMapping("me")
   fun putUserInfoAsMe(@RequestBody modifyUserInfo: UserInfoPutDto, @ApiIgnore auth: AuthRequestInfo): UserInfo {
     val infoId = userInfoRepo.findFirstByUserAccountIdOrNull(auth.userId, newFetcher(UserInfo::class).by {})?.id
@@ -123,7 +123,7 @@ class UserInfoV2Api(
    * @return 当前登录用户信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me")
   fun getUserInfoAsMe(@ApiIgnore authInfo: AuthRequestInfo): UserInfoMemberView? {
     return authInfo.userId.let { userAccountId ->
@@ -141,7 +141,7 @@ class UserInfoV2Api(
    * @return 保存后的用户信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("/")
   fun postUserInfoAsAdmin(
     @RequestBody dto: UserInfoAdminPostDto,
@@ -160,7 +160,7 @@ class UserInfoV2Api(
    * @return 返回用户信息视图，类型为UserInfoAdminView?，如果用户ID为空或未找到对应信息，则返回null
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("id/{id}")
   fun getUserInfoByIdAsAdmin(@PathVariable id: RefId): UserInfoAdminView? {
     return userInfoRepo.viewer(UserInfoAdminView::class).findNullable(id)
@@ -176,8 +176,8 @@ class UserInfoV2Api(
    * @return 用户信息表单数据，若不存在则返回 `null`
    */
   @Api
-  @SaCheckLogin
-  @SaCheckPermission("ADMIN")
+  @RequireLogin
+  @RequirePermission("ADMIN")
   @GetMapping("form")
   fun getUserInfoPutFormAsAdmin(spec: UserInfoAdminSpec): UserInfoAdminPostDto? {
     return userInfoRepo.findFirstBySpec(spec, fetcher = UserInfoAdminPostDto::class.toFetcher())?.let { UserInfoAdminPostDto(it) }
@@ -193,7 +193,7 @@ class UserInfoV2Api(
    * @return 保存后的用户信息
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PutMapping("/")
   fun putUserInfoAsAdmin(
     @RequestBody dto: UserInfoAdminPutDto,
@@ -212,7 +212,7 @@ class UserInfoV2Api(
    * @return 当前用户的个人信息表单数据，如果用户不存在则返回null
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/form")
   fun getUserInfoPutDtoAsMe(@ApiIgnore authInfo: AuthRequestInfo): UserInfo? {
     return userAccountService.fetchPutDtoByUserAccountId(authInfo.userId)
@@ -228,7 +228,7 @@ class UserInfoV2Api(
    * @return 分页后的用户信息列表
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("user_infos")
   fun getUserInfosAsAdmin(spec: UserInfoAdminSpec): IPage<UserInfoAdminView> {
     return userAccountService.fetchUserInfosAsAdmin(spec)
@@ -244,7 +244,7 @@ class UserInfoV2Api(
    * @return 返回用户信息视图，类型为UserInfoAdminView?，如果用户信息ID为空或未找到对应信息，则返回null
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("user_info_details")
   fun getUserInfoDetailsByUserInfoIdAsAdmin(@RequestParam userInfoId: RefId?): UserInfoAdminView? {
     if (userInfoId == null) return null
@@ -261,7 +261,7 @@ class UserInfoV2Api(
    * @return 省份和用户数量
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("province_user_info_count")
   fun getUserCountByProvinceAsAdmin(spec: UserInfoAdminSpec): Map<String, Long> {
     return userInfoRepo.sql.createQuery(UserInfo::class) {

@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import io.github.truenine.composeserver.data.extract.service.IMinoritiesService
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.generator.IOrderCodeGenerator
@@ -41,7 +41,7 @@ class CommonApi(
 
   /** ## AES解密 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("ass_decrypt")
   fun aseDecrypt(@RequestParam ciphertext: String): String {
     return CryptographicOperations.decryptByAesKey(keyRepo.basicAesKey()!!, ciphertext)!!
@@ -49,7 +49,7 @@ class CommonApi(
 
   /** ## AES加密 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("ase_encrypt")
   fun aseEncrypt(@RequestParam plaintext: String): String {
     return CryptographicOperations.encryptByAesKey(keyRepo.basicAesKey()!!, plaintext)!!
@@ -64,7 +64,7 @@ class CommonApi(
 
   /** ## 雪花算法id */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("server_snowflake_id")
   fun getServerSnowflakeId(): String {
     return snowflakeIdGenerator.nextString()
@@ -72,7 +72,7 @@ class CommonApi(
 
   /** ## 获取一个业务单号 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("business_order_code")
   fun getBusinessOrderCode(): String {
     return bizCode.nextString()
@@ -90,7 +90,7 @@ class CommonApi(
    * > 这通常用于测试目的
    */
   @Api
-  @SaCheckPermission("ROOT")
+  @RequirePermission("ROOT")
   @GetMapping("server_throwable")
   fun getServerThrowable() {
     throw RuntimeException("服务器异常")

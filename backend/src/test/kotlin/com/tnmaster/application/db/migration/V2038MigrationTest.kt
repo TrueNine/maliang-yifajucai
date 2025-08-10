@@ -1,6 +1,7 @@
 package com.tnmaster.application.db.migration
 
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -10,7 +11,7 @@ import org.springframework.jdbc.core.ResultSetExtractor
 import kotlin.test.assertEquals
 
 @SpringBootTest
-class V2038MigrationTest : IDatabasePostgresqlContainer {
+class V2038MigrationTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var jdbcTemplate: JdbcTemplate

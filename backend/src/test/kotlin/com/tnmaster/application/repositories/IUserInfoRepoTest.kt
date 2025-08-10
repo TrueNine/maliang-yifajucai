@@ -8,6 +8,7 @@ import com.tnmaster.repositories.IUserInfoRepo
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.ast.LikeMode
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -22,7 +23,7 @@ import kotlin.test.assertTrue
 
 @RDBRollback
 @SpringBootTest
-class IUserInfoRepoTest : IDatabasePostgresqlContainer {
+class IUserInfoRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Resource
   lateinit var userInfoRepo: IUserInfoRepo
 

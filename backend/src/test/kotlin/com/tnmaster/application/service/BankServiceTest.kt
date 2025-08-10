@@ -6,6 +6,7 @@ import com.tnmaster.service.BankService
 import io.github.truenine.composeserver.enums.ISO4217
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,7 +16,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest
 @RDBRollback
-class BankServiceTest : IDatabasePostgresqlContainer {
+class BankServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var bankService: BankService

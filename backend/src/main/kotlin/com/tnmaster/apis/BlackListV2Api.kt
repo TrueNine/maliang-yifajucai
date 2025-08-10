@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.blacklist.BlackListAdminPostDto
 import com.tnmaster.dto.blacklist.BlackListAdminView
 import com.tnmaster.dto.blacklist.BlackListEventDocSpec
@@ -72,7 +72,7 @@ class BlackListV2Api(
    * @return 返回创建后的黑名单实体
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PostMapping("admin")
   fun postBlackListAsAdmin(@RequestBody dto: BlackListAdminPostDto, @ApiIgnore auth: AuthRequestInfo): BlackList {
     return blackListService.postBlackList(
@@ -89,7 +89,7 @@ class BlackListV2Api(
    * @return 包含黑名单管理员视图的分页结果 `Pr<BlackListAdminView>`
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("admin")
   fun getBlackListsAsAdmin(pq: Pq = Pq.DEFAULT_MAX): Pr<BlackListAdminView> {
     return blackListRepo.findAllBySpec(
@@ -123,7 +123,7 @@ class BlackListV2Api(
    * @return 更新后的黑名单实体对象，如果更新失败则返回null
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PatchMapping("audit_status/{id}")
   fun patchAuditStatusByIdAsAdmin(@PathVariable id: RefId, @RequestParam auditStatus: AuditTyping): BlackList? {
     return blackListRepo.update(

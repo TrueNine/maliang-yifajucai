@@ -20,8 +20,10 @@ compose:
 spring:
   docker:
     compose:
-      enabled: false
+      enabled: true
       file: classpath:compose.yaml
+      lifecycle-management: start_and_stop
+      startup: auto
   data:
     redis:
       password: redis123
@@ -53,10 +55,11 @@ jimmer:
             eliminated by server-side developers
           version: 1.0
   dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
-sa-token:
-  is-log: true
-  is-color-log: true
-  log-level: TRACE
+# 应用配置
+app:
+  interceptors:
+    casbin-admin:
+      enabled: true
 logging:
   config: classpath:logback-dev.xml
   level:

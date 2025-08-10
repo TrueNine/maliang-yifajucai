@@ -47,8 +47,11 @@ dependencies {
   implementation(platform(cs.org.springframework.cloud.spring.cloud.dependencies))
   implementation(platform(cs.org.springframework.modulith.spring.modulith.bom))
 
-  implementation(cs.cn.dev33.sa.token.spring.boot3.starter)
-  implementation(cs.cn.dev33.sa.token.redis.jackson)
+  // Casbin 权限控制
+  implementation("org.casbin:jcasbin:1.55.0")
+  implementation("org.casbin:casbin-spring-boot-starter:1.4.0")
+  
+
 
   implementation(cs.org.springframework.boot.spring.boot.starter.data.redis)
   implementation(cs.org.jetbrains.kotlinx.kotlinx.coroutines.core)

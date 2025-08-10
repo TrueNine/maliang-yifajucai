@@ -1,6 +1,6 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckLogin
+import com.tnmaster.security.annotations.RequireLogin
 import com.tnmaster.dto.jobseeker.JobSeekerAdminSpec
 import com.tnmaster.entities.JobSeeker
 import com.tnmaster.entities.by
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 class JobSeekerV2Api(private val jobSeekerRepo: IJobSeekerRepo) {
   /** 后台筛选求职者 */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("admin")
   fun getAdminJobSeekerList(spec: JobSeekerAdminSpec): List<@FetchBy("ADMIN_JOB_SEEKER") JobSeeker> {
     return jobSeekerRepo.sql

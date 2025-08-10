@@ -1,7 +1,7 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckLogin
-import cn.dev33.satoken.annotation.SaCheckPermission
+import com.tnmaster.security.annotations.RequireLogin
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.bankcard.BankCardDto
 import com.tnmaster.dto.bankcard.BankCardView
 import com.tnmaster.dto.cert.CertAdminPostDto
@@ -58,7 +58,7 @@ class CertV2Api(
    * 对现有的证件序列标记，进行压缩收紧处理
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PatchMapping("compress_cert_marker")
   fun patchCertTypingMarkersAsAdmin(
     @RequestParam userInfoId: RefId?,
@@ -78,7 +78,7 @@ class CertV2Api(
    * @return 返回保存后的证件实体列表，类型为 `List<Cert>`
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PatchMapping("audit_statuses")
   fun patchCertsAuditStatusesAsAdmin(@ApiIgnore authInfo: AuthRequestInfo, @RequestBody auditList: List<CertAdminPutAuditStatusDto>): List<Cert> {
     return certService.persistAuditStatus(auditList)
@@ -95,7 +95,7 @@ class CertV2Api(
    * 注意：调用此接口时，必须提供用户信息 ID 或用户账户 ID，否则将抛出异常
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("not_audit_certs")
   fun getNotAuditCertsAsAdmin(spec: CertAdminSpec): IPage<CertView> {
     require(!spec.hasUserInfoIds.isNullOrEmpty() || !spec.hasUserAccountIds.isNullOrEmpty()) { "用户 id 或 信息 id 不能为空" }
@@ -116,7 +116,7 @@ class CertV2Api(
    * @return 返回银行实体列表
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("banks")
   fun getBanks(): List<Bank> {
     return bankService.fetchAllBanks()
@@ -134,7 +134,7 @@ class CertV2Api(
    * @since yyyy-MM-dd
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @DeleteMapping("me/bank_card_attachment")
   fun deleteBankCardAttachmentAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -153,7 +153,7 @@ class CertV2Api(
    * @return 以证件类型ID为key，未审核数量为value的映射表
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("not_audit_cert_counts")
   fun getNotAuditCertCounts(spec: CertAdminSpec): Map<RefId, Long> {
     return certService.fetchNotAuditCounts(spec)
@@ -168,7 +168,7 @@ class CertV2Api(
    * @return 返回一个[BankCardView]对象列表，每个对象代表用户的一张银行卡信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/bank_card_attachment")
   fun getBankCardsAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -193,7 +193,7 @@ class CertV2Api(
    * @throws IllegalArgumentException 当必填参数为空时抛出
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("me/bank_card_attachment")
   fun postBankCardAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -233,7 +233,7 @@ class CertV2Api(
    * @since yyyy-MM-dd
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("me/household_card_attachment")
   fun postHouseholdCardAttachmentAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -263,7 +263,7 @@ class CertV2Api(
    * @return 户口本附件视图列表，包含附件的基本信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/household_card_attachment")
   fun getHouseHoldCardAttachmentAsMe(@ApiIgnore authInfo: AuthRequestInfo): List<CertView> {
     return certService.fetchHouseholdCardCertByUserAccountIdOrUserInfoId(authInfo.userId, visible = true)
@@ -276,14 +276,14 @@ class CertV2Api(
    * 本接口用于用户删除已上传的第二身份证附件信息，操作后附件将从系统中**永久删除**。
    *
    * 安全要求：
-   * - 需用户登录态（通过`@SaCheckLogin`实现）
+   * - 需用户登录态（通过`@RequireLogin`实现）
    * - 仅允许操作本人证件信息
    *
    * @param authInfo 请求认证信息（通过拦截器自动注入） 包含当前登录用户的`userId`
    * @return 通用空响应体 `Response<Unit>`
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @DeleteMapping("me/id_card_2_attachment")
   fun deleteIdCard2AttachmentAsMe(@ApiIgnore authInfo: AuthRequestInfo) {
     certService.deleteIdCard2Attachment(authInfo.userId, visible = false)
@@ -295,7 +295,7 @@ class CertV2Api(
    * @return 身份证附件集合，最多两张
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/id_card_2_attachment")
   fun getIdCard2AttachmentAsMe(@ApiIgnore authInfo: AuthRequestInfo): List<CertView> {
     return certService.fetchIdCard2CertByUserAccountIdOrUserInfoId(authInfo.userId, visible = true)
@@ -316,7 +316,7 @@ class CertV2Api(
    * @return 返回一个包含上传成功的身份证视图对象列表。
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("me/id_card_2_attachment")
   fun postIdCard2CertAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -353,7 +353,7 @@ class CertV2Api(
    * @see CertService.deleteTitleImageByUserAccountIdOrUserInfoId
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @DeleteMapping("me/title_image_attachment")
   fun deleteTitleImageCertAsMe(@ApiIgnore authInfo: AuthRequestInfo) {
     certService.deleteTitleImageByUserAccountIdOrUserInfoId(authInfo.userId, visible = false)
@@ -368,7 +368,7 @@ class CertV2Api(
    * @return 认证视图列表，包含标题图片附件信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/title_image_attachment")
   fun getTitleImageCertAsMe(@ApiIgnore authInfo: AuthRequestInfo): List<CertView> {
     return certService.fetchTitleImageByUserAccountIdOrUserInfoId(authInfo.userId, visible = true)
@@ -376,7 +376,7 @@ class CertV2Api(
 
   /** ## 上传自身寸照 */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("me/title_image_attachment")
   fun postTitleImageCertAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -398,7 +398,7 @@ class CertV2Api(
 
   /** ## 获取自身残疾证信息 */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/dis_card_2_attachment")
   fun getDisCard2AttachmentAsMe(@ApiIgnore authInfo: AuthRequestInfo): List<CertView> {
     return certService.fetchDisCard2CertByUserAccountIdOrUserInfoId(authInfo.userId, visible = true)
@@ -411,7 +411,7 @@ class CertV2Api(
    * @param tail 残疾证反面
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("me/dis_card_2_attachment")
   fun postDisCard2AttachmentAsMe(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -445,7 +445,7 @@ class CertV2Api(
    * @param authInfo 认证信息
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @DeleteMapping("me/household_card_attachment")
   fun deleteHouseholdAttachmentByUserAccountId(@ApiIgnore authInfo: AuthRequestInfo) {
     certService.deleteHouseholdAttachmentByUserAccountId(authInfo.userId, visible = false)
@@ -462,7 +462,7 @@ class CertV2Api(
    *     - 通过`@ApiIgnore`注解避免在API文档中显示
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @DeleteMapping("me/dis_card_2_attachment")
   fun deleteDisCard2AttachmentAsMe(@ApiIgnore authInfo: AuthRequestInfo) {
     certService.deleteDisCard2AttachmentByUserAccountId(authInfo.userId, visible = false)
@@ -475,7 +475,7 @@ class CertV2Api(
    * @return 水印证件文件集合 id to 水印证件文件
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("watermark_attachments_id_map")
   fun getWatermarkAttachmentsGroupByIds(@RequestParam ids: List<RefId>): Map<RefId, Cert> {
     return certService.fetchWaterMarkerAttachmentGroupById(ids)
@@ -491,7 +491,7 @@ class CertV2Api(
    * @return 水印证件文件集合
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("user_info_watermark_certs")
   fun getUserInfoWatermarkCerts(
     @RequestParam userInfoId: RefId,
@@ -511,7 +511,7 @@ class CertV2Api(
    * @return 返回上传成功的证件信息列表
    */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @PostMapping("batch_certs")
   fun postCertsAsAdmin(
     @RequestPart certs: List<CertAdminPostDto>,

@@ -7,6 +7,7 @@ import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.RelationItemTyping
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 
 import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
@@ -19,7 +20,7 @@ import kotlin.test.assertTrue
 
 @SpringBootTest
 @RDBRollback
-class UserInfoTest : IDatabasePostgresqlContainer {
+class UserInfoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Resource
   lateinit var userInfoRepo: IUserInfoRepo
 

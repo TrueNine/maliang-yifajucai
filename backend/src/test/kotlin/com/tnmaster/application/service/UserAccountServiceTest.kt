@@ -16,6 +16,7 @@ import com.tnmaster.service.UserAccountService
 import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.testtoolkit.RDBRollback
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import org.babyfish.jimmer.sql.kt.ast.expression.eq
 import org.junit.jupiter.api.Nested
@@ -30,7 +31,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @SpringBootTest
-class UserAccountServiceTest : IDatabasePostgresqlContainer {
+class UserAccountServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Resource
   lateinit var userAccountService: UserAccountService
@@ -69,7 +70,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
   inner class AssignSystemAccountFunctionGroup {
 
     @Resource
-    lateinit var authService: UserAuthService
+    lateinit var userAuthService: UserAuthService
 
     @Test
     @RDBRollback
@@ -81,7 +82,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
       )
 
       // When
-      val result = authService.assignSystemAccount(baseUserInfo = userInfo)
+      val result = userAuthService.assignSystemAccount(baseUserInfo = userInfo)
 
       // Then
       assertEquals("赵", result.firstName)
@@ -94,7 +95,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
   inner class PostBankCardAttachmentFunctionGroup {
 
     @Resource
-    lateinit var authService: UserAuthService
+    lateinit var userAuthService: UserAuthService
 
     @Resource
     lateinit var certRepo: ICertRepo
@@ -108,7 +109,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
         firstName = "张",
         lastName = "三"
       )
-      val createdUser = authService.assignSystemAccount(baseUserInfo = userInfo)
+      val createdUser = userAuthService.assignSystemAccount(baseUserInfo = userInfo)
       val userAccountId = createdUser.userAccountId!!
 
       val bankCard = BankCard {
@@ -156,7 +157,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
   inner class FetchUserInfosAsAdminFunctionGroup {
 
     @Resource
-    lateinit var authService: UserAuthService
+    lateinit var userAuthService: UserAuthService
 
     @Resource
     lateinit var userInfoRepo: IUserInfoRepo
@@ -173,7 +174,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer {
         firstName = "赵",
         lastName = "日天"
       )
-      val createdUser = authService.assignSystemAccount(baseUserInfo = userInfo)
+      val createdUser = userAuthService.assignSystemAccount(baseUserInfo = userInfo)
       val userAccountId = createdUser.userAccountId!!
 
       // 添加银行卡附件

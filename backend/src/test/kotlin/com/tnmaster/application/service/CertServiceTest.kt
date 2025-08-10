@@ -36,7 +36,7 @@ import kotlin.test.assertNotNull
 @SpringBootTest
 @Transactional
 @RDBRollback
-class CertServiceTest : IDatabasePostgresqlContainer {
+class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Resource
   private lateinit var userInfoRepo: IUserInfoRepo
 

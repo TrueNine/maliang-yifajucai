@@ -133,4 +133,35 @@ interface IUserAccountRepo : IRepo<UserAccount, RefId> {
       .map { it.roleGroups }
       .flatten()
   }
+
+  /**
+   * 查询所有用户-角色组关系，用于 Casbin 策略加载
+   */
+  fun findAllUserRoleGroups(): List<Pair<String, String>> {
+    return sql
+      .createQuery(UserAccount::class) {
+        select(table.fetchBy { 
+          account()
+          roleGroups { name() } 
+        })
+      }
+      .execute()
+      .flatMap { userAccount ->
+        userAccount.roleGroups.map { roleGroup ->
+          userAccount.account to roleGroup.name
+        }
+      }
+  }
+
+  /**
+   * 更新用户最后登录时间
+   */
+  fun updateLastLoginTimeByAccount(account: String, loginTime: datetime) {
+    sql
+      .createUpdate(UserAccount::class) {
+        where(table.account eq account)
+        set(table.lastLoginTime, loginTime)
+      }
+      .execute()
+  }
 }

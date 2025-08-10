@@ -4,7 +4,7 @@ import com.tnmaster.repositories.IDisInfoRepo
 import com.tnmaster.repositories.IUserAccountRepo
 import com.tnmaster.repositories.IUserInfoRepo
 import com.tnmaster.entities.UserInfo
-import com.tnmaster.service.SaTokenService
+import com.tnmaster.service.AuthService
 import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.psdk.wxpa.model.WxpaUserInfo
 import io.github.truenine.composeserver.psdk.wxpa.service.WxpaService
@@ -27,7 +27,7 @@ class UserAuthServiceWxpaTest {
   private lateinit var userInfoRepo: IUserInfoRepo
   private lateinit var passwordEncoder: PasswordEncoder
   private lateinit var disInfoRepo: IDisInfoRepo
-  private lateinit var saService: SaTokenService
+  private lateinit var authService: AuthService
   private lateinit var wxpaService: WxpaService
   private lateinit var userAuthService: UserAuthService
   private lateinit var mockRequest: HttpServletRequest
@@ -38,7 +38,7 @@ class UserAuthServiceWxpaTest {
     userInfoRepo = mockk()
     passwordEncoder = mockk()
     disInfoRepo = mockk()
-    saService = mockk()
+    authService = mockk()
     wxpaService = mockk()
     mockRequest = mockk()
 
@@ -47,7 +47,7 @@ class UserAuthServiceWxpaTest {
       userInfoRepo,
       passwordEncoder,
       disInfoRepo,
-      saService,
+      authService,
       wxpaService
     )
 
@@ -76,11 +76,12 @@ class UserAuthServiceWxpaTest {
       val existingUserAccount = mockk<com.tnmaster.entities.UserAccount>()
       every { existingUserAccount.account } returns "test_account"
 
-      val expectedLoginView = SaTokenService.SaTokenLoginView(
-        getHeaderName = "Authorization",
-        tokenTimeout = null,
-        activeTimeout = null,
+      val expectedLoginView = AuthService.AuthTokenView(
+        sessionId = "test-session-id",
+        login = true,
+        sessionTimeout = null,
         account = "test_account",
+        userId = 1L,
         roles = emptySet(),
         permissions = emptySet()
       )
@@ -120,11 +121,12 @@ class UserAuthServiceWxpaTest {
       every { newUserInfo.account } returns mockAccount
       every { mockAccount.account } returns "new_account"
 
-      val expectedLoginView = SaTokenService.SaTokenLoginView(
-        getHeaderName = "Authorization",
-        tokenTimeout = null,
-        activeTimeout = null,
+      val expectedLoginView = AuthService.AuthTokenView(
+        sessionId = "test-session-id",
+        login = true,
+        sessionTimeout = null,
         account = "new_account",
+        userId = 1L,
         roles = emptySet(),
         permissions = emptySet()
       )
@@ -179,11 +181,12 @@ class UserAuthServiceWxpaTest {
       every { newUserInfo.account } returns mockAccount
       every { mockAccount.account } returns "new_account"
 
-      val expectedLoginView = SaTokenService.SaTokenLoginView(
-        getHeaderName = "Authorization",
-        tokenTimeout = null,
-        activeTimeout = null,
+      val expectedLoginView = AuthService.AuthTokenView(
+        sessionId = "test-session-id",
+        login = true,
+        sessionTimeout = null,
         account = "new_account",
+        userId = 1L,
         roles = emptySet(),
         permissions = emptySet()
       )

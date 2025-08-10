@@ -1,13 +1,13 @@
 package com.tnmaster.apis
 
-import cn.dev33.satoken.annotation.SaCheckLogin
-import cn.dev33.satoken.annotation.SaCheckPermission
-import cn.dev33.satoken.annotation.SaIgnore
+import com.tnmaster.security.annotations.RequireLogin
+import com.tnmaster.security.annotations.RequirePermission
+import com.tnmaster.security.annotations.IgnoreAuth
 import com.tnmaster.dto.useraccount.UserAccountAdminSpec
 import com.tnmaster.dto.useraccount.UserAccountAdminView
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.repositories.IUserAccountRepo
-import com.tnmaster.service.SaTokenService
+import com.tnmaster.service.AuthService
 import com.tnmaster.service.UserAuthService
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
@@ -58,7 +58,7 @@ class AuthApi(
    * @param newPasswordConfirm 新密码确认
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PatchMapping("me/password")
   fun patchMePassword(
     @ApiIgnore authInfo: AuthRequestInfo,
@@ -90,9 +90,9 @@ class AuthApi(
    * @param code 微信公众号 code
    */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @PostMapping("login/wxpa_fast_login_code")
-  fun loginByWxpaCode(@RequestParam code: String, @ApiIgnore request: HttpServletRequest, @ApiIgnore auth: AuthRequestInfo?): SaTokenService.SaTokenLoginView? {
+  fun loginByWxpaCode(@RequestParam code: String, @ApiIgnore request: HttpServletRequest, @ApiIgnore auth: AuthRequestInfo?): AuthService.AuthTokenView? {
     log.trace("loginByWxpaCode called, code={}, remoteAddr={}, userId={}", code, request.remoteAddr, auth?.userId)
     val result = authService.loginOrRegisteredByWxpaJsApiCodeOrThrow(code, authRequestInfo = auth, request = request)
     log.debug("loginByWxpaCode result, code={}, userId={}, result={}", code, auth?.userId, result != null)
@@ -106,7 +106,7 @@ class AuthApi(
    * @param ids 批量用户 id
    */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("user_accounts/ids")
   fun getUserAccountsByIdsAsAdmin(@RequestParam ids: List<RefId>): List<UserAccount> {
     log.trace("getUserAccountsByIdsAsAdmin called, ids={}", ids)
@@ -117,7 +117,7 @@ class AuthApi(
 
   /** ## 获取当前登录用户信息 */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @GetMapping("me/auth_request_info")
   fun getCurrentUserAccount(@ApiIgnore auth: AuthRequestInfo): UserAccount? {
     log.trace("getCurrentUserAccount called, userId={}", auth.userId)
@@ -136,9 +136,9 @@ class AuthApi(
    * @param dto 账号密码，密码以 base64 编码进行传递
    */
   @Api
-  @SaIgnore
+  @IgnoreAuth
   @PostMapping("login/account")
-  fun loginBySystemAccount(@RequestBody dto: AccountDto, @ApiIgnore request: HttpServletRequest): SaTokenService.SaTokenLoginView {
+  fun loginBySystemAccount(@RequestBody dto: AccountDto, @ApiIgnore request: HttpServletRequest): AuthService.AuthTokenView {
     log.trace("loginBySystemAccount called, account={}, requestIp={}", dto.account, request.remoteAddr)
     checkNotNull(dto.account) {
       log.debug("loginBySystemAccount failed: account is null")
@@ -160,7 +160,7 @@ class AuthApi(
 
   /** ## 当前 session 退出登录 */
   @Api
-  @SaCheckLogin
+  @RequireLogin
   @PostMapping("logout")
   fun logoutByAccount(@ApiIgnore auth: AuthRequestInfo? = null, @ApiIgnore request: HttpServletRequest) {
     log.trace("logoutByAccount called, userId={}, remoteAddr={}", auth?.userId, request.remoteAddr)
@@ -170,7 +170,7 @@ class AuthApi(
 
   /** ## 批量查询账号信息 */
   @Api
-  @SaCheckPermission("ADMIN")
+  @RequirePermission("ADMIN")
   @GetMapping("user_accounts")
   fun getUserAccountsAsAdmin(spec: UserAccountAdminSpec): IPage<UserAccountAdminView> {
     log.trace("getUserAccountsAsAdmin called, spec={}", spec)
