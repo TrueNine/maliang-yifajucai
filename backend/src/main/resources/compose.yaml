@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: maliang-postgres
+    image: postgres:17.5-alpine
     environment:
       POSTGRES_DB: ${PG_DB:-maliang}
       POSTGRES_USER: ${PG_USER:-postgres}
@@ -22,14 +21,13 @@ services:
       - maliang-network
   redis:
     image: redis:7-alpine
-    container_name: maliang-redis
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:-redis123}
     command: ["redis-server", "--requirepass", "redis123", "--appendonly", "yes"]
     ports:
       - "${REDIS_PORT:-6379}:6379"
     healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      test: [ "CMD", "redis-cli", "-a", "redis123", "--raw", "incr", "ping" ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -40,7 +38,6 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: maliang-minio
     environment:
       MINIO_ROOT_USER: ${MINIO_USER:-minio}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:-minio123}
