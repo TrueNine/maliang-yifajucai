@@ -4,9 +4,9 @@ compose:
   psdk:
     wxpa:
       wxpa:
-        verifyToken: ${WXPA_VERIFY_TOKEN}
-        appId: ${WXPA_APP_ID}
-        appSecret: ${WXPA_APP_SECRET}
+        verify-token: ${WXPA_VERIFY_TOKEN}
+        app-id: ${WXPA_APP_ID}
+        app-secret: ${WXPA_APP_SECRET}
   oss:
     provider: minio
     endpoint: ${GLOBAL_DOMAIN}
@@ -23,7 +23,6 @@ spring:
       enabled: true
       file: classpath:compose.yaml
       lifecycle-management: start_and_stop
-      startup: auto
   data:
     redis:
       password: redis123
@@ -63,7 +62,7 @@ app:
 logging:
   config: classpath:logback-dev.xml
   level:
-    root: error
+    root: info
     org.babyfish.jimmer: info
     io.github.truenine: trace
     com.tnmaster: trace
