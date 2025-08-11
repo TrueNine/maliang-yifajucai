@@ -30,7 +30,7 @@ class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContai
   fun `postToCache and scheduled save writes records to DB`() = runBlocking {
     // Given: add two records into cache
     service.postToCache(
-      ApiCallRecord {
+      ApiCallRecord { 
         reqProtocol = "HTTP/1.1"
         reqMethod = "GET"
         reqPath = "/health"
@@ -65,4 +65,3 @@ class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContai
     service.clearCachedRecords()
   }
 }
-
