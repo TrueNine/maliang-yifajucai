@@ -37,7 +37,7 @@
   - Configure datetime serialization formats consistently
   - _Requirements: 2.2, 2.5_
 
-- [-] 7. Implement Redis serialization error handling
+- [ ] 7. Implement Redis serialization error handling
   - Create error handling for UnrecognizedPropertyException cases
   - Implement fallback strategies for InvalidTypeIdException
   - Add logging and monitoring for serialization issues

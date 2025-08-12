@@ -12,6 +12,8 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.tnmaster.config.DatetimeDeserializer
 import com.tnmaster.config.DatetimeSerializer
+import com.tnmaster.config.redis.ErrorHandlingRedisSerializer
+import com.tnmaster.config.redis.RedisSerializationErrorHandler
 import com.tnmaster.entities.ApiCallRecord
 import io.github.truenine.composeserver.datetime
 import org.babyfish.jimmer.jackson.ImmutableModule
@@ -30,6 +32,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
  */
 @TestConfiguration
 class TestRedisConfiguration {
+
+    /**
+     * Redis序列化错误处理器
+     */
+    @Bean
+    fun redisSerializationErrorHandler(): RedisSerializationErrorHandler {
+        return RedisSerializationErrorHandler()
+    }
 
     /**
      * 创建统一的ObjectMapper用于Redis序列化
@@ -90,20 +100,21 @@ class TestRedisConfiguration {
     }
 
     /**
-     * 主要的RedisTemplate配置，使用GenericJackson2JsonRedisSerializer
+     * 主要的RedisTemplate配置，使用带错误处理的Redis序列化器
      * 这个配置将覆盖生产环境的配置，确保测试环境的一致性
      */
     @Bean("redisTemplate")
     @Primary
     fun testRedisTemplate(
         connectionFactory: RedisConnectionFactory,
-        testRedisObjectMapper: ObjectMapper
+        testRedisObjectMapper: ObjectMapper,
+        redisSerializationErrorHandler: RedisSerializationErrorHandler
     ): RedisTemplate<String, Any> {
         return RedisTemplate<String, Any>().apply {
             this.connectionFactory = connectionFactory
             
-            // 使用统一的序列化策略
-            val jsonSerializer = GenericJackson2JsonRedisSerializer(testRedisObjectMapper)
+            // 使用带错误处理的序列化策略
+            val jsonSerializer = ErrorHandlingRedisSerializer(testRedisObjectMapper, redisSerializationErrorHandler)
             
             keySerializer = StringRedisSerializer()
             valueSerializer = jsonSerializer
@@ -116,22 +127,23 @@ class TestRedisConfiguration {
 
     /**
      * 专门用于ApiCallRecord的RedisTemplate
-     * 使用GenericJackson2JsonRedisSerializer以保持与主RedisTemplate的一致性
-     * 这样可以正确处理@class类型信息
+     * 使用带错误处理的Redis序列化器以保持与主RedisTemplate的一致性
+     * 这样可以正确处理@class类型信息和各种序列化异常
      * 使用@Primary确保在测试环境中覆盖生产配置
      */
     @Bean("apiCallRecordRedisTemplate")
     @Primary
     fun testApiCallRecordRedisTemplate(
         connectionFactory: RedisConnectionFactory,
-        testRedisObjectMapper: ObjectMapper
+        testRedisObjectMapper: ObjectMapper,
+        redisSerializationErrorHandler: RedisSerializationErrorHandler
     ): RedisTemplate<String, ApiCallRecord?> {
         return RedisTemplate<String, ApiCallRecord?>().apply {
             this.connectionFactory = connectionFactory
             
-            // 使用GenericJackson2JsonRedisSerializer以保持与主RedisTemplate的一致性
+            // 使用带错误处理的序列化器以保持与主RedisTemplate的一致性
             // 这样可以正确处理@class类型信息，避免序列化/反序列化不匹配的问题
-            val jsonSerializer = GenericJackson2JsonRedisSerializer(testRedisObjectMapper)
+            val jsonSerializer = ErrorHandlingRedisSerializer(testRedisObjectMapper, redisSerializationErrorHandler)
             
             keySerializer = StringRedisSerializer()
             valueSerializer = jsonSerializer
@@ -148,12 +160,13 @@ class TestRedisConfiguration {
     @Bean("stringRedisTemplate")
     fun testStringRedisTemplate(
         connectionFactory: RedisConnectionFactory,
-        testRedisObjectMapper: ObjectMapper
+        testRedisObjectMapper: ObjectMapper,
+        redisSerializationErrorHandler: RedisSerializationErrorHandler
     ): RedisTemplate<String, Any> {
         return RedisTemplate<String, Any>().apply {
             this.connectionFactory = connectionFactory
             
-            val jsonSerializer = GenericJackson2JsonRedisSerializer(testRedisObjectMapper)
+            val jsonSerializer = ErrorHandlingRedisSerializer(testRedisObjectMapper, redisSerializationErrorHandler)
             
             keySerializer = StringRedisSerializer()
             valueSerializer = jsonSerializer
