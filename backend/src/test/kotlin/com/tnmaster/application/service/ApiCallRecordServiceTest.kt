@@ -6,17 +6,23 @@ import com.tnmaster.service.ApiCallRecordService
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
 import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
-import io.github.truenine.composeserver.testtoolkit.testcontainers.IOssMinioContainer
 import jakarta.annotation.Resource
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.TestPropertySource
+import org.springframework.context.annotation.Import
+import com.tnmaster.application.config.TestOssConfiguration
 import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertTrue
 
 @SpringBootTest
-class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
+@TestPropertySource(properties = [
+  "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration"
+])
+@Import(TestOssConfiguration::class)
+class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
 
   @Resource
   lateinit var service: ApiCallRecordService
@@ -27,21 +33,22 @@ class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContai
   @Test
   @Transactional
   @Commit
-  fun `postToCache and scheduled save writes records to DB`() = runBlocking {
+  fun post_to_cache_and_scheduled_save_writes_records_to_db() = runBlocking {
     // Given: add two records into cache
-    service.postToCache(
-      ApiCallRecord { 
-        reqProtocol = "HTTP/1.1"
-        reqMethod = "GET"
-        reqPath = "/health"
-        reqDatetime = datetime.now()
-        respDatetime = datetime.now()
-        respCode = 200
-        deviceCode = "dev1"
-        loginIp = "127.0.0.1"
-        reqIp = "127.0.0.1"
-      }
-    )
+    val record1 = ApiCallRecord {
+      reqProtocol = "HTTP/1.1"
+      reqMethod = "GET"
+      reqPath = "/health"
+      reqDatetime = datetime.now()
+      respDatetime = datetime.now()
+      respCode = 200
+      deviceCode = "dev1"
+      loginIp = "127.0.0.1"
+      reqIp = "127.0.0.1"
+    }
+
+    println("DEBUG: 准备缓存记录1: $record1")
+    service.postToCache(record1)
     service.postToCache(
       ApiCallRecord {
         reqProtocol = "HTTP/1.1"

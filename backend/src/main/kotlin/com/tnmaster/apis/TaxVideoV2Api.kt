@@ -27,7 +27,7 @@ class TaxVideoV2Api(private val repo: IJobSeekerDisNominalTaxVideoRepo) {
    * @param auditStatus 审核状态
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("admin/auditStatus/{id}")
   fun patchAuditStatusById(@PathVariable id: RefId, @RequestParam auditStatus: AuditTyping, @ApiIgnore auth: AuthRequestInfo): JobSeekerDisNominalTaxVideo {
     return repo.update(

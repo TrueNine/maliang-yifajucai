@@ -52,7 +52,7 @@ class UserAuthService(
    * @param jsApiCode 微信公众号 JS API 的 code，用于获取用户信息
    * @param authRequestInfo 认证请求信息，可选参数
    * @param request HTTP 请求对象，用于处理登录相关的请求信息
-   * @return 返回登录后的 `SaTokenLoginView` 对象，如果获取用户信息失败则返回 `null`
+   * @return 返回登录后的 `AuthTokenView` 对象，如果获取用户信息失败则返回 `null`
    * @throws IllegalStateException 如果公众号注册失败，抛出异常
    */
   @ACID

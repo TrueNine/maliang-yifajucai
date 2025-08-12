@@ -30,7 +30,7 @@ class AddressServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `正常情况下应该返回根地址节点`() {
+    fun normal_case_should_return_root_address_node() {
       // When - 调用服务方法
       val result = addressService.fetchRootAddressNode()
 
@@ -46,7 +46,7 @@ class AddressServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `当根节点存在但信息为空时应该返回该节点`() {
+    fun when_root_node_exists_but_info_is_empty_should_return_that_node() {
       // Given - 根节点存在但信息可能为空（这是实际情况）
       // 不需要额外操作，因为数据库中已经存在根节点
 

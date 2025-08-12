@@ -38,7 +38,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `login by account and password should work correctly`() {
+    fun login_by_account_and_password_should_work_correctly() {
       // Given: test account and password
       val testAccount = "test_user"
       val testPassword = "test_password"
@@ -55,7 +55,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `login with empty account should throw exception`() {
+    fun login_with_empty_account_should_throw_exception() {
       // Given: empty account
       val emptyAccount = ""
       val testPassword = "test_password"
@@ -71,7 +71,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `login with empty password should throw exception`() {
+    fun login_with_empty_password_should_throw_exception() {
       // Given: empty password
       val testAccount = "test_user"
       val emptyPassword = ""
@@ -91,7 +91,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `logout should work correctly`() {
+    fun logout_should_work_correctly() {
       // Given: mock auth info
       val request = MockHttpServletRequest().apply {
         addHeader("Device-Id", "test-device-auth")
@@ -110,7 +110,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @RDBRollback
-    fun `fetch current login info should return null when not logged in`() {
+    fun fetch_current_login_info_should_return_null_when_not_logged_in() {
       // When: fetch current login info without being logged in
       val result = userAuthService.fetchCurrentLoginInfo()
       

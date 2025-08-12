@@ -29,7 +29,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.testcontainers.junit.jupiter.Testcontainers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import javax.sql.DataSource
 
@@ -38,7 +37,6 @@ import javax.sql.DataSource
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(TestWebMvcConfiguration::class)
-@Testcontainers
 class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
   // 公共扩展函数，自动加 user-agent 和 ip
   fun MockHttpServletRequestBuilder.withCommonHeaders(
@@ -129,14 +127,16 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMini
 
   @Test
   @ACID
-  fun `loginBySystemAccount_正常登录`() {
+  fun login_by_system_account_normal_login() {
     val dto = AuthApi.AccountDto(account = "user1", password = "cGFzc3dvcmQ=")
-    mockMvc.perform(
+    val result = mockMvc.perform(
       MockMvcRequestBuilders.post("/v2/auth/login/account")
         .withCommonHeaders()
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(dto))
     )
+
+    result
       .andExpect(status().isOk)
       .andExpect(jsonPath("$.account").value("user1"))
       .andExpect(jsonPath("$.sessionId").exists())
@@ -144,7 +144,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMini
   }
 
   @Test
-  fun `loginBySystemAccount 账号为空`() {
+  fun login_by_system_account_account_is_empty() {
     val dto = AuthApi.AccountDto(account = null, password = "cGFzc3dvcmQ=")
     mockMvc.perform(
       MockMvcRequestBuilders.post("/v2/auth/login/account")
@@ -157,7 +157,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMini
   }
 
   @Test
-  fun `loginBySystemAccount 密码为空`() {
+  fun login_by_system_account_password_is_empty() {
     val dto = AuthApi.AccountDto(account = "user1", password = null)
     mockMvc.perform(
       MockMvcRequestBuilders.post("/v2/auth/login/account")
@@ -170,7 +170,7 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMini
   }
 
   @Test
-  fun `loginBySystemAccount service 抛出异常`() {
+  fun login_by_system_account_service_throws_exception() {
     val dto = AuthApi.AccountDto(account = "user1", password = "cGFzc3dvcmQ=")
     mockMvc.perform(
       MockMvcRequestBuilders.post("/v2/auth/login/account")

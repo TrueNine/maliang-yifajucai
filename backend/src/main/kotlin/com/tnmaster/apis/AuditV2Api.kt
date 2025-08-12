@@ -30,7 +30,7 @@ class AuditV2Api(
    * @return 包含匿名证件组的分页响应结果
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("anonymous_certs")
   fun getAllAnonymousCerts(@RequestBody pq: Pq? = Pq.DEFAULT_MAX): Pr<AnonymousCertGroup> {
     return repo.findAll(pq.toPageable()).toPr()

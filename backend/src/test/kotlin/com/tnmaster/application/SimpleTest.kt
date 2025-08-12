@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class SimpleTest {
   @Test
-  fun `简单测试验证编译修复`() {
+  fun simple_test_verify_compilation_fix() {
     assertEquals(1, 1)
   }
 }

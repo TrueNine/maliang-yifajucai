@@ -37,7 +37,7 @@ class SensitiveMockApi(private val repo: IUserInfoRepo) {
 
   /** ## 获取一个当前数据库内不存在的随机电话号码 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("global_user_info_unique_phone")
   fun getGlobalNowUserInfoUniquePhone(): String {
     var generatedRandomPhoneNumber = randomGeneratePhone()

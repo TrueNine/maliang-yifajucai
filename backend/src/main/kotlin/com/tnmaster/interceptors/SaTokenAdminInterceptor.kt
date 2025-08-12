@@ -1,14 +1,14 @@
 package com.tnmaster.interceptors
 
+import com.tnmaster.enums.HttpHeaders
 import com.tnmaster.security.UserContextHolder
 import com.tnmaster.service.AclService
+import com.tnmaster.service.PermissionService
 import com.tnmaster.service.SessionService
-import io.github.truenine.composeserver.consts.IHeaders
 import io.github.truenine.composeserver.consts.IMethods
 import io.github.truenine.composeserver.logger
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.casbin.jcasbin.main.Enforcer
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.HandlerInterceptor
@@ -21,7 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class CasbinAdminInterceptor(
   private val aclService: AclService,
   private val sessionService: SessionService,
-  private val enforcer: Enforcer,
+  private val permissionService: PermissionService,
 ) : WebMvcConfigurer {
   companion object {
     private val log = logger<CasbinAdminInterceptor>()
@@ -39,7 +39,8 @@ class CasbinAdminInterceptor(
 
         log.debug("处理请求: {} {}", requestMethod, requestPath)
 
-        val sessionId = request.getHeader(IHeaders.AUTHORIZATION)
+        // 使用统一的HTTP头获取session ID
+        val sessionId = request.getHeader(HttpHeaders.AUTHORIZATION)
         if (sessionId.isNullOrBlank()) {
           // 检查是否需要登录
           if (requiresAuthentication(requestPath, requestMethod)) {
@@ -125,8 +126,8 @@ class CasbinAdminInterceptor(
         return true
       }
 
-      // 使用 Casbin 检查权限
-      return enforcer.enforce(account, permissionName, "allow")
+      // 使用权限服务检查权限
+      return permissionService.checkPermission(account, path, method)
     }
 
     /**

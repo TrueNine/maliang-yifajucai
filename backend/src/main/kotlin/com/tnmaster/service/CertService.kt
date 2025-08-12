@@ -48,7 +48,7 @@ class CertService(
   private val oss: ObjectStorageService,
   private val bankCardRepo: IBankCardRepo,
   private val attService: AttachmentService,
-  @Qualifier("bizCode") private val bizCoder: IOrderCodeGenerator,
+  @param:Qualifier("bizCode") private val bizCoder: IOrderCodeGenerator,
 ) {
 
   /**

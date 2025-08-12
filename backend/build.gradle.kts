@@ -48,9 +48,11 @@ dependencies {
   implementation(platform(cs.org.springframework.modulith.spring.modulith.bom))
 
   // Casbin 权限控制
-  implementation("org.casbin:jcasbin:1.55.0")
-  implementation("org.casbin:casbin-spring-boot-starter:1.4.0")
-  
+  implementation(cs.org.casbin.jcasbin)
+  implementation(cs.org.casbin.casbin.spring.boot.starter)
+
+  // AOP 支持
+  implementation("org.springframework.boot:spring-boot-starter-aop")
 
 
   implementation(cs.org.springframework.boot.spring.boot.starter.data.redis)
@@ -80,6 +82,8 @@ dependencies {
   implementation(cs.io.minio.minio)
   implementation(cs.cn.hutool.hutool.all)
   implementation(cs.io.github.truenine.composeserver.depend.jackson)
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
   runtimeOnly(cs.org.flywaydb.flyway.core)
   runtimeOnly(cs.org.flywaydb.flyway.database.postgresql)

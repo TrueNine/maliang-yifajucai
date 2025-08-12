@@ -32,7 +32,7 @@ class IUserInfoRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class UserInfoVariableGroup {
     @Test
     @ACID
-    fun `确保 name concat 后查询正确`() {
+    fun ensure_name_concat_query_is_correct() {
       val nameFetcher = newFetcher(UserInfo::class).by {
         firstName()
         lastName()
@@ -82,7 +82,7 @@ class IUserInfoRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     @Test
     @ACID
     @RDBRollback
-    fun `确保 查询 用户信息id 与 用户账号id 一致`() {
+    fun ensure_user_info_id_and_user_account_id_are_consistent() {
       userInfo = generatedUserInfo()
 
       assertNotNull(userInfo.userAccountId)

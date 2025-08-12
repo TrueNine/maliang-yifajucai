@@ -26,10 +26,10 @@ class WechatPublicAccountApiTest {
   }
 
   @Nested
-  inner class `用户信息获取测试` {
+  inner class UserInfoFetchTests {
 
     @Test
-    fun `应该成功通过code获取用户信息`() {
+    fun should_successfully_get_user_info_by_code() {
       // Given
       val testCode = "test_auth_code_123"
       val expectedUserInfo = WxpaUserInfo(
@@ -52,7 +52,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun `当获取用户信息失败时应该返回null`() {
+    fun should_return_null_when_user_info_fetch_fails() {
       // Given
       val testCode = "invalid_code"
       every { wxpaService.getUserInfoByAuthCode(testCode) } returns null
@@ -67,10 +67,10 @@ class WechatPublicAccountApiTest {
   }
 
   @Nested
-  inner class `服务器验证测试` {
+  inner class ServerVerificationTests {
 
     @Test
-    fun `应该成功验证服务器配置`() {
+    fun should_successfully_verify_server_configuration() {
       // Given
       val signature = "test_signature"
       val timestamp = "1234567890"
@@ -88,7 +88,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun `当服务器验证失败时应该抛出异常`() {
+    fun should_throw_exception_when_server_verification_fails() {
       // Given
       val signature = "invalid_signature"
       val timestamp = "1234567890"
@@ -109,10 +109,10 @@ class WechatPublicAccountApiTest {
   }
 
   @Nested
-  inner class `Token状态测试` {
+  inner class TokenStatusTests {
 
     @Test
-    fun `应该成功获取Token状态`() {
+    fun should_successfully_get_token_status() {
       // Given
       val expectedStatus = mapOf(
         "hasAccessToken" to true,
@@ -131,7 +131,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun `应该成功刷新Token`() {
+    fun should_successfully_refresh_tokens() {
       // Given
       every { wxpaService.forceRefreshTokens() } returns Unit
 
@@ -145,10 +145,10 @@ class WechatPublicAccountApiTest {
   }
 
   @Nested
-  inner class `JSAPI签名测试` {
+  inner class JsapiSignatureTests {
 
     @Test
-    fun `应该成功生成JSAPI签名`() {
+    fun should_successfully_generate_jsapi_signature() {
       // Given
       val testUrl = "https://example.com/test"
       val nonceString = "test_nonce_string"
@@ -173,7 +173,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun `当生成JSAPI签名失败时应该返回null`() {
+    fun should_return_null_when_jsapi_signature_generation_fails() {
       // Given
       val testUrl = "https://example.com/test"
       every { wxpaService.generateJsapiSignature(testUrl, null) } returns null

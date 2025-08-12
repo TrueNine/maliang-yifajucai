@@ -74,7 +74,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer 
 
     @Test
     @RDBRollback
-    fun `正常 创建系统账户 时，应返回完整用户信息`() {
+    fun normal_create_system_account_should_return_complete_user_info() {
       // Given
       val userInfo = UserInfoAdminPostDto(
         firstName = "赵",
@@ -103,7 +103,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer 
     @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
     @RDBRollback
-    fun `正常 添加银行卡附件 时，应创建银行卡和证件记录`() {
+    fun normal_add_bank_card_attachment_should_create_bank_card_and_cert_records() {
       // Given - 先创建用户账户
       val userInfo = UserInfoAdminPostDto(
         firstName = "张",
@@ -168,7 +168,7 @@ class UserAccountServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer 
     @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
     @RDBRollback
-    fun `正常 按银行名称查询用户信息 时，应返回匹配的用户列表`() {
+    fun normal_query_user_info_by_bank_name_should_return_matching_user_list() {
       // Given - 创建用户并添加银行卡
       val userInfo = UserInfoAdminPostDto(
         firstName = "赵",

@@ -11,15 +11,22 @@ compose:
         app-secret: test-app-secret
         verify-token: test-verify-token
         enable-auto-refresh: false
-
+  oss:
+    provider: minio
 spring:
   main:
     allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   flyway:
     enabled: true
-    baseline-version: 3000
+    baseline-version: 1
     baseline-on-migrate: true
     out-of-order: true
+    clean-disabled: false
   data:
     redis:
       repositories:

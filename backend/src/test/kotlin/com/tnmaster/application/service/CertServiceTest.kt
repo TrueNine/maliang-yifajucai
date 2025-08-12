@@ -53,7 +53,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class PostCertWaterMarkerImageAttachmentsFunctionGroup {
     @Test
     @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
-    fun `正常 上传单个有效证件附件时，应成功保存并返回正确结果`() {
+    fun normal_upload_single_valid_cert_attachment_should_save_successfully_and_return_correct_result() {
       // 先插入 user_account
       val userAccountId = 9999L
       userAccountRepo.saveCommand(UserAccount {
@@ -102,7 +102,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
-    fun `正常 上传多个有效证件附件时，应全部成功保存并返回正确结果`() {
+    fun normal_upload_multiple_valid_cert_attachments_should_all_save_successfully_and_return_correct_result() {
       // 先插入 user_account
       val userAccountId = 9999L
       userAccountRepo.saveCommand(UserAccount {
@@ -163,7 +163,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     // --- Start of merged exception tests ---
     @Test
-    fun `边界 输入空列表时，应返回空结果`() {
+    fun boundary_input_empty_list_should_return_empty_result() {
       val result = certService.postCertWaterMarkerImageAttachments(
         certDtos = emptyList(), files = emptyList(), userAccountId = 1L, createInfo = CertCreatedInfoDto(
           createUserId = 0L.toString()
@@ -174,7 +174,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 证件数量与文件数量不匹配时，抛出 IllegalArgumentException`() {
+    fun abnormal_cert_quantity_does_not_match_file_quantity_should_throw_illegal_argument_exception() {
       val certDto1 = CertAdminPostDto(
         CertTyping.ID_CARD2, CertContentTyping.SCANNED_IMAGE, CertPointTyping.HEADS, "1", // userAccountId
         null // userInfoId
@@ -197,7 +197,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 证件中用户信息为空时，抛出 IllegalArgumentException`() {
+    fun abnormal_cert_with_empty_user_info_should_throw_illegal_argument_exception() {
       val certDto2 = CertAdminPostDto(
         CertTyping.ID_CARD2, CertContentTyping.SCANNED_IMAGE, CertPointTyping.HEADS, null, // userAccountId
         null // userInfoId
@@ -218,7 +218,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 上传空文件时，抛出 IllegalArgumentException`() {
+    fun abnormal_upload_empty_file_should_throw_illegal_argument_exception() {
       val userAccountId3 = 1L
       val certDto3 = CertAdminPostDto(
         CertTyping.ID_CARD2, CertContentTyping.SCANNED_IMAGE, CertPointTyping.HEADS, userAccountId3.toString(), null // userInfoId
@@ -250,7 +250,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 上传无效文件类型时，抛出 IllegalArgumentException`() {
+    fun abnormal_upload_invalid_file_type_should_throw_illegal_argument_exception() {
       val userAccountId4 = 1L
       val certDto4 = CertAdminPostDto(
         CertTyping.ID_CARD2, CertContentTyping.SCANNED_IMAGE, CertPointTyping.HEADS, userAccountId4.toString(), null // userInfoId
@@ -282,7 +282,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @org.junit.jupiter.api.Disabled("需要MinIO bucket 'meta-certs'")
     @Test
-    fun `异常 上传无法读取的图片文件时，抛出 IllegalArgumentException`() {
+    fun abnormal_upload_corrupted_image_file_should_throw_illegal_argument_exception() {
       val userAccountId5 = 9999L // 使用一个不会查出 userInfoId 的账号ID，避免一致性校验提前触发
       val certDto5 = CertAdminPostDto(
         CertTyping.ID_CARD2, CertContentTyping.SCANNED_IMAGE, CertPointTyping.HEADS, userAccountId5.toString(), null // userInfoId
@@ -318,7 +318,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     @Test
     @ACID
     @RDBRollback
-    fun `正常 仅 savedUserInfoId 有效时，应修正所有 certs 的 coType doType poType 字段`() {
+    fun normal_only_saved_user_info_id_is_effective_should_correct_all_certs_co_type_do_type_po_type_fields() {
       // 先插入 user_account
       val savedUserInfoId = 9999L
       userAccountRepo.saveCommand(UserAccount {
@@ -396,7 +396,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     @Test
     @ACID
     @RDBRollback
-    fun `正常 仅 userInfoId 有效时，应修正所有 certs 的 coType doType poType 字段`() {
+    fun normal_only_user_info_id_is_effective_should_correct_all_certs_co_type_do_type_po_type_fields() {
       // 先插入 user_account
       val userAccountId = 8888L
       userAccountRepo.saveCommand(UserAccount {
@@ -452,7 +452,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 userAccountId 和 userInfoId 同时为 null 时，抛出 IllegalArgumentException`() {
+    fun abnormal_user_account_id_and_user_info_id_are_both_null_should_throw_illegal_argument_exception() {
       val exception = assertThrows<IllegalArgumentException> {
         certService.fixAllImagedCertTypingMarkForUserInfoOrAccount()
       }
@@ -460,7 +460,7 @@ class CertServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 certRepo 返回空列表时，应返回空`() {
+    fun boundary_cert_repo_returns_empty_list_should_return_empty() {
       // 先插入 user_account
       val userAccountId = 300L
       userAccountRepo.saveCommand(UserAccount {

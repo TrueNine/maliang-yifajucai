@@ -25,7 +25,7 @@ class ServerCacheConfigV2Api(private val cacheService: CommonKvConfigDbCacheServ
 
   /** ## 添加百家姓 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("china_first_name")
   fun patchChinaFirstName(@Valid @Size(min = 1, max = 2, message = "长度不正确") @NotBlank(message = "姓不能为空") @RequestParam name: String): Set<String> {
     return cacheService.postChinaFirstName(name)
@@ -44,7 +44,7 @@ class ServerCacheConfigV2Api(private val cacheService: CommonKvConfigDbCacheServ
    * @param pq 分页参数
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("/")
   fun getAllCacheConfigData(pq: Pq = Pq.DEFAULT_MAX): Pr<CommonKvConfigDbCache> {
     return cacheService.fetchAll()

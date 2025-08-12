@@ -16,7 +16,7 @@ class StringUtilsTest {
   inner class IsBlankFunctionGroup {
 
     @Test
-    fun `当字符串为null时应该返回true`() {
+    fun should_return_true_when_string_is_null() {
       // Given
       val input: String? = null
 
@@ -28,7 +28,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `当字符串为空时应该返回true`() {
+    fun should_return_true_when_string_is_empty() {
       // Given
       val input = ""
 
@@ -40,7 +40,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `当字符串只包含空格时应该返回true`() {
+    fun should_return_true_when_string_contains_only_spaces() {
       // Given
       val input = "   "
 
@@ -52,7 +52,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `当字符串包含非空白字符时应该返回false`() {
+    fun should_return_false_when_string_contains_non_blank_characters() {
       // Given
       val input = "  hello  "
 
@@ -68,7 +68,7 @@ class StringUtilsTest {
   inner class TrimFunctionGroup {
 
     @Test
-    fun `正常情况下应该去除首尾空格`() {
+    fun normal_case_should_remove_leading_and_trailing_spaces() {
       // Given
       val input = "  hello world  "
 
@@ -80,7 +80,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `当字符串没有空格时应该返回原字符串`() {
+    fun should_return_original_string_when_string_has_no_spaces() {
       // Given
       val input = "hello"
 
@@ -92,7 +92,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `当字符串只有空格时应该返回空字符串`() {
+    fun should_return_empty_string_when_string_contains_only_spaces() {
       // Given
       val input = "   "
 
@@ -108,7 +108,7 @@ class StringUtilsTest {
   inner class LengthFunctionGroup {
 
     @Test
-    fun `正常字符串应该返回正确长度`() {
+    fun normal_string_should_return_correct_length() {
       // Given
       val input = "hello"
 
@@ -120,7 +120,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `空字符串应该返回长度0`() {
+    fun empty_string_should_return_length_zero() {
       // Given
       val input = ""
 
@@ -132,7 +132,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun `中文字符串应该返回正确长度`() {
+    fun chinese_string_should_return_correct_length() {
       // Given
       val input = "你好世界"
 

@@ -26,7 +26,7 @@ class CommonKvConfigDbCacheServiceTest : IDatabasePostgresqlContainer, IOssMinio
   inner class ChinaFirstNamesGroup {
     @Test
     @RDBRollback
-    fun `首次获取应返回默认百家姓并持久化`() {
+    fun first_fetch_should_return_default_chinese_surnames_and_persist() {
       val set = cacheService.fetchChinaFirstNames()
       assertTrue(set.isNotEmpty())
       // 再次获取应从缓存表读取
@@ -36,7 +36,7 @@ class CommonKvConfigDbCacheServiceTest : IDatabasePostgresqlContainer, IOssMinio
 
     @Test
     @RDBRollback
-    fun `添加和删除百家姓`() {
+    fun add_and_remove_chinese_surnames() {
       val base = cacheService.fetchChinaFirstNames()
       val added = cacheService.postChinaFirstName("增田")
       assertTrue(added.contains("增田"))
@@ -53,7 +53,7 @@ class CommonKvConfigDbCacheServiceTest : IDatabasePostgresqlContainer, IOssMinio
 
   @Test
   @RDBRollback
-  fun `get 与 postString 与 get-typed`() {
+  fun get_and_post_string_and_get_typed() {
     val key = "custom.key"
     // 保存字符串
     cacheService.postString(key, "{\"a\":1}")

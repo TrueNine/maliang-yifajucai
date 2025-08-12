@@ -58,7 +58,7 @@ class CertV2Api(
    * 对现有的证件序列标记，进行压缩收紧处理
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("compress_cert_marker")
   fun patchCertTypingMarkersAsAdmin(
     @RequestParam userInfoId: RefId?,
@@ -78,7 +78,7 @@ class CertV2Api(
    * @return 返回保存后的证件实体列表，类型为 `List<Cert>`
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("audit_statuses")
   fun patchCertsAuditStatusesAsAdmin(@ApiIgnore authInfo: AuthRequestInfo, @RequestBody auditList: List<CertAdminPutAuditStatusDto>): List<Cert> {
     return certService.persistAuditStatus(auditList)
@@ -95,7 +95,7 @@ class CertV2Api(
    * 注意：调用此接口时，必须提供用户信息 ID 或用户账户 ID，否则将抛出异常
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("not_audit_certs")
   fun getNotAuditCertsAsAdmin(spec: CertAdminSpec): IPage<CertView> {
     require(!spec.hasUserInfoIds.isNullOrEmpty() || !spec.hasUserAccountIds.isNullOrEmpty()) { "用户 id 或 信息 id 不能为空" }
@@ -153,7 +153,7 @@ class CertV2Api(
    * @return 以证件类型ID为key，未审核数量为value的映射表
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("not_audit_cert_counts")
   fun getNotAuditCertCounts(spec: CertAdminSpec): Map<RefId, Long> {
     return certService.fetchNotAuditCounts(spec)
@@ -475,7 +475,7 @@ class CertV2Api(
    * @return 水印证件文件集合 id to 水印证件文件
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("watermark_attachments_id_map")
   fun getWatermarkAttachmentsGroupByIds(@RequestParam ids: List<RefId>): Map<RefId, Cert> {
     return certService.fetchWaterMarkerAttachmentGroupById(ids)
@@ -491,7 +491,7 @@ class CertV2Api(
    * @return 水印证件文件集合
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("user_info_watermark_certs")
   fun getUserInfoWatermarkCerts(
     @RequestParam userInfoId: RefId,
@@ -511,7 +511,7 @@ class CertV2Api(
    * @return 返回上传成功的证件信息列表
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PostMapping("batch_certs")
   fun postCertsAsAdmin(
     @RequestPart certs: List<CertAdminPostDto>,

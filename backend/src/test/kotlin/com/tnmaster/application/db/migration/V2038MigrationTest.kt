@@ -17,7 +17,7 @@ class V2038MigrationTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   lateinit var jdbcTemplate: JdbcTemplate
 
   @Test
-  fun `所有表的 rlv 字段类型应为 int，ldf 字段类型应为 timestamp`() {
+  fun all_tables_rlv_field_type_should_be_int_and_ldf_field_type_should_be_timestamp() {
     val tableNames = jdbcTemplate.query(
       "select tablename from pg_tables where schemaname = 'public'", ResultSetExtractor { rs ->
         val list = mutableListOf<String>()

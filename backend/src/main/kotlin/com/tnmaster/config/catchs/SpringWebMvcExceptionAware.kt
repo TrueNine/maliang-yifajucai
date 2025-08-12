@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.InvalidDataAccessResourceUsageException
 import org.springframework.http.HttpStatus
+import org.springframework.http.converter.HttpMessageConversionException
 import org.springframework.web.HttpMediaTypeNotAcceptableException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -79,6 +80,19 @@ class SpringWebMvcExceptionAware(
       log.warn("IllegalArgumentException", ex)
       return ErrorResponseEntity(errorBy = HttpStatusEnum.UNKNOWN)
     }
+  }
+
+  @ExceptionHandler(HttpMessageConversionException::class)
+  fun httpMessageConversionException(
+    ex: HttpMessageConversionException,
+    response: HttpServletResponse,
+  ): ErrorResponseEntity {
+    log.debug("HttpMessageConversionException: {}", ex.message)
+    response.status = HttpStatusEnum._400.value
+    return ErrorResponseEntity(
+      errorBy = HttpStatusEnum._400,
+      msg = "Bad Request",
+    )
   }
 
   @ResponseBody

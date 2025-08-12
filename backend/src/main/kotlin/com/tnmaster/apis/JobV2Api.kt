@@ -35,7 +35,7 @@ class JobV2Api(private val repo: IJobRepo) {
    * @param auditStatus 审核状态
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("admin/auditStatus/{id}")
   fun patchAuditStatusById(@PathVariable id: RefId, @RequestParam auditStatus: AuditTyping): Job? {
     if (!repo.existsById(id)) {

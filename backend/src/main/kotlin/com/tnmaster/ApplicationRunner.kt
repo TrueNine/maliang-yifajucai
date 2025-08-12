@@ -2,6 +2,7 @@ package com.tnmaster
 
 import org.babyfish.jimmer.spring.repository.EnableJimmerRepositories
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.scheduling.annotation.EnableAsync
@@ -10,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableAsync
 @EnableCaching
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(exclude = [RedisAutoConfiguration::class])
 @EnableJimmerRepositories(basePackages = ["com.tnmaster.repositories"])
 internal class TnMasterRunner
 

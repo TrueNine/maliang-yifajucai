@@ -32,7 +32,7 @@ class UserInfoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     @Test
     @ACID
     @RDBRollback
-    fun `当 查询参数拥有 isBlacked 时 查询不应卡死`() {
+    fun when_query_parameter_has_is_blacked_query_should_not_hang() {
       val savedUserInfo = userInfoRepo.saveCommand(UserInfo {
         idCard = "433126199001014432"
         addressCode = "433126"

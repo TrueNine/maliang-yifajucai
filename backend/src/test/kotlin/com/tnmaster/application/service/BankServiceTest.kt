@@ -26,7 +26,7 @@ class BankServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Test
   @Transactional
-  fun `fetchAllBanks should return saved banks`() {
+  fun fetch_all_banks_should_return_saved_banks() {
     // Given
     val b1 = bankRepo.save(
       Bank {

@@ -72,7 +72,7 @@ class BlackListV2Api(
    * @return 返回创建后的黑名单实体
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PostMapping("admin")
   fun postBlackListAsAdmin(@RequestBody dto: BlackListAdminPostDto, @ApiIgnore auth: AuthRequestInfo): BlackList {
     return blackListService.postBlackList(
@@ -89,7 +89,7 @@ class BlackListV2Api(
    * @return 包含黑名单管理员视图的分页结果 `Pr<BlackListAdminView>`
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("admin")
   fun getBlackListsAsAdmin(pq: Pq = Pq.DEFAULT_MAX): Pr<BlackListAdminView> {
     return blackListRepo.findAllBySpec(
@@ -123,7 +123,7 @@ class BlackListV2Api(
    * @return 更新后的黑名单实体对象，如果更新失败则返回null
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PatchMapping("audit_status/{id}")
   fun patchAuditStatusByIdAsAdmin(@PathVariable id: RefId, @RequestParam auditStatus: AuditTyping): BlackList? {
     return blackListRepo.update(

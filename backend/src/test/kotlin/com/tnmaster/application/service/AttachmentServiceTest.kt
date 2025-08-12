@@ -43,7 +43,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Nested
   inner class EffectDeleteByIdFunctionGroup {
     @Test
-    fun `正常 存在附件 时，成功删除附件`() {
+    fun normal_existing_attachment_successfully_deleted() {
       // 准备测试数据
       val baseUrlAttachment = attachmentRepo.save(
         Attachment {
@@ -72,7 +72,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 不存在附件 时，不执行删除操作`() {
+    fun normal_nonexistent_attachment_no_deletion_operation() {
       val id = 999L.toId()!!
       attachmentService.effectDeleteById(id)
       // 由于不存在附件，不会抛出异常
@@ -82,7 +82,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Nested
   inner class EffectDeleteAllByIdFunctionGroup {
     @Test
-    fun `正常 存在附件列表 时，成功删除所有附件`() {
+    fun normal_existing_attachment_list_successfully_deleted() {
       // 准备测试数据
       val baseUrlAttachment = attachmentRepo.save(
         Attachment {
@@ -124,7 +124,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 不存在附件列表 时，不执行删除操作`() {
+    fun normal_nonexistent_attachment_list_no_deletion_operation() {
       val ids = listOf(999L.toId()!!, 1000L.toId()!!)
       attachmentService.effectDeleteAllById(ids)
       // 由于不存在附件，不会抛出异常
@@ -135,7 +135,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FetchOrPostAttachmentByBaseUrlAndUriFunctionGroup {
     @Test
     @ACID
-    fun `正常 存在附件 时，返回已存在的附件`() {
+    fun normal_existing_attachment_returns_existing_attachment() {
       // 准备测试数据
       val url = "test-url"
       val uri = "test-uri"
@@ -156,7 +156,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 不存在附件 时，创建并返回新附件`() {
+    fun normal_nonexistent_attachment_creates_and_returns_new_attachment() {
       val url = "test-url"
       val uri = "test-uri"
 
@@ -171,7 +171,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @ACID
-    fun `正常 指定仅查询id的Fetcher 时，返回仅包含id的附件`() {
+    fun normal_specified_id_only_fetcher_returns_id_only_attachment() {
       val url = "test-url-fetcher"
       val uri = "test-uri-fetcher"
       // 先确保记录存在 (使用 save)
@@ -205,7 +205,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 当 baseUrl 为空字符串时，正常创建或查找`() {
+    fun boundary_when_base_url_is_empty_string_creates_or_finds_normally() {
       val url = ""
       val uri = "non-empty-uri"
       // 执行，期望不抛异常
@@ -220,7 +220,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 当 baseUri 为空字符串时，正常创建或查找`() {
+    fun boundary_when_base_uri_is_empty_string_creates_or_finds_normally() {
       val url = "non-empty-url"
       val uri = ""
       // 执行，期望不抛异常
@@ -238,7 +238,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   @Nested
   inner class RecordUploadFunctionGroup {
     @Test
-    fun `正常 上传附件 时，成功记录并返回附件信息`() {
+    fun normal_attachment_successfully_recorded_and_returned() {
       // 准备测试数据
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "test data".toByteArray().inputStream()
@@ -267,7 +267,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
     @Test
     @ACID
-    fun `正常 附件记录已存在 时，返回已存在的记录`() {
+    fun normal_attachment_record_already_exists_returns_existing_record() {
       // 1. 准备一个已存在的附件记录
       val existingParent = attachmentService.fetchOrPostAttachmentByBaseUrlAndUri("existing-url", "existing-uri")
       val existingAttachment = attachmentRepo.save(
@@ -337,7 +337,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 当 readableAttachment size 为 0 时，成功记录附件信息`() {
+    fun boundary_when_readable_attachment_size_is_0_successfully_records_attachment_info() {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "".toByteArray().inputStream()
         override val name: string get() = "empty.txt"
@@ -363,7 +363,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 当 computed metaName 为空字符串时，成功记录`() {
+    fun boundary_when_computed_meta_name_is_empty_string_successfully_records() {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "data".toByteArray().inputStream()
         override val name: string get() = "original.txt"
@@ -384,7 +384,7 @@ class AttachmentServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `边界 当 computed saveName 为空字符串时，成功记录`() {
+    fun boundary_when_computed_save_name_is_empty_string_successfully_records() {
       val readableAttachment = object : IReadableAttachment {
         override val inputStream: InputStream? get() = "data".toByteArray().inputStream()
         override val name: string get() = "original.txt"

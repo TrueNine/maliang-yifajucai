@@ -26,7 +26,7 @@ class ApiServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
 
   @Test
   @RDBRollback  
-  fun `postAllFound upserts apis by path and method`() {
+  fun post_all_found_upserts_apis_by_path_and_method() {
     // Given: 准备测试数据
     val path1 = "/v2/test/a"
     val path2 = "/v2/test/b"

@@ -8,13 +8,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Duration
 
 @Service
-class ApiCallRecordService(private val jimmerApiCallRecordRepo: IApiCallRecordRepo, private val redisTemplate: RedisTemplate<String, ApiCallRecord?>) {
+class ApiCallRecordService(
+  private val jimmerApiCallRecordRepo: IApiCallRecordRepo,
+  @Qualifier("apiCallRecordRedisTemplate") private val redisTemplate: RedisTemplate<String, ApiCallRecord?>
+) {
   companion object {
     private val log = logger<ApiCallRecordService>()
     const val CACHE_KEY = "apiCallRecord"
@@ -24,6 +28,8 @@ class ApiCallRecordService(private val jimmerApiCallRecordRepo: IApiCallRecordRe
   suspend fun postToCache(@Valid record: ApiCallRecord) {
     withContext(Dispatchers.IO) {
       async {
+        log.info("DEBUG: 使用的RedisTemplate: {}", redisTemplate::class.java.name)
+        log.info("DEBUG: RedisTemplate的valueSerializer: {}", redisTemplate.valueSerializer?.javaClass?.name)
         redisTemplate.expire(CACHE_KEY, CACHE_DURATION)
         redisTemplate.opsForSet().add(CACHE_KEY, record)
       }

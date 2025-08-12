@@ -41,7 +41,7 @@ class CommonApi(
 
   /** ## AES解密 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("ass_decrypt")
   fun aseDecrypt(@RequestParam ciphertext: String): String {
     return CryptographicOperations.decryptByAesKey(keyRepo.basicAesKey()!!, ciphertext)!!
@@ -49,7 +49,7 @@ class CommonApi(
 
   /** ## AES加密 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("ase_encrypt")
   fun aseEncrypt(@RequestParam plaintext: String): String {
     return CryptographicOperations.encryptByAesKey(keyRepo.basicAesKey()!!, plaintext)!!
@@ -64,7 +64,7 @@ class CommonApi(
 
   /** ## 雪花算法id */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("server_snowflake_id")
   fun getServerSnowflakeId(): String {
     return snowflakeIdGenerator.nextString()
@@ -72,7 +72,7 @@ class CommonApi(
 
   /** ## 获取一个业务单号 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("business_order_code")
   fun getBusinessOrderCode(): String {
     return bizCode.nextString()

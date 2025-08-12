@@ -71,7 +71,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @Api
 @RestController
-@RequirePermission("ADMIN")
+@RequirePermission("admin:manage")
 @RequestMapping("v2/acl")
 class AclV2Api(
   private val apiRepo: IApiRepo,
@@ -174,7 +174,7 @@ class AclV2Api(
 
   /** ## 创建角色组 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PostMapping("role_group")
   fun postRoleGroupAsAdmin(@RequestBody dto: RoleGroupPostDto): RoleGroup {
     return roleGroupRepo.save(dto, SaveMode.INSERT_ONLY, AssociatedSaveMode.REPLACE)
@@ -203,7 +203,7 @@ class AclV2Api(
 
   /** ## 根据 id 删除角色组 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @DeleteMapping("role_group")
   fun deleteRoleGroupByIdAsAdmin(@RequestParam id: RefId) {
     roleGroupRepo.deleteById(id)
@@ -211,7 +211,7 @@ class AclV2Api(
 
   /** ## 根据 id 删除权限 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @DeleteMapping("permissions")
   fun deletePermissionsByIdAsAdmin(@RequestParam id: RefId) {
     permissionsRepo.deleteById(id)
@@ -223,7 +223,7 @@ class AclV2Api(
    * @param spec 查询参数
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("menus")
   fun getMenus(spec: MenuAdminSpec): IPage<Menu> {
     return menuRepo.sql
@@ -237,7 +237,7 @@ class AclV2Api(
 
   /** ## 获取所有角色 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @GetMapping("roles")
   fun getRolesAsAdmin(spec: RoleAdminSpec): IPage<Role> {
     return roleRepo.sql
@@ -312,7 +312,7 @@ class AclV2Api(
    * @param dto 角色信息
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PostMapping("role")
   fun postRoleAsAdmin(@RequestBody dto: RolePostDto): Role {
     return roleRepo.saveCommand(dto).execute().modifiedEntity
@@ -324,7 +324,7 @@ class AclV2Api(
    * @param dto 更新的角色信息
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PutMapping("role")
   fun putRoleAsAdmin(@RequestBody dto: RolePutDto): Role {
     return roleRepo.saveCommand(dto, SaveMode.UPDATE_ONLY).execute().modifiedEntity
@@ -332,7 +332,7 @@ class AclV2Api(
 
   /** ## 更新角色组信息 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("admin:manage")
   @PutMapping("role_group")
   fun putRoleGroupAsAdmin(@RequestBody dto: RoleGroupPutDto): RoleGroup {
     return roleGroupRepo.saveCommand(dto) {}.execute().modifiedEntity

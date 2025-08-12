@@ -170,7 +170,7 @@ class AuthApi(
 
   /** ## 批量查询账号信息 */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("user_accounts")
   fun getUserAccountsAsAdmin(spec: UserAccountAdminSpec): IPage<UserAccountAdminView> {
     log.trace("getUserAccountsAsAdmin called, spec={}", spec)

@@ -4,6 +4,9 @@ liteflow:
   print-banner: false
 jimmer:
   language: kotlin
+compose:
+  oss:
+    provider: minio
 spring:
   output:
     ansi:

@@ -6,6 +6,7 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.servlet.deviceId
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
+import io.github.truenine.composeserver.logger
 import io.github.truenine.composeserver.slf4j
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.redis.core.RedisTemplate
@@ -20,7 +21,7 @@ class AuthService(
   private val redisTemplate: RedisTemplate<String, Any>
 ) {
   companion object {
-    private val log = slf4j<AuthService>()
+    private val log = logger<AuthService>()
     private const val USER_SESSION_PREFIX = "user:session:"
     private const val USER_DISABLED_PREFIX = "user:disabled:"
     private const val DEFAULT_SESSION_TIMEOUT = 86400L // 24 hours

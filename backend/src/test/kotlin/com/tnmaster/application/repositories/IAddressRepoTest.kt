@@ -78,7 +78,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindIdByCodeFunctionGroup {
 
     @Test
-    fun `正常 存在的地址编码 时，返回正确的ID`() {
+    fun normal_existing_address_code_should_return_correct_id() {
       // when
       val id = addressRepo.findIdByCode("110101")
 
@@ -88,7 +88,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的地址编码 时，返回null`() {
+    fun abnormal_nonexistent_address_code_should_return_null() {
       // when
       val id = addressRepo.findIdByCode("999999")
 
@@ -101,7 +101,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindAllByCodeInFunctionGroup {
 
     @Test
-    fun `正常 存在的地址编码列表 时，返回正确的地址视图集合`() {
+    fun normal_existing_address_code_list_should_return_correct_address_view_collection() {
       // when
       val addresses = addressRepo.findAllByCodeIn(listOf("110000", "110101"))
 
@@ -112,7 +112,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 空列表 时，返回空集合`() {
+    fun normal_empty_list_should_return_empty_collection() {
       // when
       val addresses = addressRepo.findAllByCodeIn(emptyList())
 
@@ -121,7 +121,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的编码 时，返回只包含存在编码的地址`() {
+    fun abnormal_nonexistent_codes_should_return_only_existing_code_addresses() {
       // when
       val addresses = addressRepo.findAllByCodeIn(listOf("110000", "999999"))
 
@@ -135,7 +135,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class ExistsByCodeFunctionGroup {
 
     @Test
-    fun `正常 存在的地址编码 时，返回true`() {
+    fun normal_existing_address_code_should_return_true() {
       // when
       val exists = addressRepo.existsByCode("110101")
 
@@ -144,7 +144,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的地址编码 时，返回false`() {
+    fun abnormal_nonexistent_address_code_should_return_false() {
       val exists = addressRepo.existsByCode("9999")
       assertFalse(exists)
     }
@@ -154,7 +154,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindFirstByCodeOrNullFunctionGroup {
 
     @Test
-    fun `正常 存在的地址编码 时，返回正确的地址`() {
+    fun normal_existing_address_code_should_return_correct_address() {
       // when
       val address = addressRepo.findFirstByCodeOrNull("110101")
 
@@ -165,7 +165,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 使用Fetcher 时，返回包含指定属性的地址`() {
+    fun normal_using_fetcher_should_return_address_with_specified_properties() {
       // given
       val fetcher = newFetcher(Address::class).by {
         allScalarFields()
@@ -185,7 +185,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的地址编码 时，返回null`() {
+    fun abnormal_nonexistent_address_code_should_return_null() {
       // when
       val address = addressRepo.findFirstByCodeOrNull("999999")
 
@@ -198,7 +198,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindDirectChildrenByCodeFunctionGroup {
 
     @Test
-    fun `正常 存在子节点的地址编码 时，返回所有子节点`() {
+    fun normal_address_code_with_children_should_return_all_children() {
       // when
       val children = addressRepo.findDirectChildrenByCode("110000")
 
@@ -208,7 +208,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 无子节点的地址编码 时，返回空列表`() {
+    fun normal_address_code_without_children_should_return_empty_list() {
       // when
       val children = addressRepo.findDirectChildrenByCode("110101")
 
@@ -217,7 +217,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的地址编码 时，返回空列表`() {
+    fun abnormal_nonexistent_address_code_should_return_empty_list() {
       // when
       val children = addressRepo.findDirectChildrenByCode("999999")
 
@@ -226,7 +226,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 使用Fetcher 时，返回包含指定属性的子节点列表`() {
+    fun normal_using_fetcher_should_return_list_of_children_with_specified_properties() {
       // given
       val fetcher = newFetcher(Address::class).by {
         allScalarFields()
@@ -250,7 +250,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindRootAddressNodeFunctionGroup {
 
     @Test
-    fun `正常 默认根ID 时，返回根节点`() {
+    fun normal_default_root_id_should_return_root_node() {
       // when
       val root = addressRepo.findRootAddressNode()
 
@@ -260,7 +260,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 指定根ID 时，返回指定节点`() {
+    fun normal_specified_root_id_should_return_specified_node() {
       // when
       val root = addressRepo.findRootAddressNode(provinceAddress.id)
 
@@ -271,7 +271,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的根ID 时，返回null`() {
+    fun abnormal_nonexistent_root_id_should_return_null() {
       // when
       val root = addressRepo.findRootAddressNode((999L).toId()!!)
 
@@ -284,7 +284,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
   inner class FindAllFullPathByCodesInFunctionGroup {
 
     @Test
-    fun `正常 存在的地址编码列表 时，返回正确的地址视图集合`() {
+    fun normal_existing_address_code_list_should_return_correct_address_view_collection() {
       // when
       val addresses = addressRepo.findAllFullPathByCodesIn(listOf("110000", "110101"))
 
@@ -295,7 +295,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `正常 空列表 时，返回空集合`() {
+    fun normal_empty_list_should_return_empty_collection() {
       // when
       val addresses = addressRepo.findAllFullPathByCodesIn(emptyList())
 
@@ -304,7 +304,7 @@ class IAddressRepoTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     }
 
     @Test
-    fun `异常 不存在的编码 时，返回只包含存在编码的地址`() {
+    fun abnormal_nonexistent_codes_should_return_only_existing_code_addresses() {
       // when
       val addresses = addressRepo.findAllFullPathByCodesIn(listOf("110000", "999999"))
 

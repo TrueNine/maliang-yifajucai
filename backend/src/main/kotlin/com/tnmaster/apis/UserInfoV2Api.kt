@@ -79,7 +79,7 @@ class UserInfoV2Api(
    * @return 认证用户信息的视图，如果未找到则返回 `null`
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("certified_user_info")
   fun getCertifiedUserInfoViewAsAdmin(spec: CertAdminCertifiedUserInfoSpec): UserInfoAdminCertifiedView? {
     return userAccountService.fetchUserInfoCertifyViewByUserAccountId(spec)
@@ -160,7 +160,7 @@ class UserInfoV2Api(
    * @return 返回用户信息视图，类型为UserInfoAdminView?，如果用户ID为空或未找到对应信息，则返回null
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("id/{id}")
   fun getUserInfoByIdAsAdmin(@PathVariable id: RefId): UserInfoAdminView? {
     return userInfoRepo.viewer(UserInfoAdminView::class).findNullable(id)
@@ -177,7 +177,7 @@ class UserInfoV2Api(
    */
   @Api
   @RequireLogin
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("form")
   fun getUserInfoPutFormAsAdmin(spec: UserInfoAdminSpec): UserInfoAdminPostDto? {
     return userInfoRepo.findFirstBySpec(spec, fetcher = UserInfoAdminPostDto::class.toFetcher())?.let { UserInfoAdminPostDto(it) }
@@ -193,7 +193,7 @@ class UserInfoV2Api(
    * @return 保存后的用户信息
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @PutMapping("/")
   fun putUserInfoAsAdmin(
     @RequestBody dto: UserInfoAdminPutDto,
@@ -228,7 +228,7 @@ class UserInfoV2Api(
    * @return 分页后的用户信息列表
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("user_infos")
   fun getUserInfosAsAdmin(spec: UserInfoAdminSpec): IPage<UserInfoAdminView> {
     return userAccountService.fetchUserInfosAsAdmin(spec)
@@ -244,7 +244,7 @@ class UserInfoV2Api(
    * @return 返回用户信息视图，类型为UserInfoAdminView?，如果用户信息ID为空或未找到对应信息，则返回null
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("user_info_details")
   fun getUserInfoDetailsByUserInfoIdAsAdmin(@RequestParam userInfoId: RefId?): UserInfoAdminView? {
     if (userInfoId == null) return null
@@ -261,7 +261,7 @@ class UserInfoV2Api(
    * @return 省份和用户数量
    */
   @Api
-  @RequirePermission("ADMIN")
+  @RequirePermission("user:admin")
   @GetMapping("province_user_info_count")
   fun getUserCountByProvinceAsAdmin(spec: UserInfoAdminSpec): Map<String, Long> {
     return userInfoRepo.sql.createQuery(UserInfo::class) {
