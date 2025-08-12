@@ -12,17 +12,18 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.TestPropertySource
 import org.springframework.context.annotation.Import
+import com.tnmaster.application.config.BaseRedisTest
 import com.tnmaster.application.config.TestOssConfiguration
 import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertTrue
 
-@SpringBootTest
 @TestPropertySource(properties = [
-  "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration"
+  "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration",
+  "spring.main.allow-bean-definition-overriding=true"
 ])
 @Import(TestOssConfiguration::class)
-class ApiCallRecordServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer {
+class ApiCallRecordServiceTest : BaseRedisTest(), IDatabasePostgresqlContainer {
 
   @Resource
   lateinit var service: ApiCallRecordService
