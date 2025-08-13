@@ -4,21 +4,17 @@ import com.tnmaster.repositories.IUserAccountRepo
 import com.tnmaster.security.UserPrincipal
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
-import io.github.truenine.composeserver.depend.servlet.deviceId
-import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.logger
-import io.github.truenine.composeserver.slf4j
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
-import java.util.concurrent.TimeUnit
 
 @Service
 class AuthService(
   private val userAccountRepo: IUserAccountRepo,
   private val sessionService: SessionService,
-  private val redisTemplate: RedisTemplate<String, Any>
+  private val redisTemplate: RedisTemplate<String, Any>,
 ) {
   companion object {
     private val log = logger<AuthService>()
@@ -44,7 +40,7 @@ class AuthService(
     val roles: Set<String> = emptySet(),
     val permissions: Set<String> = emptySet(),
     val account: String,
-    val userId: RefId
+    val userId: RefId,
   )
 
   /**

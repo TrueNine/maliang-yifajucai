@@ -1,7 +1,7 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.entities.CommonKvConfigDbCache
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.service.CommonKvConfigDbCacheService
 import io.github.truenine.composeserver.Pq
 import io.github.truenine.composeserver.Pr

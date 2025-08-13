@@ -1,6 +1,5 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.api.ApiAdminDto
 import com.tnmaster.dto.api.ApiAdminSpec
 import com.tnmaster.dto.api.ApiPatchPermissionsDto
@@ -37,6 +36,7 @@ import com.tnmaster.repositories.IPermissionsRepo
 import com.tnmaster.repositories.IRoleGroupRepo
 import com.tnmaster.repositories.IRoleRepo
 import com.tnmaster.repositories.IUserAccountRepo
+import com.tnmaster.security.annotations.RequirePermission
 import io.github.truenine.composeserver.Pr
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IPage

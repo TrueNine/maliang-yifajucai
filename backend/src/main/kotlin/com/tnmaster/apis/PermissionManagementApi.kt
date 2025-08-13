@@ -3,7 +3,13 @@ package com.tnmaster.apis
 import com.tnmaster.service.PermissionService
 import io.github.truenine.composeserver.logger
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * 权限管理API接口
@@ -16,7 +22,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/permissions")
 class PermissionManagementApi(
-  private val permissionService: PermissionService
+  private val permissionService: PermissionService,
 ) {
   companion object {
     private val log = logger<PermissionManagementApi>()
@@ -29,15 +35,17 @@ class PermissionManagementApi(
   fun checkPermission(
     @RequestParam account: String,
     @RequestParam resource: String,
-    @RequestParam action: String
+    @RequestParam action: String,
   ): ResponseEntity<Map<String, Any>> {
     val hasPermission = permissionService.checkPermission(account, resource, action)
-    return ResponseEntity.ok(mapOf(
-      "hasPermission" to hasPermission,
-      "account" to account,
-      "resource" to resource,
-      "action" to action
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "hasPermission" to hasPermission,
+        "account" to account,
+        "resource" to resource,
+        "action" to action
+      )
+    )
   }
 
   /**
@@ -46,14 +54,16 @@ class PermissionManagementApi(
   @PostMapping("/check-role")
   fun checkRole(
     @RequestParam account: String,
-    @RequestParam role: String
+    @RequestParam role: String,
   ): ResponseEntity<Map<String, Any>> {
     val hasRole = permissionService.hasRole(account, role)
-    return ResponseEntity.ok(mapOf(
-      "hasRole" to hasRole,
-      "account" to account,
-      "role" to role
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "hasRole" to hasRole,
+        "account" to account,
+        "role" to role
+      )
+    )
   }
 
   /**
@@ -62,10 +72,12 @@ class PermissionManagementApi(
   @GetMapping("/user/{account}/roles")
   fun getUserRoles(@PathVariable account: String): ResponseEntity<Map<String, Any>> {
     val roles = permissionService.getUserRoles(account)
-    return ResponseEntity.ok(mapOf(
-      "account" to account,
-      "roles" to roles
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "account" to account,
+        "roles" to roles
+      )
+    )
   }
 
   /**
@@ -74,10 +86,12 @@ class PermissionManagementApi(
   @GetMapping("/user/{account}/permissions")
   fun getUserPermissions(@PathVariable account: String): ResponseEntity<Map<String, Any>> {
     val permissions = permissionService.getUserPermissions(account)
-    return ResponseEntity.ok(mapOf(
-      "account" to account,
-      "permissions" to permissions
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "account" to account,
+        "permissions" to permissions
+      )
+    )
   }
 
   /**
@@ -86,14 +100,16 @@ class PermissionManagementApi(
   @PostMapping("/user/role")
   fun addRoleForUser(
     @RequestParam account: String,
-    @RequestParam role: String
+    @RequestParam role: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.addRoleForUser(account, role)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "account" to account,
-      "role" to role
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "account" to account,
+        "role" to role
+      )
+    )
   }
 
   /**
@@ -102,14 +118,16 @@ class PermissionManagementApi(
   @DeleteMapping("/user/role")
   fun removeRoleForUser(
     @RequestParam account: String,
-    @RequestParam role: String
+    @RequestParam role: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.removeRoleForUser(account, role)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "account" to account,
-      "role" to role
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "account" to account,
+        "role" to role
+      )
+    )
   }
 
   /**
@@ -119,15 +137,17 @@ class PermissionManagementApi(
   fun addPolicy(
     @RequestParam role: String,
     @RequestParam resource: String,
-    @RequestParam action: String
+    @RequestParam action: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.addPolicy(role, resource, action)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "role" to role,
-      "resource" to resource,
-      "action" to action
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "role" to role,
+        "resource" to resource,
+        "action" to action
+      )
+    )
   }
 
   /**
@@ -137,15 +157,17 @@ class PermissionManagementApi(
   fun removePolicy(
     @RequestParam role: String,
     @RequestParam resource: String,
-    @RequestParam action: String
+    @RequestParam action: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.removePolicy(role, resource, action)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "role" to role,
-      "resource" to resource,
-      "action" to action
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "role" to role,
+        "resource" to resource,
+        "action" to action
+      )
+    )
   }
 
   /**
@@ -154,10 +176,12 @@ class PermissionManagementApi(
   @GetMapping("/policies")
   fun getAllPolicies(): ResponseEntity<Map<String, Any>> {
     val policies = permissionService.getAllPolicies()
-    return ResponseEntity.ok(mapOf(
-      "policies" to policies,
-      "count" to policies.size
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "policies" to policies,
+        "count" to policies.size
+      )
+    )
   }
 
   /**
@@ -166,10 +190,12 @@ class PermissionManagementApi(
   @PostMapping("/reload")
   fun reloadPolicy(): ResponseEntity<Map<String, Any>> {
     val success = permissionService.reloadPolicy()
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "message" to if (success) "策略重新加载成功" else "策略重新加载失败"
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "message" to if (success) "策略重新加载成功" else "策略重新加载失败"
+      )
+    )
   }
 
   // ========== 角色管理API ==========
@@ -180,15 +206,17 @@ class PermissionManagementApi(
   @PostMapping("/roles")
   fun createRole(
     @RequestParam name: String,
-    @RequestParam(required = false, defaultValue = "") description: String
+    @RequestParam(required = false, defaultValue = "") description: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.createRole(name, description)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "roleName" to name,
-      "description" to description,
-      "message" to if (success) "角色创建成功" else "角色创建失败"
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "roleName" to name,
+        "description" to description,
+        "message" to if (success) "角色创建成功" else "角色创建失败"
+      )
+    )
   }
 
   /**
@@ -197,11 +225,13 @@ class PermissionManagementApi(
   @DeleteMapping("/roles/{roleName}")
   fun deleteRole(@PathVariable roleName: String): ResponseEntity<Map<String, Any>> {
     val success = permissionService.deleteRole(roleName)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "roleName" to roleName,
-      "message" to if (success) "角色删除成功" else "角色删除失败"
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "roleName" to roleName,
+        "message" to if (success) "角色删除成功" else "角色删除失败"
+      )
+    )
   }
 
   /**
@@ -210,10 +240,12 @@ class PermissionManagementApi(
   @GetMapping("/roles")
   fun getAllRoles(): ResponseEntity<Map<String, Any>> {
     val roles = permissionService.getAllRoles()
-    return ResponseEntity.ok(mapOf(
-      "roles" to roles,
-      "count" to roles.size
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "roles" to roles,
+        "count" to roles.size
+      )
+    )
   }
 
   /**
@@ -225,10 +257,12 @@ class PermissionManagementApi(
     return if (roleInfo != null) {
       ResponseEntity.ok(roleInfo)
     } else {
-      ResponseEntity.status(404).body(mapOf(
-        "error" to "角色不存在",
-        "roleName" to roleName
-      ))
+      ResponseEntity.status(404).body(
+        mapOf(
+          "error" to "角色不存在",
+          "roleName" to roleName
+        )
+      )
     }
   }
 
@@ -239,16 +273,18 @@ class PermissionManagementApi(
   fun addPermissionToRole(
     @PathVariable roleName: String,
     @RequestParam resource: String,
-    @RequestParam action: String
+    @RequestParam action: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.addPolicy(roleName, resource, action)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "roleName" to roleName,
-      "resource" to resource,
-      "action" to action,
-      "message" to if (success) "权限添加成功" else "权限添加失败"
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "roleName" to roleName,
+        "resource" to resource,
+        "action" to action,
+        "message" to if (success) "权限添加成功" else "权限添加失败"
+      )
+    )
   }
 
   /**
@@ -258,16 +294,18 @@ class PermissionManagementApi(
   fun removePermissionFromRole(
     @PathVariable roleName: String,
     @RequestParam resource: String,
-    @RequestParam action: String
+    @RequestParam action: String,
   ): ResponseEntity<Map<String, Any>> {
     val success = permissionService.removePolicy(roleName, resource, action)
-    return ResponseEntity.ok(mapOf(
-      "success" to success,
-      "roleName" to roleName,
-      "resource" to resource,
-      "action" to action,
-      "message" to if (success) "权限移除成功" else "权限移除失败"
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "success" to success,
+        "roleName" to roleName,
+        "resource" to resource,
+        "action" to action,
+        "message" to if (success) "权限移除成功" else "权限移除失败"
+      )
+    )
   }
 
   /**
@@ -276,10 +314,12 @@ class PermissionManagementApi(
   @GetMapping("/roles/{roleName}/permissions")
   fun getRolePermissions(@PathVariable roleName: String): ResponseEntity<Map<String, Any>> {
     val permissions = permissionService.getRolePermissions(roleName)
-    return ResponseEntity.ok(mapOf(
-      "roleName" to roleName,
-      "permissions" to permissions,
-      "count" to permissions.size
-    ))
+    return ResponseEntity.ok(
+      mapOf(
+        "roleName" to roleName,
+        "permissions" to permissions,
+        "count" to permissions.size
+      )
+    )
   }
 }

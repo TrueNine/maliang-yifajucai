@@ -1,7 +1,7 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequireLogin
 import com.tnmaster.entities.UserAccount
+import com.tnmaster.security.annotations.RequireLogin
 import com.tnmaster.service.UserAccountService
 import io.github.truenine.composeserver.domain.AuthRequestInfo
 import org.babyfish.jimmer.client.ApiIgnore

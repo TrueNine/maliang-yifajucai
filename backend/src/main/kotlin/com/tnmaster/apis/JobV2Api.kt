@@ -1,11 +1,11 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.job.JobAdminSpec
 import com.tnmaster.entities.Job
 import com.tnmaster.entities.by
 import com.tnmaster.entities.orderedWeight
 import com.tnmaster.repositories.IJobRepo
+import com.tnmaster.security.annotations.RequirePermission
 import io.github.truenine.composeserver.Pr
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.rds.enums.AuditTyping

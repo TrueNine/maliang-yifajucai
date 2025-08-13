@@ -23,12 +23,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  */
 @Configuration
 class SessionAuthenticationInterceptor(
-  private val sessionService: SessionService
+  private val sessionService: SessionService,
 ) : WebMvcConfigurer {
 
   companion object {
     private val log = logger<SessionAuthenticationInterceptor>()
-    
+
     /**
      * 不需要认证的路径
      */
@@ -50,7 +50,7 @@ class SessionAuthenticationInterceptor(
       try {
         // 从HTTP头中获取session ID
         val sessionId = request.getHeader(HttpHeaders.AUTHORIZATION)
-        
+
         if (sessionId.isNullOrBlank()) {
           log.debug("请求未提供session ID: {}", request.requestURI)
           response.status = HttpStatus.UNAUTHORIZED.value()
@@ -59,7 +59,7 @@ class SessionAuthenticationInterceptor(
 
         // 验证session并获取用户信息
         val userPrincipal = sessionService.validateSessionAndGetUser(sessionId)
-        
+
         if (userPrincipal == null) {
           log.debug("无效的session ID: {}, URI: {}", sessionId, request.requestURI)
           response.status = HttpStatus.UNAUTHORIZED.value()
@@ -68,7 +68,7 @@ class SessionAuthenticationInterceptor(
 
         // 设置用户上下文
         UserContextHolder.setCurrentUser(userPrincipal)
-        
+
         // 尝试刷新session（延长过期时间）
         try {
           val refreshResult = sessionService.refreshSession(sessionId)
@@ -82,7 +82,7 @@ class SessionAuthenticationInterceptor(
 
         log.debug("用户认证成功: account={}, URI={}", userPrincipal.account, request.requestURI)
         return true
-        
+
       } catch (e: Exception) {
         log.error("认证过程中发生异常: URI={}", request.requestURI, e)
         response.status = HttpStatus.UNAUTHORIZED.value()
@@ -94,11 +94,11 @@ class SessionAuthenticationInterceptor(
       request: HttpServletRequest,
       response: HttpServletResponse,
       handler: Any,
-      ex: Exception?
+      ex: Exception?,
     ) {
       // 清理用户上下文
       UserContextHolder.clear()
-      
+
       if (ex != null) {
         log.debug("请求处理完成，存在异常: URI={}", request.requestURI, ex)
       } else {
@@ -113,7 +113,7 @@ class SessionAuthenticationInterceptor(
       .order(Ordered.HIGHEST_PRECEDENCE) // 最高优先级，确保在其他拦截器之前执行
       .addPathPatterns("/**")
       .excludePathPatterns(*EXCLUDE_PATHS)
-      
+
     log.info("SessionAuthenticationInterceptor 已注册，排除路径: {}", EXCLUDE_PATHS.contentToString())
   }
 }

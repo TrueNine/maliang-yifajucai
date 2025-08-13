@@ -2,7 +2,7 @@ package com.tnmaster.security
 
 /**
  * # 用户上下文持有者
- * 
+ *
  * 使用 ThreadLocal 存储当前请求的用户信息
  *
  * @author TrueNine

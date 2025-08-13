@@ -1,7 +1,5 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequireLogin
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.bankcard.BankCardDto
 import com.tnmaster.dto.bankcard.BankCardView
 import com.tnmaster.dto.cert.CertAdminPostDto
@@ -14,6 +12,8 @@ import com.tnmaster.dto.userinfo.UserInfoPutDto
 import com.tnmaster.entities.Bank
 import com.tnmaster.entities.BankCard
 import com.tnmaster.entities.Cert
+import com.tnmaster.security.annotations.RequireLogin
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.service.BankService
 import com.tnmaster.service.CertService
 import com.tnmaster.service.UserAccountService

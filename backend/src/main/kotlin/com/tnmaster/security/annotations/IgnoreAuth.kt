@@ -2,7 +2,7 @@ package com.tnmaster.security.annotations
 
 /**
  * # 忽略认证注解
- * 
+ *
  * 替换 sa-token 的 @IgnoreAuth 注解
  *
  * @author TrueNine

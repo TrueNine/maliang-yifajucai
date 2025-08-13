@@ -17,7 +17,7 @@ import java.time.Duration
 @Service
 class ApiCallRecordService(
   private val jimmerApiCallRecordRepo: IApiCallRecordRepo,
-  @Qualifier("apiCallRecordRedisTemplate") private val redisTemplate: RedisTemplate<String, ApiCallRecord?>
+  @Qualifier("apiCallRecordRedisTemplate") private val redisTemplate: RedisTemplate<String, ApiCallRecord?>,
 ) {
   companion object {
     private val log = logger<ApiCallRecordService>()

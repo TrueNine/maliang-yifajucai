@@ -1,8 +1,8 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.entities.JobSeekerDisNominalTaxVideo
 import com.tnmaster.repositories.IJobSeekerDisNominalTaxVideoRepo
+import com.tnmaster.security.annotations.RequirePermission
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo
 import io.github.truenine.composeserver.rds.enums.AuditTyping

@@ -18,13 +18,13 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class JacksonConfig {
-  
+
   @Resource
   private lateinit var objectMapper: ObjectMapper
-  
+
   @Resource(name = JacksonAutoConfiguration.NON_IGNORE_OBJECT_MAPPER_BEAN_NAME)
   private lateinit var nonJsonIgnoreObjectMapper: ObjectMapper
-  
+
   @PostConstruct
   fun configureObjectMappers() {
     // Configure both ObjectMappers with enhanced Kotlin and polymorphic type support
@@ -36,7 +36,7 @@ class JacksonConfig {
     println("ObjectMapper模块数量: ${objectMapper.registeredModuleIds.size}")
     println("NonJsonIgnoreObjectMapper模块数量: ${nonJsonIgnoreObjectMapper.registeredModuleIds.size}")
   }
-  
+
   private fun configureObjectMapper(mapper: ObjectMapper) {
     // Enhanced Kotlin module configuration for better data class support
     val kotlinModule = KotlinModule.Builder()

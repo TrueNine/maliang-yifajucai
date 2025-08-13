@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class PermissionService(
-  private val enforcer: Enforcer
+  private val enforcer: Enforcer,
 ) {
   companion object {
     private val log = logger<PermissionService>()

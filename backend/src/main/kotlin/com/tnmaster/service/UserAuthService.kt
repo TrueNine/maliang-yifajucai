@@ -120,7 +120,7 @@ class UserAuthService(
       authService.disableUser(account)
       error { "账号已被封禁，请于 " + it.seconds + " 后重试" }
     }
-    
+
     // 获取用户权限信息并设置登录状态
     val userId = userAccountRepo.findIdByAccount(account) ?: error("用户不存在")
     val roles = userAccountRepo.findAllRoleNameByAccount(account)

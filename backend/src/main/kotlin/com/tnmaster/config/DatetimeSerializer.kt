@@ -28,7 +28,7 @@ class DatetimeSerializer : JsonSerializer<datetime>() {
     value: datetime?,
     gen: JsonGenerator,
     serializers: SerializerProvider,
-    typeSer: TypeSerializer
+    typeSer: TypeSerializer,
   ) {
     // 对于带类型信息的序列化，直接调用标准序列化方法
     // TypeSerializer会自动处理类型信息的包装

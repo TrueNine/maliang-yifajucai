@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class PermissionAspect(
-  private val permissionService: PermissionService
+  private val permissionService: PermissionService,
 ) {
 
   companion object {
@@ -47,6 +47,5 @@ class PermissionAspect(
     val currentUser = UserContextHolder.getCurrentUser() ?: return false
     return permissionService.hasRole(currentUser.account, role)
   }
-
 
 }

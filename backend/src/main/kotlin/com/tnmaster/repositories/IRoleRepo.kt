@@ -21,9 +21,9 @@ interface IRoleRepo : IRepo<Role, RefId> {
   fun findAllRolePermissions(): List<Pair<String, String>> {
     return sql
       .createQuery(Role::class) {
-        select(table.fetchBy { 
+        select(table.fetchBy {
           name()
-          permissions { name() } 
+          permissions { name() }
         })
       }
       .execute()

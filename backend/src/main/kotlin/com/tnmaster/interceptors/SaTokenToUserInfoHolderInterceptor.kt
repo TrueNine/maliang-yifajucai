@@ -3,7 +3,6 @@ package com.tnmaster.interceptors
 import com.tnmaster.holders.UserInfoContextHolder
 import com.tnmaster.security.UserContextHolder
 import com.tnmaster.service.AuthService
-import io.github.truenine.composeserver.depend.servlet.deviceId
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.domain.AuthRequestInfo
 import io.github.truenine.composeserver.slf4j
@@ -23,7 +22,7 @@ class UserInfoHolderInterceptor(private val authService: AuthService) : WebMvcCo
     log.trace("register user info holder interceptor")
   }
 
-  inner class InternalInterceptor : HandlerInterceptor {
+  class InternalInterceptor : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
       val authInfo = try {
@@ -49,7 +48,7 @@ class UserInfoHolderInterceptor(private val authService: AuthService) : WebMvcCo
         log.error("get auth info error", ex)
         null
       }
-      
+
       UserInfoContextHolder.set(authInfo)
       return true
     }

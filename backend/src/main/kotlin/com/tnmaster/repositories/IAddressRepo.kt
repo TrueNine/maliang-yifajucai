@@ -16,7 +16,6 @@ import org.babyfish.jimmer.sql.kt.ast.expression.`valueIn?`
 import org.babyfish.jimmer.sql.kt.exists
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Repository
-import kotlin.jvm.optionals.getOrNull
 
 @Primary
 @Repository

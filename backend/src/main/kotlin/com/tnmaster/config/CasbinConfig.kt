@@ -19,13 +19,13 @@ class CasbinConfig {
   fun enforcer(casbinDatabaseAdapter: CasbinDatabaseAdapter): Enforcer {
     val modelPath = ClassPathResource("casbin/model.conf").file.absolutePath
     val enforcer = Enforcer(modelPath, casbinDatabaseAdapter)
-    
+
     // 启用自动保存策略
     enforcer.enableAutoSave(true)
-    
+
     // 启用日志
     enforcer.enableLog(true)
-    
+
     return enforcer
   }
 }

@@ -1,12 +1,12 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.blacklist.BlackListAdminPostDto
 import com.tnmaster.dto.blacklist.BlackListAdminView
 import com.tnmaster.dto.blacklist.BlackListEventDocSpec
 import com.tnmaster.dto.blacklist.BlackListEventDocView
 import com.tnmaster.entities.*
 import com.tnmaster.repositories.IBlackListRepo
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.service.BlackListService
 import io.github.truenine.composeserver.Pq
 import io.github.truenine.composeserver.Pr

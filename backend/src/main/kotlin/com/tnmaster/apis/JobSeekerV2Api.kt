@@ -1,10 +1,10 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequireLogin
 import com.tnmaster.dto.jobseeker.JobSeekerAdminSpec
 import com.tnmaster.entities.JobSeeker
 import com.tnmaster.entities.by
 import com.tnmaster.repositories.IJobSeekerRepo
+import com.tnmaster.security.annotations.RequireLogin
 import org.babyfish.jimmer.client.FetchBy
 import org.babyfish.jimmer.client.meta.Api
 import org.babyfish.jimmer.sql.kt.fetcher.newFetcher

@@ -15,7 +15,6 @@ import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.logger
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.util.*
@@ -116,7 +115,7 @@ class SessionService(
       // 验证存储是否成功
       val storedData = redisTemplate.opsForValue().get(sessionKey)
       log.debug("验证存储结果: {}", if (storedData != null) "存储成功" else "存储失败")
-      
+
       // 添加更多调试信息
       if (storedData == null) {
         log.error("会话存储验证失败: 无法从Redis读取数据")
@@ -252,7 +251,7 @@ class SessionService(
    */
   private fun clearUserSessions(account: String) {
     log.debug("开始清理用户会话: account={}", account)
-    
+
     // 删除用户会话映射
     val userSessionKey = USER_SESSION_PREFIX + account
     redisTemplate.delete(userSessionKey)
@@ -261,11 +260,11 @@ class SessionService(
     // 查找并删除所有相关的session
     val sessionKeys = redisTemplate.keys(SESSION_PREFIX + "*")
     log.debug("找到会话键数量: {}", sessionKeys?.size ?: 0)
-    
+
     sessionKeys?.forEach { sessionKey ->
       val rawData = redisTemplate.opsForValue().get(sessionKey)
       log.debug("检查会话键: {}, 数据类型: {}", sessionKey, rawData?.javaClass?.simpleName)
-      
+
       // 使用与getSessionData相同的转换逻辑
       val sessionData = when (rawData) {
         is SessionData -> rawData
@@ -274,16 +273,16 @@ class SessionService(
             // 使用ObjectMapper将Map转换为SessionData
             val objectMapper = ObjectMapper()
             objectMapper.registerModule(JavaTimeModule())
-            
+
             // 创建自定义模块来处理datetime类型
             val datetimeModule = SimpleModule()
             datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
             datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
             objectMapper.registerModule(datetimeModule)
-            
+
             // 配置忽略未知字段
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            
+
             val jsonString = objectMapper.writeValueAsString(rawData)
             objectMapper.readValue(jsonString, SessionData::class.java)
           } catch (e: Exception) {
@@ -291,15 +290,16 @@ class SessionService(
             null
           }
         }
+
         else -> null
       }
-      
+
       if (sessionData?.account == account) {
         log.debug("删除用户会话: key={}, account={}", sessionKey, account)
         redisTemplate.delete(sessionKey)
       }
     }
-    
+
     log.debug("用户会话清理完成: account={}", account)
   }
 
@@ -349,7 +349,7 @@ class SessionService(
   /**
    * 刷新会话过期时间
    */
-    fun refreshSession(sessionId: String): Boolean {
+  fun refreshSession(sessionId: String): Boolean {
     log.debug("开始刷新会话: {}", sessionId)
 
     val sessionKey = SESSION_PREFIX + sessionId
@@ -367,16 +367,16 @@ class SessionService(
           // 使用ObjectMapper将Map转换为SessionData
           val objectMapper = ObjectMapper()
           objectMapper.registerModule(JavaTimeModule())
-          
+
           // 创建自定义模块来处理datetime类型
           val datetimeModule = SimpleModule()
           datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
           datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
           objectMapper.registerModule(datetimeModule)
-          
+
           // 配置忽略未知字段
           objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-          
+
           val jsonString = objectMapper.writeValueAsString(rawData)
           objectMapper.readValue(jsonString, SessionData::class.java)
         } catch (e: Exception) {
@@ -384,9 +384,10 @@ class SessionService(
           null
         }
       }
+
       else -> null
     }
-    
+
     log.debug("转换后的会话数据: {}", if (sessionData != null) "成功" else "失败")
 
     if (sessionData == null) {
@@ -394,13 +395,15 @@ class SessionService(
       return false
     }
 
-    log.debug("会话数据: account={}, userId={}, expireTime={}", 
-      sessionData.account, sessionData.userId, sessionData.expireTime)
+    log.debug(
+      "会话数据: account={}, userId={}, expireTime={}",
+      sessionData.account, sessionData.userId, sessionData.expireTime
+    )
 
     // 创建新的过期时间
     val newExpireTime = datetime.now().plusSeconds(DEFAULT_SESSION_TIMEOUT)
     val updatedSessionData = sessionData.copy(expireTime = newExpireTime)
-    
+
     log.debug("更新会话过期时间: {} -> {}", sessionData.expireTime, newExpireTime)
 
     // 更新会话数据
@@ -443,25 +446,23 @@ class SessionService(
    */
   fun getSessionData(sessionId: String): SessionData? {
     val sessionKey = SESSION_PREFIX + sessionId
-    val rawData = redisTemplate.opsForValue().get(sessionKey)
-    
-    return when (rawData) {
+    return when (val rawData = redisTemplate.opsForValue().get(sessionKey)) {
       is SessionData -> rawData
       is Map<*, *> -> {
         try {
           // 使用ObjectMapper将Map转换为SessionData
           val objectMapper = ObjectMapper()
           objectMapper.registerModule(JavaTimeModule())
-          
+
           // 创建自定义模块来处理datetime类型
           val datetimeModule = SimpleModule()
           datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
           datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
           objectMapper.registerModule(datetimeModule)
-          
+
           // 配置忽略未知字段
           objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-          
+
           val jsonString = objectMapper.writeValueAsString(rawData)
           objectMapper.readValue(jsonString, SessionData::class.java)
         } catch (e: Exception) {
@@ -469,6 +470,7 @@ class SessionService(
           null
         }
       }
+
       else -> null
     }
   }

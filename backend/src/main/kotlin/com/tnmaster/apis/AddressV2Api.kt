@@ -1,9 +1,9 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.address.AddressFullPathView
 import com.tnmaster.entities.Address
 import com.tnmaster.repositories.IAddressRepo
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.service.AddressService
 import org.babyfish.jimmer.client.meta.Api
 import org.springframework.web.bind.annotation.GetMapping

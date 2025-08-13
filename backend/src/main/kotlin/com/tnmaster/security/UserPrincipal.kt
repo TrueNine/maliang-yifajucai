@@ -19,9 +19,9 @@ data class UserPrincipal(
   val enabled: Boolean = true,
   val nonExpired: Boolean = true,
   val loginTime: datetime? = null,
-  val deviceId: String? = null
+  val deviceId: String? = null,
 ) {
-  
+
   /**
    * 检查是否拥有指定权限
    */

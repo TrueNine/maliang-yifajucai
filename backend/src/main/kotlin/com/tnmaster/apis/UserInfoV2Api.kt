@@ -1,7 +1,5 @@
 package com.tnmaster.apis
 
-import com.tnmaster.security.annotations.RequireLogin
-import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.dto.cert.CertAdminCertifiedUserInfoSpec
 import com.tnmaster.dto.userinfo.UserInfoAdminCertifiedView
 import com.tnmaster.dto.userinfo.UserInfoAdminPostDto
@@ -16,6 +14,8 @@ import com.tnmaster.entities.addressCode
 import com.tnmaster.entities.by
 import com.tnmaster.entities.id
 import com.tnmaster.repositories.IUserInfoRepo
+import com.tnmaster.security.annotations.RequireLogin
+import com.tnmaster.security.annotations.RequirePermission
 import com.tnmaster.service.UserAccountService
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.AuthRequestInfo

@@ -140,9 +140,9 @@ interface IUserAccountRepo : IRepo<UserAccount, RefId> {
   fun findAllUserRoleGroups(): List<Pair<String, String>> {
     return sql
       .createQuery(UserAccount::class) {
-        select(table.fetchBy { 
+        select(table.fetchBy {
           account()
-          roleGroups { name() } 
+          roleGroups { name() }
         })
       }
       .execute()

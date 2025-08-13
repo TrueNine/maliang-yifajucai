@@ -25,7 +25,7 @@ class AclService(
   private val roleRepo: IRoleRepo,
   private val permissionsRepo: IPermissionsRepo,
   private val userAccountRepo: IUserAccountRepo,
-  private val enforcer: Enforcer
+  private val enforcer: Enforcer,
 ) {
   companion object {
     private val log = slf4j<AclService>()

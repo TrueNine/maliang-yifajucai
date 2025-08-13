@@ -21,9 +21,9 @@ interface IRoleGroupRepo : IRepo<RoleGroup, RefId> {
   fun findAllRoleGroupRoles(): List<Pair<String, String>> {
     return sql
       .createQuery(RoleGroup::class) {
-        select(table.fetchBy { 
+        select(table.fetchBy {
           name()
-          roles { name() } 
+          roles { name() }
         })
       }
       .execute()

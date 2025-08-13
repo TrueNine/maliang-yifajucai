@@ -10,7 +10,6 @@ import org.babyfish.jimmer.jackson.ImmutableModule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
@@ -21,8 +20,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
 class RedisConfig {
-
-
 
   @Value($$"${spring.data.redis.host:127.0.0.1}")
   private lateinit var host: String
@@ -49,8 +46,6 @@ class RedisConfig {
 
     return LettuceConnectionFactory(config)
   }
-
-
 
   @Bean("apiCallRecordRedisTemplate")
   fun apiCallRecordRedisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, ApiCallRecord?> {
