@@ -30,8 +30,8 @@ class DatetimeSerializer : JsonSerializer<datetime>() {
     serializers: SerializerProvider,
     typeSer: TypeSerializer,
   ) {
-    // 对于带类型信息的序列化，直接调用标准序列化方法
-    // TypeSerializer会自动处理类型信息的包装
+    // 对于datetime类型，我们直接序列化为字符串，不添加多态类型信息
+    // 因为datetime类型已经在PolymorphicTypeValidator中被排除，应该直接序列化
     serialize(value, gen, serializers)
   }
 }

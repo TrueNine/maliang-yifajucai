@@ -72,12 +72,11 @@ class JacksonConfig {
     mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
     mapper.configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true)
 
-    // Configure polymorphic type handling with @class information
-    // This is crucial for Redis serialization with complex object hierarchies
-    // Use NON_FINAL for interfaces and abstract classes, explicit annotations for concrete classes
+    // 启用有选择的多态类型处理
+    // 使用JAVA_LANG_OBJECT而不是OBJECT_AND_NON_CONCRETE以减少对集合的影响
     mapper.activateDefaultTyping(
       LaissezFaireSubTypeValidator.instance,
-      ObjectMapper.DefaultTyping.NON_FINAL,
+      ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT,
       JsonTypeInfo.As.PROPERTY
     )
   }

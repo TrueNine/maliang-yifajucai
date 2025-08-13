@@ -36,9 +36,11 @@ class ErrorHandlingRedisSerializer(
     }
 
     try {
-      return super.serialize(source)
+      val result = super.serialize(source)
+      log.debug("Redis序列化成功 - 对象类型: {}, 字节数: {}", source.javaClass.simpleName, result.size)
+      return result
     } catch (ex: Exception) {
-      log.warn("Redis序列化失败，尝试错误处理 - 对象类型: {}", source.javaClass.simpleName)
+      log.warn("Redis序列化失败，尝试错误处理 - 对象类型: {}", source.javaClass.simpleName, ex)
 
       // 使用错误处理器处理异常
       val handledResult = errorHandler.handleSerializationError(ex, source, "serialize")
@@ -46,7 +48,10 @@ class ErrorHandlingRedisSerializer(
       if (handledResult != null) {
         try {
           // 尝试序列化处理后的结果
-          return super.serialize(handledResult)
+          val result = super.serialize(handledResult)
+          log.info("Redis序列化错误处理成功 - 原始类型: {}, 处理后类型: {}", 
+            source.javaClass.simpleName, handledResult.javaClass.simpleName)
+          return result
         } catch (retryEx: Exception) {
           log.error("重试序列化也失败了", retryEx)
         }
@@ -70,10 +75,12 @@ class ErrorHandlingRedisSerializer(
     }
 
     try {
-      return super.deserialize(source)
+      val result = super.deserialize(source)
+      log.debug("Redis反序列化成功 - 结果类型: {}", result?.javaClass?.simpleName ?: "null")
+      return result
     } catch (ex: Exception) {
       val jsonString = String(source)
-      log.warn("Redis反序列化失败，尝试错误处理 - JSON长度: {}", jsonString.length)
+      log.warn("Redis反序列化失败，尝试错误处理 - JSON长度: {}", jsonString.length, ex)
       log.debug("失败的JSON内容: {}", jsonString)
 
       // 使用错误处理器处理异常
@@ -81,11 +88,15 @@ class ErrorHandlingRedisSerializer(
 
       if (handledResult != null) {
         log.info("错误处理器成功处理了反序列化异常，返回类型: {}", handledResult.javaClass.simpleName)
-        return handledResult
+        
+        // 尝试将Map转换回原始的SessionData类型
+        val finalResult = attemptMapToSessionDataConversion(handledResult, jsonString)
+        return finalResult ?: handledResult
       }
 
-      // 如果错误处理也失败，记录警告但不抛出异常，返回null
-      log.warn("Redis反序列化完全失败，JSON: {}", jsonString, ex)
+      // 如果错误处理也失败，记录错误但不抛出异常，返回null
+      // 在测试环境中，这种行为可能导致测试失败，但在生产环境中可以避免系统崩溃
+      log.error("Redis反序列化完全失败，JSON: {}", jsonString, ex)
       return null
     }
   }
@@ -109,5 +120,34 @@ class ErrorHandlingRedisSerializer(
    */
   fun logErrorStatistics() {
     errorHandler.logErrorStatistics()
+  }
+
+  /**
+   * 尝试将Map转换回SessionData类型
+   */
+  private fun attemptMapToSessionDataConversion(result: Any, originalJson: String): Any? {
+    if (result !is Map<*, *>) {
+      return result
+    }
+
+    // 检查JSON中是否有SessionData的特征字段
+    if (!originalJson.contains("sessionId") || !originalJson.contains("account")) {
+      return result
+    }
+
+    try {
+      log.debug("尝试将Map转换为SessionData")
+      
+      // 使用ObjectMapper将Map重新序列化为JSON，然后反序列化为SessionData
+      val jsonBytes = objectMapper.writeValueAsBytes(result)
+      val sessionData = objectMapper.readValue(jsonBytes, com.tnmaster.security.SessionData::class.java)
+      
+      log.info("成功将Map转换为SessionData: sessionId={}", sessionData.sessionId)
+      return sessionData
+      
+    } catch (ex: Exception) {
+      log.debug("Map到SessionData转换失败: {}", ex.message)
+      return result
+    }
   }
 }
