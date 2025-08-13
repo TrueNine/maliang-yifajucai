@@ -74,7 +74,7 @@ class JacksonConfig {
 
     // Configure polymorphic type handling with @class information
     // This is crucial for Redis serialization with complex object hierarchies
-    // Use NON_FINAL to include abstract classes and interfaces, but not final classes like data classes
+    // Use NON_FINAL for interfaces and abstract classes, explicit annotations for concrete classes
     mapper.activateDefaultTyping(
       LaissezFaireSubTypeValidator.instance,
       ObjectMapper.DefaultTyping.NON_FINAL,

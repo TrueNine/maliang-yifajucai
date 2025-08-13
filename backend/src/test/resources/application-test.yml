@@ -12,7 +12,9 @@ compose:
         verify-token: test-verify-token
         enable-auto-refresh: false
   oss:
-    provider: minio
+    endpoint: http://${MINIO_HOST:${MINIO_PORT}
+    access-key: ${MINIO_USER}
+    secret-key: ${MINIO_PASSWORD}
 spring:
   main:
     allow-bean-definition-overriding: true

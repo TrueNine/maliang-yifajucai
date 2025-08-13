@@ -91,6 +91,7 @@ class TestRedisConfiguration {
             // Enhanced polymorphic type handling with @class information
             // This is the key configuration for resolving @class property issues
             // Use NON_FINAL to include abstract classes and interfaces, but not final classes like data classes
+            // This matches the production configuration and avoids unnecessary @class information
             activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,

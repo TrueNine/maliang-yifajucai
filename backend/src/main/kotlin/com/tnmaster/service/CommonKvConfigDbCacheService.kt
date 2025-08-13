@@ -39,15 +39,22 @@ class CommonKvConfigDbCacheService(private val jsonMapper: ObjectMapper, private
 
   @ACID
   fun removeChinaFirstName(name: String, k: String = Keys.CHINA_FIRST_NAMES) {
-    val e = cacheRepo.findFirstValueByKey(k)?.let { jsonMapper.readValue(it, Set::class.java) }?.map { it.toString() }?.toSet()
+    val e = cacheRepo.findFirstValueByKey(k)?.let { 
+      // 使用Collection类型进行反序列化，兼容List、Set等所有集合类型
+      jsonMapper.readValue(it, Collection::class.java)?.map { it.toString() }?.toSet()
+    }
     e?.apply { filter { it != name }.also { post(k, it) } }
   }
 
   fun fetchChinaFirstNames(k: String = Keys.CHINA_FIRST_NAMES): Set<String> {
-    return cacheRepo.findFirstValueByKey(k)?.let { jsonMapper.readValue(it, Set::class.java) }?.map { it.toString() }?.toSet()
+    return cacheRepo.findFirstValueByKey(k)?.let { 
+      // 使用Collection类型进行反序列化，兼容List、Set等所有集合类型
+      jsonMapper.readValue(it, Collection::class.java)?.map { it.toString() }?.toSet()
+    }
       ?: run {
-        val list = IChinaFirstNameService.CHINA_FIRST_NAMES.toSet()
-        post(k, list)
+        val names = IChinaFirstNameService.CHINA_FIRST_NAMES.toSet()
+        post(k, names)
+        names
       }
   }
 

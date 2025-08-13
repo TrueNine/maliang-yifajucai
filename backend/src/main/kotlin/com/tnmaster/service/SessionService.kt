@@ -267,8 +267,12 @@ class SessionService(
 
       // 使用与getSessionData相同的转换逻辑
       val sessionData = when (rawData) {
-        is SessionData -> rawData
+        is SessionData -> {
+          log.debug("直接使用SessionData对象: key={}", sessionKey)
+          rawData
+        }
         is Map<*, *> -> {
+          log.debug("检测到Map类型数据，尝试转换为SessionData: key={}", sessionKey)
           try {
             // 使用ObjectMapper将Map转换为SessionData
             val objectMapper = ObjectMapper()
@@ -284,14 +288,20 @@ class SessionService(
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
             val jsonString = objectMapper.writeValueAsString(rawData)
-            objectMapper.readValue(jsonString, SessionData::class.java)
+            log.debug("Map转换为JSON成功: key={}, json={}", sessionKey, jsonString.take(200))
+            
+            val result = objectMapper.readValue(jsonString, SessionData::class.java)
+            log.debug("JSON反序列化为SessionData成功: key={}", sessionKey)
+            result
           } catch (e: Exception) {
-            log.error("转换SessionData失败: key={}, error={}", sessionKey, e.message)
+            log.error("转换SessionData失败: key={}, error={}", sessionKey, e.message, e)
             null
           }
         }
-
-        else -> null
+        else -> {
+          log.debug("未知数据类型: key={}, type={}", sessionKey, rawData?.javaClass?.simpleName)
+          null
+        }
       }
 
       if (sessionData?.account == account) {
@@ -361,8 +371,12 @@ class SessionService(
 
     // 尝试转换为SessionData
     val sessionData = when (rawData) {
-      is SessionData -> rawData
+      is SessionData -> {
+        log.debug("直接使用SessionData对象")
+        rawData
+      }
       is Map<*, *> -> {
+        log.debug("检测到Map类型数据，尝试转换为SessionData")
         try {
           // 使用ObjectMapper将Map转换为SessionData
           val objectMapper = ObjectMapper()
@@ -378,14 +392,20 @@ class SessionService(
           objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
           val jsonString = objectMapper.writeValueAsString(rawData)
-          objectMapper.readValue(jsonString, SessionData::class.java)
+          log.debug("Map转换为JSON成功: {}", jsonString.take(200))
+          
+          val result = objectMapper.readValue(jsonString, SessionData::class.java)
+          log.debug("JSON反序列化为SessionData成功")
+          result
         } catch (e: Exception) {
-          log.error("转换SessionData失败: {}", e.message)
+          log.error("转换SessionData失败: error={}", e.message, e)
           null
         }
       }
-
-      else -> null
+      else -> {
+        log.debug("未知数据类型: {}", rawData?.javaClass?.simpleName)
+        null
+      }
     }
 
     log.debug("转换后的会话数据: {}", if (sessionData != null) "成功" else "失败")
@@ -446,9 +466,17 @@ class SessionService(
    */
   fun getSessionData(sessionId: String): SessionData? {
     val sessionKey = SESSION_PREFIX + sessionId
-    return when (val rawData = redisTemplate.opsForValue().get(sessionKey)) {
-      is SessionData -> rawData
+    val rawData = redisTemplate.opsForValue().get(sessionKey)
+    
+    log.debug("从Redis获取原始数据: key={}, 数据类型: {}", sessionKey, rawData?.javaClass?.simpleName)
+    
+    return when (rawData) {
+      is SessionData -> {
+        log.debug("直接返回SessionData对象")
+        rawData
+      }
       is Map<*, *> -> {
+        log.debug("检测到Map类型数据，尝试转换为SessionData")
         try {
           // 使用ObjectMapper将Map转换为SessionData
           val objectMapper = ObjectMapper()
@@ -464,14 +492,20 @@ class SessionService(
           objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
           val jsonString = objectMapper.writeValueAsString(rawData)
-          objectMapper.readValue(jsonString, SessionData::class.java)
+          log.debug("Map转换为JSON成功: {}", jsonString.take(200))
+          
+          val result = objectMapper.readValue(jsonString, SessionData::class.java)
+          log.debug("JSON反序列化为SessionData成功")
+          result
         } catch (e: Exception) {
-          log.error("转换SessionData失败: {}", e.message)
+          log.error("转换SessionData失败: key={}, error={}", sessionKey, e.message, e)
           null
         }
       }
-
-      else -> null
+      else -> {
+        log.debug("未知数据类型: {}", rawData?.javaClass?.simpleName)
+        null
+      }
     }
   }
 

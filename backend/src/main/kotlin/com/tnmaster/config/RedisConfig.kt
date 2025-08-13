@@ -1,15 +1,20 @@
 package com.tnmaster.config
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.tnmaster.entities.ApiCallRecord
+import com.tnmaster.config.redis.ErrorHandlingRedisSerializer
+import com.tnmaster.config.redis.RedisSerializationErrorHandler
 import io.github.truenine.composeserver.datetime
 import org.babyfish.jimmer.jackson.ImmutableModule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
@@ -47,30 +52,24 @@ class RedisConfig {
     return LettuceConnectionFactory(config)
   }
 
-  @Bean("apiCallRecordRedisTemplate")
-  fun apiCallRecordRedisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, ApiCallRecord?> {
-    val template = RedisTemplate<String, ApiCallRecord?>()
+  /**
+   * 主要的RedisTemplate配置，用于通用对象序列化
+   * 这个配置将确保与测试环境的一致性，正确处理@class类型信息
+   */
+  @Bean("redisTemplate")
+  @Primary
+  fun redisTemplate(
+    connectionFactory: RedisConnectionFactory,
+    redisSerializationErrorHandler: RedisSerializationErrorHandler
+  ): RedisTemplate<String, Any> {
+    val template = RedisTemplate<String, Any>()
     template.connectionFactory = connectionFactory
 
-    // 创建一个专门用于ApiCallRecord的ObjectMapper
-    val objectMapper = ObjectMapper()
+    // 创建统一的ObjectMapper用于Redis序列化
+    val objectMapper = createRedisObjectMapper()
 
-    // 注册Kotlin模块以支持Kotlin data class和可空类型
-    val kotlinModule = KotlinModule.Builder().build()
-    objectMapper.registerModule(kotlinModule)
-    objectMapper.registerModule(JavaTimeModule())
-
-    // 注册Jimmer模块以支持Jimmer实体序列化
-    objectMapper.registerModule(ImmutableModule())
-
-    // 创建自定义模块来处理datetime类型
-    val datetimeModule = SimpleModule()
-    datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
-    datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
-    objectMapper.registerModule(datetimeModule)
-
-    // 使用Jackson2JsonRedisSerializer避免类型信息问题
-    val jsonSerializer = Jackson2JsonRedisSerializer(objectMapper, ApiCallRecord::class.java)
+    // 使用带错误处理的Redis序列化器
+    val jsonSerializer = ErrorHandlingRedisSerializer(objectMapper, redisSerializationErrorHandler)
 
     // 设置序列化器
     template.keySerializer = StringRedisSerializer()
@@ -81,5 +80,68 @@ class RedisConfig {
     template.afterPropertiesSet()
 
     return template
+  }
+
+  @Bean("apiCallRecordRedisTemplate")
+  fun apiCallRecordRedisTemplate(
+    connectionFactory: RedisConnectionFactory,
+    redisSerializationErrorHandler: RedisSerializationErrorHandler
+  ): RedisTemplate<String, ApiCallRecord?> {
+    val template = RedisTemplate<String, ApiCallRecord?>()
+    template.connectionFactory = connectionFactory
+
+    // 使用相同的ObjectMapper确保序列化一致性
+    val objectMapper = createRedisObjectMapper()
+
+    // 使用共享的错误处理器实例
+    val jsonSerializer = ErrorHandlingRedisSerializer(objectMapper, redisSerializationErrorHandler)
+
+    // 设置序列化器
+    template.keySerializer = StringRedisSerializer()
+    template.valueSerializer = jsonSerializer
+    template.hashKeySerializer = StringRedisSerializer()
+    template.hashValueSerializer = jsonSerializer
+
+    template.afterPropertiesSet()
+
+    return template
+  }
+
+  /**
+   * 创建用于Redis序列化的统一ObjectMapper
+   * 确保与测试环境配置一致，正确处理@class类型信息
+   */
+  private fun createRedisObjectMapper(): ObjectMapper {
+    return ObjectMapper().apply {
+      // 注册Kotlin模块以支持Kotlin data class和可空类型
+      val kotlinModule = KotlinModule.Builder().build()
+      registerModule(kotlinModule)
+      registerModule(JavaTimeModule())
+
+      // 注册Jimmer模块以支持Jimmer实体序列化
+      registerModule(ImmutableModule())
+
+      // 创建自定义模块来处理datetime类型
+      val datetimeModule = SimpleModule()
+      datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
+      datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
+      registerModule(datetimeModule)
+
+      // 配置多态类型处理，确保@class属性正确包含
+      // 这是解决"missing type id property '@class'"问题的关键配置
+      activateDefaultTyping(
+        LaissezFaireSubTypeValidator.instance,
+        ObjectMapper.DefaultTyping.NON_FINAL,
+        JsonTypeInfo.As.PROPERTY
+      )
+    }
+  }
+
+  /**
+   * Redis序列化错误处理器
+   */
+  @Bean
+  fun redisSerializationErrorHandler(): RedisSerializationErrorHandler {
+    return RedisSerializationErrorHandler()
   }
 }

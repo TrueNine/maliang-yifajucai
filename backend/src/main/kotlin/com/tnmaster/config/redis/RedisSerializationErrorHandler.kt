@@ -26,12 +26,12 @@ class RedisSerializationErrorHandler {
 
   companion object {
     private val log = logger<RedisSerializationErrorHandler>()
-
-    // 错误统计计数器
-    private var unrecognizedPropertyCount = 0L
-    private var invalidTypeIdCount = 0L
-    private var generalSerializationErrorCount = 0L
   }
+
+  // 错误统计计数器 - 移到实例变量
+  private var unrecognizedPropertyCount = 0L
+  private var invalidTypeIdCount = 0L
+  private var generalSerializationErrorCount = 0L
 
   /**
    * 处理序列化异常的主要入口点
@@ -161,9 +161,12 @@ class RedisSerializationErrorHandler {
     originalData: Any?,
     operation: String,
   ): Any? {
+    generalSerializationErrorCount++
+    
     log.warn(
-      "Redis序列化遇到JSON处理异常 [操作: {}] - 位置: {}, 消息: {}",
+      "Redis序列化遇到JSON处理异常 [操作: {}, 计数: {}] - 位置: {}, 消息: {}",
       operation,
+      generalSerializationErrorCount,
       ex.location?.toString() ?: "Unknown",
       ex.originalMessage
     )
@@ -179,9 +182,12 @@ class RedisSerializationErrorHandler {
     originalData: Any?,
     operation: String,
   ): Any? {
+    generalSerializationErrorCount++
+    
     log.warn(
-      "Redis序列化遇到JSON映射异常 [操作: {}] - 路径: {}, 消息: {}",
+      "Redis序列化遇到JSON映射异常 [操作: {}, 计数: {}] - 路径: {}, 消息: {}",
       operation,
+      generalSerializationErrorCount,
       ex.pathReference ?: "Unknown",
       ex.originalMessage
     )
@@ -197,15 +203,20 @@ class RedisSerializationErrorHandler {
     originalData: Any?,
     operation: String,
   ): Any? {
+    // 增加通用错误计数
+    generalSerializationErrorCount++
+    
     log.error(
-      "Redis序列化遇到未知异常 [操作: {}] - 类型: {}, 消息: {}",
+      "Redis序列化遇到未知异常 [操作: {}, 计数: {}] - 类型: {}, 消息: {}",
       operation,
+      generalSerializationErrorCount,
       ex.javaClass.simpleName,
       ex.message,
       ex
     )
 
-    return null
+    // 对于未知异常，也尝试进行fallback反序列化
+    return attemptFallbackDeserialization(ex, originalData, "UnknownException")
   }
 
   /**
@@ -233,6 +244,19 @@ class RedisSerializationErrorHandler {
 
       log.debug("尝试使用fallback ObjectMapper进行{}反序列化", errorType)
 
+      // 首先尝试修复已知的集合序列化问题
+      val repairedJson = repairCollectionSerialization(jsonString)
+      if (repairedJson != jsonString) {
+        log.info("检测到并修复了集合序列化格式")
+        try {
+          val result = fallbackMapper.readValue(repairedJson, Map::class.java)
+          log.info("修复后反序列化成功，返回Map结构: {}", result.keys)
+          return result
+        } catch (repairEx: Exception) {
+          log.debug("修复后的JSON仍然失败: {}", repairEx.message)
+        }
+      }
+
       // 尝试反序列化为通用的Map结构
       val result = fallbackMapper.readValue(jsonString, Map::class.java)
       log.info("Fallback反序列化成功，返回Map结构: {}", result.keys)
@@ -241,6 +265,44 @@ class RedisSerializationErrorHandler {
     } catch (fallbackEx: Exception) {
       log.warn("Fallback反序列化也失败了: {}", fallbackEx.message)
       return null
+    }
+  }
+  
+  /**
+   * 修复集合序列化格式问题
+   * 将["java.util.Collections$SingletonSet",["USER"]]格式转换为["USER"]
+   */
+  private fun repairCollectionSerialization(jsonString: String): String {
+    try {
+      // 使用正则表达式匹配并替换集合序列化格式
+      // 匹配格式: ["java.util.Collections$类名", [实际数据]]
+      val collectionPattern = Regex(
+        """\["java\.util\.Collections\$[^"]*",\s*(\[[^\]]*\])\]"""
+      )
+      
+      var repairedJson = jsonString
+      var hasChanges = false
+      
+      collectionPattern.findAll(jsonString).forEach { matchResult ->
+        val fullMatch = matchResult.value
+        val collectionData = matchResult.groupValues[1]
+        
+        log.debug("修复集合格式: {} -> {}", fullMatch, collectionData)
+        repairedJson = repairedJson.replace(fullMatch, collectionData)
+        hasChanges = true
+      }
+      
+      if (hasChanges) {
+        log.info("成功修复集合序列化格式")
+        log.debug("修复前: {}", jsonString)
+        log.debug("修复后: {}", repairedJson)
+      }
+      
+      return repairedJson
+      
+    } catch (ex: Exception) {
+      log.warn("修复集合序列化格式时发生异常: {}", ex.message)
+      return jsonString
     }
   }
 
@@ -255,6 +317,16 @@ class RedisSerializationErrorHandler {
     val fallbackTypeMapping = mapOf(
       "com.tnmaster.entities.ApiCallRecordDraft" to "com.tnmaster.entities.ApiCallRecord",
       "com.tnmaster.security.SessionData" to Map::class.java.name,
+      // 集合类型的fallback映射
+      "java.util.Collections\$SingletonSet" to "java.util.LinkedHashSet",
+      "java.util.Collections\$UnmodifiableSet" to "java.util.LinkedHashSet",
+      "java.util.Collections\$EmptySet" to "java.util.LinkedHashSet",
+      "java.util.Collections\$SingletonList" to "java.util.ArrayList",
+      "java.util.Collections\$UnmodifiableList" to "java.util.ArrayList",
+      "java.util.Collections\$EmptyList" to "java.util.ArrayList",
+      "java.util.Collections\$SingletonMap" to "java.util.LinkedHashMap",
+      "java.util.Collections\$UnmodifiableMap" to "java.util.LinkedHashMap",
+      "java.util.Collections\$EmptyMap" to "java.util.LinkedHashMap",
       // 可以根据需要添加更多映射
     )
 
@@ -270,6 +342,11 @@ class RedisSerializationErrorHandler {
           else -> return null
         }
 
+        // 处理集合类型的特殊情况
+        if (typeId.startsWith("java.util.Collections\$")) {
+          return handleCollectionTypeFallback(jsonString, typeId, fallbackMapper)
+        }
+
         // 移除@class属性并尝试反序列化
         val jsonWithoutClass = removeClassProperty(jsonString)
         return fallbackMapper.readValue(jsonWithoutClass, Map::class.java)
@@ -280,6 +357,104 @@ class RedisSerializationErrorHandler {
     }
 
     return attemptFallbackDeserialization(ex, originalData, "InvalidTypeId")
+  }
+
+  /**
+   * 处理集合类型的fallback反序列化
+   */
+  private fun handleCollectionTypeFallback(
+    jsonString: String,
+    typeId: String,
+    fallbackMapper: ObjectMapper
+  ): Any? {
+    try {
+      log.debug("处理集合类型fallback: {}", typeId)
+      
+      // 解析JSON结构，期望格式为: ["类型名", [实际数据]]
+      val jsonNode = fallbackMapper.readTree(jsonString)
+      
+      // 检查是否为集合的序列化格式
+      if (jsonNode.isArray && jsonNode.size() == 2) {
+        val actualData = jsonNode[1]
+        
+        return when {
+          typeId.contains("Set") -> {
+            // 处理Set类型
+            if (actualData.isArray) {
+              val result = mutableSetOf<Any?>()
+              actualData.forEach { element ->
+                when {
+                  element.isTextual -> result.add(element.asText())
+                  element.isNumber -> result.add(element.asLong())
+                  element.isBoolean -> result.add(element.asBoolean())
+                  element.isNull -> result.add(null)
+                  else -> result.add(element.toString())
+                }
+              }
+              log.info("成功处理Set类型fallback，元素数量: {}", result.size)
+              result
+            } else {
+              log.warn("Set类型数据格式异常，不是数组格式")
+              setOf<String>()
+            }
+          }
+          
+          typeId.contains("List") -> {
+            // 处理List类型
+            if (actualData.isArray) {
+              val result = mutableListOf<Any?>()
+              actualData.forEach { element ->
+                when {
+                  element.isTextual -> result.add(element.asText())
+                  element.isNumber -> result.add(element.asLong())
+                  element.isBoolean -> result.add(element.asBoolean())
+                  element.isNull -> result.add(null)
+                  else -> result.add(element.toString())
+                }
+              }
+              log.info("成功处理List类型fallback，元素数量: {}", result.size)
+              result
+            } else {
+              log.warn("List类型数据格式异常，不是数组格式")
+              listOf<String>()
+            }
+          }
+          
+          typeId.contains("Map") -> {
+            // 处理Map类型
+            if (actualData.isObject) {
+              val result = mutableMapOf<String, Any?>()
+              actualData.fields().forEach { (key, value) ->
+                when {
+                  value.isTextual -> result[key] = value.asText()
+                  value.isNumber -> result[key] = value.asLong()
+                  value.isBoolean -> result[key] = value.asBoolean()
+                  value.isNull -> result[key] = null
+                  else -> result[key] = value.toString()
+                }
+              }
+              log.info("成功处理Map类型fallback，键数量: {}", result.size)
+              result
+            } else {
+              log.warn("Map类型数据格式异常，不是对象格式")
+              mapOf<String, String>()
+            }
+          }
+          
+          else -> {
+            log.warn("未知的集合类型: {}", typeId)
+            null
+          }
+        }
+      } else {
+        log.warn("集合类型JSON格式异常，不是标准的[类型, 数据]格式")
+        return null
+      }
+      
+    } catch (ex: Exception) {
+      log.warn("集合类型fallback处理失败: {}", ex.message)
+      return null
+    }
   }
 
   /**

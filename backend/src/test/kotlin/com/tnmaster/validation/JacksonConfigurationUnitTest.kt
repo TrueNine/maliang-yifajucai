@@ -1,5 +1,6 @@
 package com.tnmaster.validation
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -21,6 +22,15 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 // Define polymorphic types outside the class for testing
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "@class"
+)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = UserEntity::class, name = "UserEntity"),
+    JsonSubTypes.Type(value = AdminEntity::class, name = "AdminEntity")
+)
 interface BaseEntity {
     val id: Long
     val type: String
@@ -95,7 +105,7 @@ class JacksonConfigurationUnitTest {
             
             // Enhanced polymorphic type handling with @class information
             // This is the key configuration for resolving @class property issues
-            // Use NON_FINAL to include abstract classes and interfaces, but not final classes like data classes
+            // Use NON_FINAL to include abstract classes and interfaces, with explicit @JsonTypeInfo for concrete classes
             activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,
@@ -231,7 +241,8 @@ class JacksonConfigurationUnitTest {
         // Test each entity type
         entities.forEach { entity ->
             val json = objectMapper.writeValueAsString(entity)
-            assertTrue(json.contains("@class"), "JSON should contain @class type information")
+            println("Serialized entity ${entity::class.simpleName}: $json")
+            assertTrue(json.contains("@class"), "JSON should contain @class type information for ${entity::class.simpleName}. Actual JSON: $json")
             
             val deserialized = objectMapper.readValue(json, BaseEntity::class.java)
             assertEquals(entity::class, deserialized::class, "Deserialized type should match original")

@@ -1,6 +1,7 @@
 package com.tnmaster.application.config
 
 import io.github.truenine.composeserver.testtoolkit.testcontainers.ICacheRedisContainer
+import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePostgresqlContainer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,12 +14,13 @@ import org.testcontainers.junit.jupiter.Testcontainers
 /**
  * Redis相关测试的基类
  * 提供统一的Redis测试环境配置和清理机制
+ * 同时启动PostgreSQL容器以支持Flyway迁移
  */
 @SpringBootTest
 @ActiveProfiles("test")
 @Import(TestRedisConfiguration::class)
 @Testcontainers
-abstract class BaseRedisTest : ICacheRedisContainer {
+abstract class BaseRedisTest : ICacheRedisContainer, IDatabasePostgresqlContainer {
 
     @Autowired
     protected lateinit var redisTemplate: RedisTemplate<String, Any>
