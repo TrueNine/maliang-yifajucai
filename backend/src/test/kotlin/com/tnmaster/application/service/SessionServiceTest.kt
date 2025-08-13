@@ -1,6 +1,12 @@
 package com.tnmaster.application.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.tnmaster.application.config.TestRedisConfiguration
+import com.tnmaster.config.DatetimeDeserializer
+import com.tnmaster.config.DatetimeSerializer
 import com.tnmaster.security.SessionData
 import com.tnmaster.service.SessionService
 import io.github.truenine.composeserver.datetime
@@ -245,6 +251,28 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
     println("Debug: 原始datetime = $testDatetime")
     println("Debug: 原始datetime类型 = ${testDatetime.javaClass}")
 
+    // 添加原始数据的JSON序列化检查
+    try {
+      val objectMapper = ObjectMapper().apply {
+        val kotlinModule = KotlinModule.Builder().build()
+        registerModule(kotlinModule)
+        registerModule(JavaTimeModule())
+        val datetimeModule = SimpleModule()
+        datetimeModule.addSerializer(datetime::class.java, DatetimeSerializer())
+        datetimeModule.addDeserializer(datetime::class.java, DatetimeDeserializer())
+        registerModule(datetimeModule)
+      }
+      val jsonString = objectMapper.writeValueAsString(testDatetime)
+      println("Debug: datetime序列化为JSON = $jsonString")
+      
+      val deserializedBack = objectMapper.readValue(jsonString, datetime::class.java)
+      println("Debug: JSON反序列化回datetime = $deserializedBack")
+      println("Debug: JSON反序列化回datetime类型 = ${deserializedBack?.javaClass}")
+    } catch (e: Exception) {
+      println("Debug: ObjectMapper序列化测试失败 - ${e.message}")
+      e.printStackTrace()
+    }
+
     // When: 存储到Redis
     redisTemplate.opsForValue().set(testKey, testDatetime, 60, TimeUnit.SECONDS)
 
@@ -253,7 +281,17 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
     println("Debug: 从Redis读取的原始datetime数据 = $rawData")
     println("Debug: 原始datetime数据类型 = ${rawData?.javaClass}")
 
-    val retrievedDatetime = rawData as? datetime
+    val retrievedDatetime = when (rawData) {
+        is datetime -> rawData
+        is String -> {
+            try {
+                datetime.parse(rawData)
+            } catch (e: Exception) {
+                kotlin.test.fail("无法解析datetime字符串: $rawData, 错误: ${e.message}")
+            }
+        }
+        else -> kotlin.test.fail("期望datetime或String类型，但获得: ${rawData?.javaClass}")
+    }
 
     // 验证数据是否正确
     assertNotNull(retrievedDatetime, "从Redis读取的datetime不应该为null")

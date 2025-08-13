@@ -258,7 +258,7 @@ class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOss
       remoteAddr = "127.0.0.1"
     }
     val roles = setOf("USER")
-    val permissions = setOf("READ_PROFILE")
+    val permissions = setOf("READ_USER", "WRITE_USER")
 
     // 为测试用户添加角色关系
     addTestUserRole(testAccount, "USER")

@@ -80,6 +80,7 @@ class TestRedisConfiguration {
             configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, false)
             configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, false)
             configure(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS, false)
+            configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, false)
             
             // Enhanced serialization features for consistent output
             configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -88,13 +89,34 @@ class TestRedisConfiguration {
             configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, false)
             configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true)
             
-            // Enhanced polymorphic type handling with @class information
-            // This is the key configuration for resolving @class property issues
-            // Use NON_FINAL to include abstract classes and interfaces, but not final classes like data classes
-            // This matches the production configuration and avoids unnecessary @class information
+            // 创建自定义验证器以排除datetime类型的多态处理
+            val customValidator = object : com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator() {
+                override fun validateBaseType(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+                    if (baseType?.rawClass == datetime::class.java) {
+                        return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
+                    }
+                    return LaissezFaireSubTypeValidator.instance.validateBaseType(config, baseType)
+                }
+                
+                override fun validateSubClassName(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?, subClassName: String?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+                    if (subClassName?.contains("datetime") == true) {
+                        return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
+                    }
+                    return LaissezFaireSubTypeValidator.instance.validateSubClassName(config, baseType, subClassName)
+                }
+                
+                override fun validateSubType(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?, subType: com.fasterxml.jackson.databind.JavaType?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+                    if (subType?.rawClass == datetime::class.java) {
+                        return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
+                    }
+                    return LaissezFaireSubTypeValidator.instance.validateSubType(config, baseType, subType)
+                }
+            }
+            
+            // 启用多态类型处理以支持@JsonTypeInfo注解
             activateDefaultTyping(
-                LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL,
+                customValidator,
+                ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT,
                 JsonTypeInfo.As.PROPERTY
             )
         }
@@ -103,6 +125,7 @@ class TestRedisConfiguration {
     /**
      * 主要的RedisTemplate配置，使用带错误处理的Redis序列化器
      * 这个配置将覆盖生产环境的配置，确保测试环境的一致性
+     * 使用高优先级确保在测试环境中完全覆盖生产配置
      */
     @Bean("redisTemplate")
     @Primary
