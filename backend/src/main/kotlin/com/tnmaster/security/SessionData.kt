@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import java.io.Serializable
@@ -15,85 +16,86 @@ import java.time.Duration
  * @author TrueNine
  * @since 2025-01-10
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 data class SessionData @JsonCreator constructor(
   /**
    * 会话ID
    */
-  @JsonProperty("sessionId")
+  @param:JsonProperty("sessionId")
   val sessionId: String,
 
   /**
    * 用户账号
    */
-  @JsonProperty("account")
+  @param:JsonProperty("account")
   val account: String,
 
   /**
    * 用户ID
    */
-  @JsonProperty("userId")
+  @param:JsonProperty("userId")
   val userId: RefId,
 
   /**
    * 设备ID
    */
-  @JsonProperty("deviceId")
+  @param:JsonProperty("deviceId")
   val deviceId: String,
 
   /**
    * 登录IP地址
    */
-  @JsonProperty("loginIpAddr")
+  @param:JsonProperty("loginIpAddr")
   val loginIpAddr: String,
 
   /**
    * 登录时间
    */
-  @JsonProperty("loginTime")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
+  @param:JsonProperty("loginTime")
+  @param:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
   val loginTime: datetime,
 
   /**
    * 用户角色列表
    */
-  @JsonProperty("roles")
+  @param:JsonProperty("roles")
   val roles: Set<String>,
 
   /**
    * 用户权限列表
    */
-  @JsonProperty("permissions")
+  @param:JsonProperty("permissions")
   val permissions: Set<String>,
 
   /**
    * 会话过期时间
    */
-  @JsonProperty("expireTime")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
+  @param:JsonProperty("expireTime")
+  @param:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
   val expireTime: datetime,
 
   /**
    * 是否被禁用
    */
-  @JsonProperty("disabled")
+  @param:JsonProperty("disabled")
   val disabled: Boolean = false,
 
   /**
    * 用户昵称
    */
-  @JsonProperty("nickName")
+  @param:JsonProperty("nickName")
   val nickName: String? = null,
 
   /**
    * 用户代理
    */
-  @JsonProperty("userAgent")
+  @param:JsonProperty("userAgent")
   val userAgent: String? = null,
 
   /**
    * 客户端版本
    */
-  @JsonProperty("clientVersion")
+  @param:JsonProperty("clientVersion")
   val clientVersion: String? = null,
 ) : Serializable {
   /**
