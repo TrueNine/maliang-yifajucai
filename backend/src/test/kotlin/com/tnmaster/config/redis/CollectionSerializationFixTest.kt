@@ -10,12 +10,12 @@ import kotlin.test.assertNotNull
  */
 class CollectionSerializationFixTest {
 
-    @Test
-    fun `测试集合序列化格式修复功能`() {
-        val errorHandler = RedisSerializationErrorHandler()
-        
-        // 模拟problematic JSON - SingletonSet格式
-        val problematicJson = """
+  @Test
+  fun `测试集合序列化格式修复功能`() {
+    val errorHandler = RedisSerializationErrorHandler()
+
+    // 模拟problematic JSON - SingletonSet格式
+    val problematicJson = """
             {
                 "sessionId": "test-session-123",
                 "account": "testuser", 
@@ -29,31 +29,31 @@ class CollectionSerializationFixTest {
                 "disabled": false
             }
         """.trimIndent()
-        
-        println("原始问题JSON: $problematicJson")
-        
-        // 创建模拟异常
-        val mockEx = Exception("Test serialization error")
-        
-        // 使用错误处理器处理
-        val result = errorHandler.handleSerializationError(mockEx, problematicJson, "deserialize")
-        
-        assertNotNull(result, "错误处理器应该能够处理集合序列化问题")
-        println("处理结果: $result")
-        
-        // 验证结果包含正确的字段
-        if (result is Map<*, *>) {
-            assertEquals("test-session-123", result["sessionId"])
-            assertEquals("testuser", result["account"])
-            
-            // 验证集合字段被正确处理
-            val roles = result["roles"] as? List<*>
-            assertNotNull(roles, "roles字段应该被正确处理")
-            assertEquals(listOf("USER"), roles)
-            
-            val permissions = result["permissions"] as? List<*>  
-            assertNotNull(permissions, "permissions字段应该被正确处理")
-            assertEquals(listOf("READ_PROFILE"), permissions)
-        }
+
+    println("原始问题JSON: $problematicJson")
+
+    // 创建模拟异常
+    val mockEx = Exception("Test serialization error")
+
+    // 使用错误处理器处理
+    val result = errorHandler.handleSerializationError(mockEx, problematicJson, "deserialize")
+
+    assertNotNull(result, "错误处理器应该能够处理集合序列化问题")
+    println("处理结果: $result")
+
+    // 验证结果包含正确的字段
+    if (result is Map<*, *>) {
+      assertEquals("test-session-123", result["sessionId"])
+      assertEquals("testuser", result["account"])
+
+      // 验证集合字段被正确处理
+      val roles = result["roles"] as? List<*>
+      assertNotNull(roles, "roles字段应该被正确处理")
+      assertEquals(listOf("USER"), roles)
+
+      val permissions = result["permissions"] as? List<*>
+      assertNotNull(permissions, "permissions字段应该被正确处理")
+      assertEquals(listOf("READ_PROFILE"), permissions)
     }
+  }
 }

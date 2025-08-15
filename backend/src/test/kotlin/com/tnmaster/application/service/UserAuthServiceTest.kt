@@ -45,7 +45,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val request = MockHttpServletRequest().apply {
         addHeader("Device-Id", "test-device-auth")
       }
-      
+
       // This test would require actual user data in the database
       // For now, we'll test that the method doesn't throw exceptions
       assertThrows<IllegalArgumentException> {
@@ -62,7 +62,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val request = MockHttpServletRequest().apply {
         addHeader("Device-Id", "test-device-auth")
       }
-      
+
       // When & Then: should throw exception
       assertThrows<IllegalArgumentException> {
         userAuthService.loginByAccountAndBase64PasswordOrThrow(emptyAccount, testPassword, request)
@@ -78,7 +78,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val request = MockHttpServletRequest().apply {
         addHeader("Device-Id", "test-device-auth")
       }
-      
+
       // When & Then: should throw exception
       assertThrows<IllegalArgumentException> {
         userAuthService.loginByAccountAndBase64PasswordOrThrow(testAccount, emptyPassword, request)
@@ -96,10 +96,10 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       val request = MockHttpServletRequest().apply {
         addHeader("Device-Id", "test-device-auth")
       }
-      
+
       // When: logout (should not throw exception)
       userAuthService.setCurrentSessionLogout(null, request)
-      
+
       // Then: no exception should be thrown
       // This is a basic test since we don't have actual login state
     }
@@ -113,7 +113,7 @@ class UserAuthServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
     fun fetch_current_login_info_should_return_null_when_not_logged_in() {
       // When: fetch current login info without being logged in
       val result = userAuthService.fetchCurrentLoginInfo()
-      
+
       // Then: should return null
       // Note: This might return null or throw exception depending on implementation
       // The test verifies the method can be called without crashing

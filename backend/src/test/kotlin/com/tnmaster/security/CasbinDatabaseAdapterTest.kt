@@ -101,7 +101,7 @@ class CasbinDatabaseAdapterTest {
       verify { userAccountRepo.findAllUserRoleGroups() }
       verify { roleGroupRepo.findAllRoleGroupRoles() }
       verify { roleRepo.findAllRolePermissions() }
-      
+
       // 验证没有策略被添加（除了可能的初始化调用）
       verify(exactly = 0) { model.addPolicy("g", "g", any()) }
       verify(exactly = 0) { model.addPolicy("g", "g2", any()) }

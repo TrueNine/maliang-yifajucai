@@ -162,7 +162,7 @@ class RedisSerializationErrorHandler {
     operation: String,
   ): Any? {
     generalSerializationErrorCount++
-    
+
     log.warn(
       "Redis序列化遇到JSON处理异常 [操作: {}, 计数: {}] - 位置: {}, 消息: {}",
       operation,
@@ -183,7 +183,7 @@ class RedisSerializationErrorHandler {
     operation: String,
   ): Any? {
     generalSerializationErrorCount++
-    
+
     log.warn(
       "Redis序列化遇到JSON映射异常 [操作: {}, 计数: {}] - 路径: {}, 消息: {}",
       operation,
@@ -205,7 +205,7 @@ class RedisSerializationErrorHandler {
   ): Any? {
     // 增加通用错误计数
     generalSerializationErrorCount++
-    
+
     log.error(
       "Redis序列化遇到未知异常 [操作: {}, 计数: {}] - 类型: {}, 消息: {}",
       operation,
@@ -267,7 +267,7 @@ class RedisSerializationErrorHandler {
       return null
     }
   }
-  
+
   /**
    * 修复集合序列化格式问题
    * 将["java.util.Collections$SingletonSet",["USER"]]格式转换为["USER"]
@@ -279,27 +279,27 @@ class RedisSerializationErrorHandler {
       val collectionPattern = Regex(
         """\["java\.util\.Collections\$[^"]*",\s*(\[[^\]]*\])\]"""
       )
-      
+
       var repairedJson = jsonString
       var hasChanges = false
-      
+
       collectionPattern.findAll(jsonString).forEach { matchResult ->
         val fullMatch = matchResult.value
         val collectionData = matchResult.groupValues[1]
-        
+
         log.debug("修复集合格式: {} -> {}", fullMatch, collectionData)
         repairedJson = repairedJson.replace(fullMatch, collectionData)
         hasChanges = true
       }
-      
+
       if (hasChanges) {
         log.info("成功修复集合序列化格式")
         log.debug("修复前: {}", jsonString)
         log.debug("修复后: {}", repairedJson)
       }
-      
+
       return repairedJson
-      
+
     } catch (ex: Exception) {
       log.warn("修复集合序列化格式时发生异常: {}", ex.message)
       return jsonString
@@ -365,18 +365,18 @@ class RedisSerializationErrorHandler {
   private fun handleCollectionTypeFallback(
     jsonString: String,
     typeId: String,
-    fallbackMapper: ObjectMapper
+    fallbackMapper: ObjectMapper,
   ): Any? {
     try {
       log.debug("处理集合类型fallback: {}", typeId)
-      
+
       // 解析JSON结构，期望格式为: ["类型名", [实际数据]]
       val jsonNode = fallbackMapper.readTree(jsonString)
-      
+
       // 检查是否为集合的序列化格式
       if (jsonNode.isArray && jsonNode.size() == 2) {
         val actualData = jsonNode[1]
-        
+
         return when {
           typeId.contains("Set") -> {
             // 处理Set类型
@@ -398,7 +398,7 @@ class RedisSerializationErrorHandler {
               setOf<String>()
             }
           }
-          
+
           typeId.contains("List") -> {
             // 处理List类型
             if (actualData.isArray) {
@@ -419,7 +419,7 @@ class RedisSerializationErrorHandler {
               listOf<String>()
             }
           }
-          
+
           typeId.contains("Map") -> {
             // 处理Map类型
             if (actualData.isObject) {
@@ -440,7 +440,7 @@ class RedisSerializationErrorHandler {
               mapOf<String, String>()
             }
           }
-          
+
           else -> {
             log.warn("未知的集合类型: {}", typeId)
             null
@@ -450,7 +450,7 @@ class RedisSerializationErrorHandler {
         log.warn("集合类型JSON格式异常，不是标准的[类型, 数据]格式")
         return null
       }
-      
+
     } catch (ex: Exception) {
       log.warn("集合类型fallback处理失败: {}", ex.message)
       return null

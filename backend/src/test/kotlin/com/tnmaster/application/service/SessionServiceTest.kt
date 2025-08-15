@@ -264,7 +264,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
       }
       val jsonString = objectMapper.writeValueAsString(testDatetime)
       println("Debug: datetime序列化为JSON = $jsonString")
-      
+
       val deserializedBack = objectMapper.readValue(jsonString, datetime::class.java)
       println("Debug: JSON反序列化回datetime = $deserializedBack")
       println("Debug: JSON反序列化回datetime类型 = ${deserializedBack?.javaClass}")
@@ -282,27 +282,28 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
     println("Debug: 原始datetime数据类型 = ${rawData?.javaClass}")
 
     val retrievedDatetime = when (rawData) {
-        is datetime -> rawData
-        is String -> {
-            try {
-                datetime.parse(rawData)
-            } catch (e: Exception) {
-                kotlin.test.fail("无法解析datetime字符串: $rawData, 错误: ${e.message}")
-            }
+      is datetime -> rawData
+      is String -> {
+        try {
+          datetime.parse(rawData)
+        } catch (e: Exception) {
+          kotlin.test.fail("无法解析datetime字符串: $rawData, 错误: ${e.message}")
         }
-        else -> kotlin.test.fail("期望datetime或String类型，但获得: ${rawData?.javaClass}")
+      }
+
+      else -> kotlin.test.fail("期望datetime或String类型，但获得: ${rawData?.javaClass}")
     }
 
     // 验证数据是否正确
     assertNotNull(retrievedDatetime, "从Redis读取的datetime不应该为null")
-    
+
     println("Debug: 检索到的datetime = $retrievedDatetime")
-    
+
     // 检查是否是timezone问题 - 如果是LocalDateTime，不应该有timezone转换
     // 如果时间差异是整数小时，可能是timezone问题
     val timeDifference = java.time.Duration.between(testDatetime, retrievedDatetime).toHours()
     println("Debug: 时间差异（小时）= $timeDifference")
-    
+
     if (timeDifference != 0L) {
       println("Warning: 检测到时间差异，可能是timezone问题")
       // 对于这个测试，我们只验证序列化/反序列化能够成功，不验证具体值

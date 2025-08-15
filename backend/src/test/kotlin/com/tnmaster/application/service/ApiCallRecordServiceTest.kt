@@ -18,10 +18,12 @@ import org.springframework.test.annotation.Commit
 import org.springframework.transaction.annotation.Transactional
 import kotlin.test.assertTrue
 
-@TestPropertySource(properties = [
-  "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration",
-  "spring.main.allow-bean-definition-overriding=true"
-])
+@TestPropertySource(
+  properties = [
+    "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration",
+    "spring.main.allow-bean-definition-overriding=true"
+  ]
+)
 @Import(TestOssConfiguration::class)
 class ApiCallRecordServiceTest : BaseRedisTest(), IDatabasePostgresqlContainer {
 

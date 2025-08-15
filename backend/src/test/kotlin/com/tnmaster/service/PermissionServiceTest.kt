@@ -33,7 +33,7 @@ class PermissionServiceTest {
     val account = "testuser"
     val resource = "/api/user/profile"
     val action = "GET"
-    
+
     every { enforcer.enforce(account, resource, action) } returns true
 
     // When
@@ -50,7 +50,7 @@ class PermissionServiceTest {
     val account = "testuser"
     val resource = "/api/admin/users"
     val action = "DELETE"
-    
+
     every { enforcer.enforce(account, resource, action) } returns false
 
     // When
@@ -67,7 +67,7 @@ class PermissionServiceTest {
     val account = "testuser"
     val resource = "/api/user/profile"
     val action = "GET"
-    
+
     every { enforcer.enforce(account, resource, action) } throws RuntimeException("测试异常")
 
     // When
@@ -83,7 +83,7 @@ class PermissionServiceTest {
     // Given
     val account = "testuser"
     val role = "admin"
-    
+
     every { enforcer.hasRoleForUser(account, role) } returns true
 
     // When
@@ -99,7 +99,7 @@ class PermissionServiceTest {
     // Given
     val account = "testuser"
     val roles = listOf("user", "editor")
-    
+
     every { enforcer.getRolesForUser(account) } returns roles
 
     // When
@@ -122,7 +122,7 @@ class PermissionServiceTest {
       listOf("user", "read"),
       listOf("user", "write")
     )
-    
+
     every { enforcer.getPermissionsForUser(account) } returns permissions
 
     // When
@@ -142,7 +142,7 @@ class PermissionServiceTest {
     // Given
     val account = "testuser"
     val role = "admin"
-    
+
     every { enforcer.addRoleForUser(account, role) } returns true
 
     // When
@@ -158,7 +158,7 @@ class PermissionServiceTest {
     // Given
     val account = "testuser"
     val role = "admin"
-    
+
     every { enforcer.deleteRoleForUser(account, role) } returns true
 
     // When
@@ -175,7 +175,7 @@ class PermissionServiceTest {
     val role = "admin"
     val resource = "/api/admin/**"
     val action = "*"
-    
+
     every { enforcer.addPolicy(role, resource, action) } returns true
 
     // When
@@ -192,7 +192,7 @@ class PermissionServiceTest {
     val role = "admin"
     val resource = "/api/admin/**"
     val action = "*"
-    
+
     every { enforcer.removePolicy(role, resource, action) } returns true
 
     // When
@@ -210,7 +210,7 @@ class PermissionServiceTest {
       listOf("admin", "/api/admin/**", "*"),
       listOf("user", "/api/user/**", "GET")
     )
-    
+
     every { enforcer.policy } returns policies
 
     // When

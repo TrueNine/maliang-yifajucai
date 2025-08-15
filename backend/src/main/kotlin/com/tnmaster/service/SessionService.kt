@@ -271,6 +271,7 @@ class SessionService(
           log.debug("直接使用SessionData对象: key={}", sessionKey)
           rawData
         }
+
         is Map<*, *> -> {
           log.debug("检测到Map类型数据，尝试转换为SessionData: key={}", sessionKey)
           try {
@@ -289,7 +290,7 @@ class SessionService(
 
             val jsonString = objectMapper.writeValueAsString(rawData)
             log.debug("Map转换为JSON成功: key={}, json={}", sessionKey, jsonString.take(200))
-            
+
             val result = objectMapper.readValue(jsonString, SessionData::class.java)
             log.debug("JSON反序列化为SessionData成功: key={}", sessionKey)
             result
@@ -298,6 +299,7 @@ class SessionService(
             null
           }
         }
+
         else -> {
           log.debug("未知数据类型: key={}, type={}", sessionKey, rawData?.javaClass?.simpleName)
           null
@@ -375,6 +377,7 @@ class SessionService(
         log.debug("直接使用SessionData对象")
         rawData
       }
+
       is Map<*, *> -> {
         log.debug("检测到Map类型数据，尝试转换为SessionData")
         try {
@@ -393,7 +396,7 @@ class SessionService(
 
           val jsonString = objectMapper.writeValueAsString(rawData)
           log.debug("Map转换为JSON成功: {}", jsonString.take(200))
-          
+
           val result = objectMapper.readValue(jsonString, SessionData::class.java)
           log.debug("JSON反序列化为SessionData成功")
           result
@@ -402,6 +405,7 @@ class SessionService(
           null
         }
       }
+
       else -> {
         log.debug("未知数据类型: {}", rawData?.javaClass?.simpleName)
         null
@@ -467,14 +471,15 @@ class SessionService(
   fun getSessionData(sessionId: String): SessionData? {
     val sessionKey = SESSION_PREFIX + sessionId
     val rawData = redisTemplate.opsForValue().get(sessionKey)
-    
+
     log.debug("从Redis获取原始数据: key={}, 数据类型: {}", sessionKey, rawData?.javaClass?.simpleName)
-    
+
     return when (rawData) {
       is SessionData -> {
         log.debug("直接返回SessionData对象")
         rawData
       }
+
       is Map<*, *> -> {
         log.debug("检测到Map类型数据，尝试转换为SessionData")
         try {
@@ -493,7 +498,7 @@ class SessionService(
 
           val jsonString = objectMapper.writeValueAsString(rawData)
           log.debug("Map转换为JSON成功: {}", jsonString.take(200))
-          
+
           val result = objectMapper.readValue(jsonString, SessionData::class.java)
           log.debug("JSON反序列化为SessionData成功")
           result
@@ -502,6 +507,7 @@ class SessionService(
           null
         }
       }
+
       else -> {
         log.debug("未知数据类型: {}", rawData?.javaClass?.simpleName)
         null

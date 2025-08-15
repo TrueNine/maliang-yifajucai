@@ -20,5 +20,4 @@ class RoleManagementApiTest {
     assertNotNull(permissionService)
   }
 
-
 }

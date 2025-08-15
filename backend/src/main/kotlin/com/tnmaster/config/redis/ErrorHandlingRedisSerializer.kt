@@ -49,8 +49,10 @@ class ErrorHandlingRedisSerializer(
         try {
           // 尝试序列化处理后的结果
           val result = super.serialize(handledResult)
-          log.info("Redis序列化错误处理成功 - 原始类型: {}, 处理后类型: {}", 
-            source.javaClass.simpleName, handledResult.javaClass.simpleName)
+          log.info(
+            "Redis序列化错误处理成功 - 原始类型: {}, 处理后类型: {}",
+            source.javaClass.simpleName, handledResult.javaClass.simpleName
+          )
           return result
         } catch (retryEx: Exception) {
           log.error("重试序列化也失败了", retryEx)
@@ -88,7 +90,7 @@ class ErrorHandlingRedisSerializer(
 
       if (handledResult != null) {
         log.info("错误处理器成功处理了反序列化异常，返回类型: {}", handledResult.javaClass.simpleName)
-        
+
         // 尝试将Map转换回原始的SessionData类型
         val finalResult = attemptMapToSessionDataConversion(handledResult, jsonString)
         return finalResult ?: handledResult
@@ -137,14 +139,14 @@ class ErrorHandlingRedisSerializer(
 
     try {
       log.debug("尝试将Map转换为SessionData")
-      
+
       // 使用ObjectMapper将Map重新序列化为JSON，然后反序列化为SessionData
       val jsonBytes = objectMapper.writeValueAsBytes(result)
       val sessionData = objectMapper.readValue(jsonBytes, com.tnmaster.security.SessionData::class.java)
-      
+
       log.info("成功将Map转换为SessionData: sessionId={}", sessionData.sessionId)
       return sessionData
-      
+
     } catch (ex: Exception) {
       log.debug("Map到SessionData转换失败: {}", ex.message)
       return result

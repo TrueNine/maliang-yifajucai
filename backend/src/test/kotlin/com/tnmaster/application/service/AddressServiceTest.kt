@@ -39,7 +39,7 @@ class AddressServiceTest : IDatabasePostgresqlContainer, IOssMinioContainer {
       assertEquals(Rbac.ROOT_ID, result.id, "根节点ID应该是0")
       assertEquals(0, result.level, "根节点级别应该是0")
       assertEquals("000000000000", result.code, "根节点代码应该是000000000000")
-      
+
       // 根据Flyway初始化脚本，根节点的name初始化为空字符串
       // 这是符合预期的，因为根节点代表整个地址树的根，name为空是合理的
     }

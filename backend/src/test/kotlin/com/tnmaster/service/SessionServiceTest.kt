@@ -279,7 +279,7 @@ class SessionServiceTest {
     userId: Long,
     roles: Set<String>,
     permissions: Set<String>,
-    expireTime: datetime = datetime.now().plusSeconds(3600)
+    expireTime: datetime = datetime.now().plusSeconds(3600),
   ): SessionData {
     return SessionData(
       sessionId = sessionId,

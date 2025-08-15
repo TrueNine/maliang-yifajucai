@@ -30,21 +30,21 @@ class DatabaseMigrationTest : IDatabasePostgresqlContainer, ICacheRedisContainer
   fun verify_basic_tables_exist() {
     dataSource.connection.use { connection ->
       val statement = connection.createStatement()
-      
+
       // 检查 user_account 表是否存在
       val userAccountResult = statement.executeQuery(
         "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'user_account')"
       )
       userAccountResult.next()
       assertTrue(userAccountResult.getBoolean(1), "user_account 表应该存在")
-      
+
       // 检查 role_group 表是否存在
       val roleGroupResult = statement.executeQuery(
         "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'role_group')"
       )
       roleGroupResult.next()
       assertTrue(roleGroupResult.getBoolean(1), "role_group 表应该存在")
-      
+
       // 检查 role 表是否存在
       val roleResult = statement.executeQuery(
         "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'role')"

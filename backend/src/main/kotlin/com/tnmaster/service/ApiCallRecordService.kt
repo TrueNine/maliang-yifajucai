@@ -44,7 +44,7 @@ class ApiCallRecordService(
     // 使用主RedisTemplate以获得错误处理功能
     val mainRedisTemplate = redisTemplate as RedisTemplate<String, Any?>
     val cacheData = mainRedisTemplate.opsForSet().members(CACHE_KEY)?.filterNotNull()
-    
+
     if (null != cacheData && cacheData.isNotEmpty()) {
       cacheData.forEach { record ->
         when (record) {
@@ -52,6 +52,7 @@ class ApiCallRecordService(
             log.debug("保存正常的ApiCallRecord到数据库")
             jimmerApiCallRecordRepo.sql.save(record, SaveMode.INSERT_IF_ABSENT)
           }
+
           is Map<*, *> -> {
             log.warn("遇到反序列化错误的数据，尝试手动重建ApiCallRecord对象")
             try {
@@ -61,6 +62,7 @@ class ApiCallRecordService(
               log.error("重建ApiCallRecord失败，跳过此记录", ex)
             }
           }
+
           else -> {
             log.warn("遇到未知类型的缓存数据: {}, 类型: {}", record, record.javaClass.simpleName)
           }

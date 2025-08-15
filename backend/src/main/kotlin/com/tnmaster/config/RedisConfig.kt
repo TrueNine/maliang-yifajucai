@@ -61,7 +61,7 @@ class RedisConfig {
   @Primary
   fun redisTemplate(
     connectionFactory: RedisConnectionFactory,
-    redisSerializationErrorHandler: RedisSerializationErrorHandler
+    redisSerializationErrorHandler: RedisSerializationErrorHandler,
   ): RedisTemplate<String, Any> {
     val template = RedisTemplate<String, Any>()
     template.connectionFactory = connectionFactory
@@ -86,7 +86,7 @@ class RedisConfig {
   @Bean("apiCallRecordRedisTemplate")
   fun apiCallRecordRedisTemplate(
     connectionFactory: RedisConnectionFactory,
-    redisSerializationErrorHandler: RedisSerializationErrorHandler
+    redisSerializationErrorHandler: RedisSerializationErrorHandler,
   ): RedisTemplate<String, ApiCallRecord?> {
     val template = RedisTemplate<String, ApiCallRecord?>()
     template.connectionFactory = connectionFactory
@@ -130,35 +130,46 @@ class RedisConfig {
 
       // 创建自定义验证器以排除datetime类型的多态处理
       val customValidator = object : com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator() {
-        override fun validateBaseType(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+        override fun validateBaseType(
+          config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?,
+          baseType: com.fasterxml.jackson.databind.JavaType?,
+        ): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
           if (baseType?.rawClass == datetime::class.java) {
             return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
           }
           return LaissezFaireSubTypeValidator.instance.validateBaseType(config, baseType)
         }
-        
-        override fun validateSubClassName(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?, subClassName: String?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+
+        override fun validateSubClassName(
+          config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?,
+          baseType: com.fasterxml.jackson.databind.JavaType?,
+          subClassName: String?,
+        ): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
           if (subClassName?.contains("datetime") == true) {
             return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
           }
           return LaissezFaireSubTypeValidator.instance.validateSubClassName(config, baseType, subClassName)
         }
-        
-        override fun validateSubType(config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?, baseType: com.fasterxml.jackson.databind.JavaType?, subType: com.fasterxml.jackson.databind.JavaType?): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
+
+        override fun validateSubType(
+          config: com.fasterxml.jackson.databind.cfg.MapperConfig<*>?,
+          baseType: com.fasterxml.jackson.databind.JavaType?,
+          subType: com.fasterxml.jackson.databind.JavaType?,
+        ): com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity {
           if (subType?.rawClass == datetime::class.java) {
             return com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity.DENIED
           }
           return LaissezFaireSubTypeValidator.instance.validateSubType(config, baseType, subType)
         }
       }
-      
+
       // 启用多态类型处理以支持@JsonTypeInfo注解
       activateDefaultTyping(
         customValidator,
         ObjectMapper.DefaultTyping.JAVA_LANG_OBJECT,
         JsonTypeInfo.As.PROPERTY
       )
-      
+
       // 配置反序列化特性以提高兼容性
       configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
       configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
