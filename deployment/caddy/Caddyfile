@@ -1,0 +1,61 @@
+# Caddy configuration for yifajucai.com
+{
+    # 全局配置
+    auto_https on
+    email admin@yifajucai.com
+}
+
+yifajucai.com {
+    # 自动HTTPS和HTTP/2
+    encode gzip
+
+    # 静态文件服务
+    root * /srv/dist
+    
+    # 文档路径
+    handle_path /docs/* {
+        root * /srv/__docs
+        try_files {path} /docs/404.html
+        
+        @html {
+            path *.html *.htm
+        }
+        header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
+    }
+
+    # API文档代理
+    reverse_proxy /v3/api-docs* api:8080
+
+    # 后端API代理
+    handle_path /apis/* {
+        reverse_proxy api:8080
+    }
+
+    # MinIO对象存储代理  
+    handle_path /ressources_oss/* {
+        reverse_proxy minio:9000
+    }
+
+    # 处理SPA路由，所有未匹配的请求返回index.html
+    try_files {path} /index.html
+    file_server
+    
+    # 缓存控制
+    @static {
+        path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    }
+    header @static Cache-Control "public, max-age=31536000"
+    
+    @html {
+        path *.html *.htm
+    }
+    header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
+    
+    @mjs {
+        path *.mjs
+    }
+    header @mjs Content-Type "application/javascript"
+}
+
+# HTTP重定向到HTTPS（自动处理）
+# Caddy自动将HTTP流量重定向到HTTPS
