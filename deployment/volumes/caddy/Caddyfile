@@ -12,9 +12,6 @@
   # 设置更长的超时时间
   http_port 80
   https_port 443
-
-  # 启用调试日志（临时用于排查问题）
-  debug
 }
 
 # HTTP IP访问配置（不重定向到HTTPS）
