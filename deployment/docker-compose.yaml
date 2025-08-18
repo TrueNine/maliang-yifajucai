@@ -76,13 +76,18 @@ services:
     hostname: redis
     restart: always
     volumes:
-      - ./volumes/redis/redis.conf:/redis.conf
       - ./volumes/redis/data:/data
     command: [
       "redis-server",
-      '/redis.conf',
-      '--port 6379',
-      '--requirepass ${REDIS_PASSWORD}',
+      "--port", "6379",
+      "--requirepass", "${REDIS_PASSWORD}",
+      "--appendonly", "yes",
+      "--appendfsync", "everysec",
+      "--maxmemory", "256mb",
+      "--maxmemory-policy", "allkeys-lru",
+      "--save", "900 1",
+      "--save", "300 10",
+      "--save", "60 10000"
     ]
     ports:
       - "${REDIS_PORT:-6379}:6379"
