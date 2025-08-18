@@ -40,7 +40,7 @@ composeGradle {
 sourceSets { main { resources { exclude("config/data/**") } } }
 
 dependencies {
-  implementation(cs.org.springframework.boot.spring.boot.docker.compose)
+  developmentOnly(cs.org.springframework.boot.spring.boot.docker.compose)
 
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
