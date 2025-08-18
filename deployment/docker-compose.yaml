@@ -17,7 +17,7 @@ services:
       MINIO_COMPRESS_MIME_TYPES: "application/pdf,application/json,application/xml,image/png,image/jpg,image/jpeg"
     command: server --console-address ':9001' /data
     volumes:
-      - /opt/dl/minio/data:/data
+      - ./volumes/minio/data:/data
   api:
     container_name: api
     build:
@@ -26,15 +26,15 @@ services:
     restart: always
     working_dir: /app
     volumes:
-      - /opt/dl/java:/app
-      - /opt/dl/.env:/app/.env
-      - /opt/dl/ms-playwright:/ms-playwright
+      - ./volumes/java:/app
+      - ./.env:/app/.env
+      - ./volumes/ms-playwright:/ms-playwright
     command:
       [
         'java',
         '-jar',
-        '/app/${JAR_NAME}',
-        '--spring.profiles.active=${SPRING_PROFILE:-default}',
+        '/app/${PROJECT_NAME}-${PROJECT_VERSION}.jar',
+        '--spring.profiles.active=prod',
         '--add-opens java.base/sun.reflect.annotation=ALL-UNNAMED'
       ]
     ports:
@@ -51,10 +51,10 @@ services:
       - "${CADDY_HTTP_PORT:-80}:80"
       - "${CADDY_HTTPS_PORT:-443}:443"
     volumes:
-      - /opt/dl/caddy/html:/srv
-      - /opt/dl/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - /opt/dl/caddy/data:/data
-      - /opt/dl/caddy/config:/config
+      - ./volumes/caddy/html:/srv
+      - ./volumes/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./volumes/caddy/data:/data
+      - ./volumes/caddy/config:/config
     restart: always
     environment:
       TZ: ${TZ:-Asia/Shanghai}
@@ -67,8 +67,8 @@ services:
     container_name: redis
     restart: always
     volumes:
-      - /opt/dl/redis/redis.conf:/redis.conf
-      - /opt/dl/redis/data:/data
+      - ./volumes/redis/redis.conf:/redis.conf
+      - ./volumes/redis/data:/data
     command: [
       "redis-server",
       '/redis.conf',
@@ -88,4 +88,4 @@ services:
       POSTGRES_USER: '${PG_USER}'
       POSTGRES_PASSWORD: '${PG_PASSWORD}'
     volumes:
-      - /opt/dl/postgres/data:/var/lib/postgresql/data
+      - ./volumes/postgres/data:/var/lib/postgresql/data
