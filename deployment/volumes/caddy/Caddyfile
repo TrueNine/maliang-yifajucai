@@ -1,7 +1,6 @@
 # Caddy configuration for yifajucai.com
 {
   # 全局配置
-  auto_https on
   email truenine304520@gmail.com
 }
 
