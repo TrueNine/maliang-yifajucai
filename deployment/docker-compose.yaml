@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   minio:
-    image: minio/minio:${MINIO_V}
+    image: minio/minio:RELEASE.2025-06-13T11-33-47Z-cpuv1
     container_name: minio
     restart: always
     ports:
@@ -44,28 +44,26 @@ services:
     environment:
       JVM_VERSION: '${JVM_V}'
       PLAYWRIGHT_VERSION: '${PLAYWRIGHT_V}'
-  nginx:
-    image:
-      nginx:${NGINX_V}
-    container_name: nginx
+  caddy:
+    image: caddy:2.8.4-alpine
+    container_name: caddy
     ports:
-      - "${NGINX_HTTP_PORT:-80}:80"
-      - "${NGINX_HTTPS_PORT:-443}:443"
+      - "${CADDY_HTTP_PORT:-80}:80"
+      - "${CADDY_HTTPS_PORT:-443}:443"
     volumes:
-      - /etc/letsencrypt/archive:/etc/nginx/conf.d/cert:ro
-      - /opt/dl/nginx/html:/etc/nginx/html
-      - /opt/dl/nginx/conf.d/nginx.conf:/etc/nginx/conf.d/default.conf
-      - /opt/dl/nginx/mime.types:/etc/nginx/mime.types:ro
-      - /opt/dl/nginx/.logs:/var/log/nginx
+      - /opt/dl/caddy/html:/srv
+      - /opt/dl/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /opt/dl/caddy/data:/data
+      - /opt/dl/caddy/config:/config
     restart: always
     environment:
-      TZ:
+      TZ: ${TZ:-Asia/Shanghai}
     depends_on:
       - minio
       - postgres
+      - api
   redis:
-    image:
-      redis:${REDIS_V}
+    image: redis:7.4.5-alpine3.21
     container_name: redis
     restart: always
     volumes:
@@ -80,7 +78,7 @@ services:
     ports:
       - "${REDIS_PORT:-6379}:6379"
   postgres:
-    image: postgres:${POSTGRES_V}
+    image: postgres:17.5-alpine3.22
     container_name: postgres
     restart: always
     ports:
