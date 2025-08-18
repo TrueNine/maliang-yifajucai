@@ -41,7 +41,7 @@ services:
       [
         'java',
         '-jar',
-        '/app/${PROJECT_NAME}-${PROJECT_VERSION}.jar',
+        '/app/libs/${PROJECT_NAME}-${PROJECT_VERSION}.jar',
         '--spring.profiles.active=prod',
         '--add-opens java.base/sun.reflect.annotation=ALL-UNNAMED'
       ]
