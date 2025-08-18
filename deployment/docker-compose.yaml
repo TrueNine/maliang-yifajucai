@@ -8,6 +8,7 @@ services:
       - "${MINIO_PORT:-9000}:9000"
       - "${MINIO_ADMIN_PORT:-9001}:9001"
     environment:
+      TZ: ${TZ}
       MINIO_ROOT_USER: '${MINIO_USER}'
       MINIO_ROOT_PASSWORD: '${MINIO_PASSWORD}'
       MINIO_SERVER_URL: "http://${GLOBAL_IP}:${MINIO_PORT}"
@@ -17,6 +18,8 @@ services:
     command: server --console-address ':9001' /data
     volumes:
       - ./volumes/minio/data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - frontend-network
       - backend-network
@@ -30,8 +33,10 @@ services:
     working_dir: /app
     volumes:
       - ./volumes/java:/app:ro
-      - ./.env:/app/.env
+      - ./.env:/app/.env:ro
       - ./volumes/ms-playwright:/ms-playwright:rw
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     command:
       [
         'java',
@@ -45,11 +50,14 @@ services:
     env_file:
       - ./.env
     environment:
+      TZ: ${TZ}
       JVM_VERSION: '${JVM_V}'
       PLAYWRIGHT_VERSION: '${PLAYWRIGHT_V}'
     networks:
       - frontend-network
       - backend-network
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
   caddy:
     image: caddy:2.8.4-alpine
     container_name: ${PROJECT_NAME}_caddy
@@ -62,9 +70,11 @@ services:
       - ./volumes/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./volumes/caddy/data:/data
       - ./volumes/caddy/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     restart: always
     environment:
-      TZ: ${TZ:-Asia/Shanghai}
+      TZ: ${TZ}
     depends_on:
       - minio
       - api
@@ -77,6 +87,8 @@ services:
     restart: always
     volumes:
       - ./volumes/redis/data:/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     command: [
       "redis-server",
       "--port", "6379",
@@ -101,11 +113,14 @@ services:
     ports:
       - "${PG_PORT:-5432}:5432"
     environment:
+      TZ: ${TZ}
       POSTGRES_DB: '${PG_DB}'
       POSTGRES_USER: '${PG_USER}'
       POSTGRES_PASSWORD: '${PG_PASSWORD}'
     volumes:
       - ./volumes/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - backend-network
 
