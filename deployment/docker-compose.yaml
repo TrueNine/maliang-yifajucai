@@ -33,7 +33,7 @@ services:
     working_dir: /app
     volumes:
       - ./volumes/java:/app:ro
-      - ./.env:/app/.env:ro
+      - ./.env:/etc/app/.env:ro
       - ./volumes/ms-playwright:/ms-playwright:rw
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
