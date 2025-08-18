@@ -130,4 +130,4 @@ networks:
     internal: false
   backend-network:
     driver: bridge
-    internal: true
+    internal: false
