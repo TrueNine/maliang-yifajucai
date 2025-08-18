@@ -17,6 +17,9 @@ services:
     command: server --console-address ':9001' /data
     volumes:
       - ./volumes/minio/data:/data
+    networks:
+      - frontend-network
+      - backend-network
   api:
     build:
       context: ./ms-playwright
@@ -44,6 +47,9 @@ services:
     environment:
       JVM_VERSION: '${JVM_V}'
       PLAYWRIGHT_VERSION: '${PLAYWRIGHT_V}'
+    networks:
+      - frontend-network
+      - backend-network
   caddy:
     image: caddy:2.8.4-alpine
     container_name: ${PROJECT_NAME}_caddy
@@ -61,8 +67,9 @@ services:
       TZ: ${TZ:-Asia/Shanghai}
     depends_on:
       - minio
-      - postgres
       - api
+    networks:
+      - frontend-network
   redis:
     image: redis:7.4.5-alpine3.21
     container_name: ${PROJECT_NAME}_redis
@@ -79,6 +86,8 @@ services:
     ]
     ports:
       - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - backend-network
   postgres:
     image: postgres:17.5-alpine3.22
     container_name: ${PROJECT_NAME}_postgres
@@ -92,3 +101,13 @@ services:
       POSTGRES_PASSWORD: '${PG_PASSWORD}'
     volumes:
       - ./volumes/postgres/data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+    driver: bridge
+    internal: false
+  backend-network:
+    driver: bridge
+    internal: true
