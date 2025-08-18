@@ -26,7 +26,7 @@ services:
   api:
     build:
       context: ./volumes/ms-playwright
-      dockerfile: ./volumes/ms-playwright/Dockerfile
+      dockerfile: ./Dockerfile
     container_name: ${PROJECT_NAME}_java
     hostname: api
     restart: always
