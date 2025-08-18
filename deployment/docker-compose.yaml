@@ -25,8 +25,8 @@ services:
       - backend-network
   api:
     build:
-      context: ./volumes/ms-playwright
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./volumes/ms-playwright/Dockerfile
     container_name: ${PROJECT_NAME}_java
     hostname: api
     restart: always
