@@ -9,5 +9,7 @@
     <output url="file://$PROJECT_DIR$/backend/out"/>
     <output url="file://$PROJECT_DIR$/backend/build"/>
     <output url="file://$PROJECT_DIR$/backend/.logs"/>
+    <output url="file://$PROJECT_DIR$/frontend/dist"/>
+    <output url="file://$PROJECT_DIR$/frontend/.vscode"/>
   </component>
 </project>
