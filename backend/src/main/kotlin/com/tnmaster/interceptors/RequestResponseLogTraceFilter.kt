@@ -5,6 +5,7 @@ import com.tnmaster.service.ApiCallRecordService
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.servlet.deviceId
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
+import io.github.truenine.composeserver.logger
 import io.github.truenine.composeserver.slf4j
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -36,6 +37,6 @@ class RequestResponseLogTraceFilter(private val recordService: ApiCallRecordServ
 
   companion object {
     @JvmStatic
-    private val log = slf4j<RequestResponseLogTraceFilter>()
+    private val log = logger<RequestResponseLogTraceFilter>()
   }
 }
