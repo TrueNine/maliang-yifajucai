@@ -1,116 +1,75 @@
-# Caddy configuration - 完全禁用HTTPS
+# 极简 Caddy 配置 - 彻底禁用 HTTPS
 {
-  # 全局配置
-  email truenine304520@gmail.com
-  
-  # 完全禁用自动HTTPS
-  auto_https off
-  
-  # 禁用所有HTTPS相关功能
-  servers {
-    protocols h1 h2c
-  }
-  
-  # 禁用管理端点的HTTPS
+  # 禁用管理API
   admin off
 }
 
-# IP访问配置 - 只监听80端口
-:80 {
-  encode gzip
-
-  # 匹配器定义
-  @static {
-    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
-  }
-  
-  @html {
-    path *.html *.htm
-  }
-
+# 监听域名 yifajucai.com 的80端口请求 - 仅HTTP协议
+yifajucai.com {
   # 静态文件根目录
   root * /srv
-
-  # API文档代理
+  
+  # 启用gzip压缩
+  encode gzip
+  
+  # 静态文件匹配器
+  @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
+  @html path *.html *.htm
+  
+  # API代理 - 必须在file_server之前
   reverse_proxy /v3/api-docs* api:8080
-
-  # 后端API代理
-  handle_path /apis/* {
-    reverse_proxy api:8080
-  }
-
-  # MinIO对象存储代理
-  handle_path /ressources_oss/* {
-    reverse_proxy minio:9000
-  }
-
-  # 文档路径处理
-  handle_path /docs/* {
+  reverse_proxy /apis/* api:8080
+  reverse_proxy /ressources_oss/* minio:9000
+  
+  # 文档处理
+  handle /docs/* {
     root * /srv/__docs
+    rewrite * /docs{path}
     try_files {path} /docs/404.html
-  }
-
-  # SPA路由处理
-  try_files {path} /index.html
-  file_server
-
-  # 缓存控制
-  header @static {
-    Cache-Control "public, max-age=31536000"
-    Content-Type "application/javascript"
+    file_server
   }
   
-  header @html {
-    Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-  }
+  # 默认处理 - SPA路由
+  try_files {path} /index.html
+  file_server
+  
+  # 缓存头
+  header @static Cache-Control "public, max-age=31536000"
+  header @html Cache-Control "no-cache, no-store, must-revalidate"
+  header @static Content-Type "application/javascript"
 }
 
-# 域名访问配置 - 强制HTTP
-http://yifajucai.com {
-  encode gzip
-
-  # 匹配器定义
-  @static {
-    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
-  }
-  
-  @html {
-    path *.html *.htm
-  }
-
+# 监听所有其他80端口请求 - 支持IP访问
+:80 {
   # 静态文件根目录
   root * /srv
-
-  # API文档代理
+  
+  # 启用gzip压缩
+  encode gzip
+  
+  # 静态文件匹配器
+  @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
+  @html path *.html *.htm
+  
+  # API代理 - 必须在file_server之前
   reverse_proxy /v3/api-docs* api:8080
-
-  # 后端API代理
-  handle_path /apis/* {
-    reverse_proxy api:8080
-  }
-
-  # MinIO对象存储代理
-  handle_path /ressources_oss/* {
-    reverse_proxy minio:9000
-  }
-
-  # 文档路径处理
-  handle_path /docs/* {
+  reverse_proxy /apis/* api:8080
+  reverse_proxy /ressources_oss/* minio:9000
+  
+  # 文档处理
+  handle /docs/* {
     root * /srv/__docs
+    rewrite * /docs{path}
     try_files {path} /docs/404.html
-  }
-
-  # SPA路由处理
-  try_files {path} /index.html
-  file_server
-
-  # 缓存控制
-  header @static {
-    Cache-Control "public, max-age=31536000"
-    Content-Type "application/javascript"
+    file_server
   }
   
-  header @html {
-    Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-  }
+  # 默认处理 - SPA路由
+  try_files {path} /index.html
+  file_server
+  
+  # 缓存头
+  header @static Cache-Control "public, max-age=31536000"
+  header @html Cache-Control "no-cache, no-store, must-revalidate"
+  header @static Content-Type "application/javascript"
 }
