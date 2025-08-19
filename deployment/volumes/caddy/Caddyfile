@@ -1,5 +1,6 @@
-# 监听域名 yifajucai.com - 自动HTTPS
+# 域名 + 绑定固定IP地址
 yifajucai.com {
+  bind 111.170.157.144 127.0.0.1
   # 启用gzip压缩
   encode gzip
 
