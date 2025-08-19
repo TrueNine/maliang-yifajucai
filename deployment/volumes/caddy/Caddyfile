@@ -1,22 +1,27 @@
-# 域名 + 绑定固定IP地址
 yifajucai.com {
-  bind 111.170.157.144 127.0.0.1
-  # 启用gzip压缩
-  encode gzip
+	encode gzip
 
-  handle /api/* {
-    uri strip_prefix /api
-    reverse_proxy api:8080
-  }
+	# 使用 Google Trust Services 作为证书颁发机构
+	tls {
+		issuer acme {
+			dir https://dv.acme-v02.api.pki.goog/directory
+			email truenine304520@gmail.com
+		}
+	}
 
-  handle /ressources_oss/* {
-    uri strip_prefix /api
-    reverse_proxy minio:9000
-  }
-  
-  handle {
-    root * /srv
-    try_files {path} /index.html
-    file_server
-  }
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy api:8080
+	}
+
+	handle /ressources_oss/* {
+		uri strip_prefix /ressources_oss
+		reverse_proxy minio:9000
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
 }
