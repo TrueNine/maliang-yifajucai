@@ -1,10 +1,10 @@
-# 极简 Caddy 配置 - 彻底禁用 HTTPS
+# Caddy 配置 - 启用 HTTPS 自动证书
 {
   # 禁用管理API
   admin off
 }
 
-# 监听域名 yifajucai.com 的80端口请求 - 仅HTTP协议
+# 监听域名 yifajucai.com - 自动HTTPS
 yifajucai.com {
   # 静态文件根目录
   root * /srv
