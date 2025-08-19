@@ -106,11 +106,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
     volumes:
       - ./volumes/caddy/dist:/srv:ro
       - ./volumes/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./volumes/caddy/data:/data:rw
-      - ./volumes/caddy/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     restart: always
@@ -118,6 +117,7 @@ services:
       TZ: ${TZ}
     networks:
       - frontend-network
+      - backend-network
 
 networks:
   frontend-network:
