@@ -1,40 +1,35 @@
-# Caddy configuration for yifajucai.com
+# Caddy configuration - 完全禁用HTTPS
 {
   # 全局配置
   email truenine304520@gmail.com
-
-  # 配置多个CA，优先使用ZeroSSL（对国内网络更友好）
-  acme_ca https://acme.zerossl.com/v2/DV90
-
-  # 备用CA配置
-  acme_ca https://acme-v02.api.letsencrypt.org/directory
-
-  # 设置更长的超时时间
-  http_port 80
-  https_port 443
+  
+  # 完全禁用自动HTTPS
+  auto_https off
+  
+  # 禁用所有HTTPS相关功能
+  servers {
+    protocols h1 h2c
+  }
+  
+  # 禁用管理端点的HTTPS
+  admin off
 }
 
-# HTTP IP访问配置（不重定向到HTTPS）
+# IP访问配置 - 只监听80端口
 :80 {
   encode gzip
 
-  # 静态文件服务
-  root * /srv/dist
-
-  # 全局匹配器定义
+  # 匹配器定义
   @static {
-    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
   }
+  
   @html {
     path *.html *.htm
   }
 
-  # 文档路径
-  handle_path /docs/* {
-    root * /srv/__docs
-    try_files {path} /docs/404.html
-    header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-  }
+  # 静态文件根目录
+  root * /srv
 
   # API文档代理
   reverse_proxy /v3/api-docs* api:8080
@@ -49,42 +44,42 @@
     reverse_proxy minio:9000
   }
 
-  # 处理SPA路由，所有未匹配的请求返回index.html
+  # 文档路径处理
+  handle_path /docs/* {
+    root * /srv/__docs
+    try_files {path} /docs/404.html
+  }
+
+  # SPA路由处理
   try_files {path} /index.html
   file_server
 
   # 缓存控制
-  header @static Cache-Control "public, max-age=31536000"
-  header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-
-  @mjs {
-    path *.mjs
+  header @static {
+    Cache-Control "public, max-age=31536000"
+    Content-Type "application/javascript"
   }
-  header @mjs Content-Type "application/javascript"
+  
+  header @html {
+    Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
+  }
 }
 
-# HTTPS域名配置（自动重定向HTTP域名访问到HTTPS）
-yifajucai.com {
-  # 自动HTTPS和HTTP/2
+# 域名访问配置 - 强制HTTP
+http://yifajucai.com {
   encode gzip
 
-  # 静态文件服务
-  root * /srv/dist
-
-  # 全局匹配器定义
+  # 匹配器定义
   @static {
-    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+    path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
   }
+  
   @html {
     path *.html *.htm
   }
 
-  # 文档路径
-  handle_path /docs/* {
-    root * /srv/__docs
-    try_files {path} /docs/404.html
-    header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-  }
+  # 静态文件根目录
+  root * /srv
 
   # API文档代理
   reverse_proxy /v3/api-docs* api:8080
@@ -99,16 +94,23 @@ yifajucai.com {
     reverse_proxy minio:9000
   }
 
-  # 处理SPA路由，所有未匹配的请求返回index.html
+  # 文档路径处理
+  handle_path /docs/* {
+    root * /srv/__docs
+    try_files {path} /docs/404.html
+  }
+
+  # SPA路由处理
   try_files {path} /index.html
   file_server
 
   # 缓存控制
-  header @static Cache-Control "public, max-age=31536000"
-  header @html Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
-
-  @mjs {
-    path *.mjs
+  header @static {
+    Cache-Control "public, max-age=31536000"
+    Content-Type "application/javascript"
   }
-  header @mjs Content-Type "application/javascript"
+  
+  header @html {
+    Cache-Control "private, no-store, no-cache, must-revalidate, proxy-revalidate"
+  }
 }
