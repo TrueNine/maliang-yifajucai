@@ -1,75 +1,21 @@
-# Caddy 配置 - 启用 HTTPS 自动证书
-{
-  # 禁用管理API
-  admin off
-}
-
 # 监听域名 yifajucai.com - 自动HTTPS
 yifajucai.com {
-  # 静态文件根目录
-  root * /srv
-  
   # 启用gzip压缩
   encode gzip
-  
-  # 静态文件匹配器
-  @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
-  @html path *.html *.htm
-  
-  # API代理 - 必须在file_server之前
-  reverse_proxy /v3/api-docs* api:8080
-  reverse_proxy /apis/* api:8080
-  reverse_proxy /ressources_oss/* minio:9000
-  
-  # 文档处理
-  handle /docs/* {
-    root * /srv/__docs
-    rewrite * /docs{path}
-    try_files {path} /docs/404.html
-    file_server
-  }
-  
-  # 默认处理 - SPA路由
-  try_files {path} /index.html
-  file_server
-  
-  # 缓存头
-  header @static Cache-Control "public, max-age=31536000"
-  header @html Cache-Control "no-cache, no-store, must-revalidate"
-  header @static Content-Type "application/javascript"
-}
 
-# 监听所有其他80端口请求 - 支持IP访问
-:80 {
-  # 静态文件根目录
-  root * /srv
-  
-  # 启用gzip压缩
-  encode gzip
-  
-  # 静态文件匹配器
-  @static path *.js *.css *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot *.mjs
-  @html path *.html *.htm
-  
-  # API代理 - 必须在file_server之前
-  reverse_proxy /v3/api-docs* api:8080
-  reverse_proxy /apis/* api:8080
-  reverse_proxy /ressources_oss/* minio:9000
-  
-  # 文档处理
-  handle /docs/* {
-    root * /srv/__docs
-    rewrite * /docs{path}
-    try_files {path} /docs/404.html
-    file_server
+  handle /api/* {
+    uri strip_prefix /api
+    reverse_proxy api:8080
+  }
+
+  handle /ressources_oss/* {
+    uri strip_prefix /api
+    reverse_proxy minio:9000
   }
   
-  # 默认处理 - SPA路由
-  try_files {path} /index.html
-  file_server
-  
-  # 缓存头
-  header @static Cache-Control "public, max-age=31536000"
-  header @html Cache-Control "no-cache, no-store, must-revalidate"
-  header @static Content-Type "application/javascript"
+  handle {
+    root * /srv
+    try_files {path} /index.html
+    file_server
+  }
 }
