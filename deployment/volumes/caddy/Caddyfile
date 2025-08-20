@@ -1,7 +1,4 @@
-{
-}
-
-:80, yifajucai.com:80 {
+yifajucai.truenine.org, http://yifajucai.truenine.org, http://150.5.173.213 {
 	encode gzip
 	handle {
 		root * /srv
