@@ -18,13 +18,13 @@ const snackbar = useSnackbar()
 // 加载微信 js sdk
 async function loadJsSdk() {
   wxInfo.value = await api.wechatPublicAccountApi.getJsApiUrlSignature({ url: window.location.href })
-  if (!wxInfo.value.appId || !wxInfo.value.nonceString || !wxInfo.value.sign || !wxInfo.value.timestamp) {
+  if (!wxInfo.value?.appId || !wxInfo.value?.nonceStr || !wxInfo.value?.signature || !wxInfo.value?.timestamp) {
     return
   }
   loadWxpaJsSdk(() => (sdkLoaded.value = true), {
     appId: wxInfo.value.appId,
-    nonceStr: wxInfo.value.nonceString,
-    signature: wxInfo.value.sign,
+    nonceStr: wxInfo.value.nonceStr,
+    signature: wxInfo.value.signature,
     timestamp: wxInfo.value.timestamp,
   })
 }

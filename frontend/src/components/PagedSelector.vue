@@ -34,6 +34,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits<Emits>()
 const { items: _items, modelValue: _modelValue, pq: _pq } = useVModels(props, emit, { passive: true })
+// 显式类型转换以解决 VCombobox 的类型兼容性问题
+const _modelValueComputed = computed({
+  get: () => _modelValue.value,
+  set: (value) => {
+    _modelValue.value = value
+  },
+})
 const _nonEmptyItems = computed(() => {
   return _items.value?.d?.length ? _items.value?.d : []
 })
@@ -58,7 +65,7 @@ onMounted(() => {
 </script>
 
 <template>
-<VCombobox v-model="_modelValue" :multiple="props.multiple" chips returnobject :itemTitle="props.itemTitle as unknown as string" :itemValue="props.itemValue as unknown as string" :items="_nonEmptyItems" @update:search="onUpdateSearch">
+<VCombobox v-model="_modelValueComputed" :multiple="props.multiple" chips returnObject :itemTitle="props.itemTitle as unknown as string" :itemValue="props.itemValue as unknown as string" :items="_nonEmptyItems" @update:search="onUpdateSearch">
   <template #prepend-item>
     <PaginatorComp v-model:freeze="free" v-model:pq="_pq" v-model:pr="_items" :totalVisible="mobile ? 4 : 7" @change="changePage" />
   </template>

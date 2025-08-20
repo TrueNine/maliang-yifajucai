@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Pq } from '@compose/types'
-import type { HTTPMethod, RequestOf, ResponseOf } from '@/api'
+import type { HttpMethod, RequestOf, ResponseOf } from '@/api'
 import { array, object, string } from 'yup'
-import { api, HTTPMethod_CONSTANTS } from '@/api'
+import { api, HttpMethod_CONSTANTS } from '@/api'
 import PagedSelector from '@/components/PagedSelector.vue'
 
 type _Data = ResponseOf<typeof api.aclV2Api.getAllApisAsAdmin>
@@ -42,12 +42,12 @@ const schema = object({
   apiMethods: array()
     .required()
     .min(1)
-    .of(string().oneOf(HTTPMethod_CONSTANTS)),
+    .of(string().oneOf(HttpMethod_CONSTANTS)),
 })
 
 type _Dto = RequestOf<typeof api.aclV2Api.postApiAsAdmin>['body']
 
-async function saveApi(dto: _Dto & { apiMethods: HTTPMethod[] }) {
+async function saveApi(dto: _Dto & { apiMethods: HttpMethod[] }) {
   for (const mtd of dto.apiMethods) {
     await api.aclV2Api.postApiAsAdmin({
       body: { ...dto, apiMethod: mtd },
@@ -101,7 +101,7 @@ async function saveApi(dto: _Dto & { apiMethods: HTTPMethod[] }) {
         </YField>
 
         <YField name="apiMethods" label="访问方法">
-          <VSelect :items="HTTPMethod_CONSTANTS" multiple chips />
+          <VSelect :items="HttpMethod_CONSTANTS" multiple chips />
         </YField>
         <YField name="permissions" label="所需访问权限">
           <PagedSelector v-model:pq="_permissionsPq" eager itemTitle="name" :items="allPermissions" @page="getAllPermissions" />

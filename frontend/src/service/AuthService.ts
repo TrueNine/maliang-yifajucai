@@ -18,11 +18,11 @@ class AuthService {
     const userStore = useUserStore()
     userStore.$reset()
     const a = await api.authApi.loginBySystemAccount({ body: { account, password: btoa(password) } })
-    userStore.authToken = a.token
-    userStore.roles = a.roles
-    userStore.timeout = a.tokenTimeout
-    userStore.activeTimeout = a.activeTimeout
-    userStore.permissions = a.permissions
+    userStore.authToken = a.sessionId
+    userStore.roles = Array.from(a.roles)
+    userStore.timeout = a.sessionTimeout
+    userStore.activeTimeout = undefined // activeTimeout 字段在新API中不存在
+    userStore.permissions = Array.from(a.permissions)
     return true
   }
 }

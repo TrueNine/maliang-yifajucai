@@ -1,9 +1,9 @@
-import type { SaTokenService_SaTokenLoginView as SaTokenServiceSaTokenLoginView } from '@/__generated/model/static'
+import type { AuthService_AuthTokenView as AuthServiceAuthTokenView } from '@/__generated/model/static'
 import { Headers as HeadersR } from '@compose/req'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-type _LoginResult = SaTokenServiceSaTokenLoginView
+type _LoginResult = AuthServiceAuthTokenView
 export const userStoreKey = 'userStore'
 export const useUserStore = defineStore(
   userStoreKey,
@@ -43,13 +43,13 @@ export const useUserStore = defineStore(
         logoutClear()
         return
       }
-      authHeaderName.value = loginResult.getHeaderName
-      roles.value = loginResult.roles
+      authHeaderName.value = undefined // getHeaderName 字段在新API中不存在
+      roles.value = Array.from(loginResult.roles)
       account.value = loginResult.account
-      timeout.value = loginResult.tokenTimeout
-      authToken.value = loginResult.token
-      permissions.value = loginResult.permissions
-      activeTimeout.value = loginResult.activeTimeout
+      timeout.value = loginResult.sessionTimeout
+      authToken.value = loginResult.sessionId
+      permissions.value = Array.from(loginResult.permissions)
+      activeTimeout.value = undefined // activeTimeout 字段在新API中不存在
     }
 
     return {
