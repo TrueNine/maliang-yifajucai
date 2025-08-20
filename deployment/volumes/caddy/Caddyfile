@@ -1,5 +1,17 @@
 yifajucai.truenine.org, http://yifajucai.truenine.org, http://150.5.173.213 {
 	encode gzip
+	
+	# API 反向代理
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+	
+	# MinIO 对象存储资源代理
+	handle /resources_oss/* {
+		reverse_proxy minio:9000
+	}
+	
+	# 前端静态资源
 	handle {
 		root * /srv
 		try_files {path} /index.html
