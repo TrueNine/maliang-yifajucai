@@ -27,16 +27,6 @@ repositories {
   mavenCentral()
 }
 
-composeGradle {
-  jarExtension.enabled = true
-  jarExtension {
-    enabled = true
-    bootJarClassifier = ""
-    bootJarVersion = project.version.toString()
-    bootJarSeparate = true
-  }
-}
-
 sourceSets { main { resources { exclude("config/data/**") } } }
 
 dependencies {
