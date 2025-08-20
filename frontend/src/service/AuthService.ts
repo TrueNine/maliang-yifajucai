@@ -21,7 +21,8 @@ class AuthService {
     userStore.authToken = a.sessionId
     userStore.roles = Array.from(a.roles)
     userStore.timeout = a.sessionTimeout
-    userStore.activeTimeout = undefined // activeTimeout 字段在新API中不存在
+    // activeTimeout 字段在新API中不存在
+    userStore.activeTimeout = void 0
     userStore.permissions = Array.from(a.permissions)
     return true
   }

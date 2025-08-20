@@ -43,13 +43,15 @@ export const useUserStore = defineStore(
         logoutClear()
         return
       }
-      authHeaderName.value = undefined // getHeaderName 字段在新API中不存在
+      // getHeaderName 字段在新API中不存在
+      authHeaderName.value = void 0
       roles.value = Array.from(loginResult.roles)
       account.value = loginResult.account
       timeout.value = loginResult.sessionTimeout
       authToken.value = loginResult.sessionId
       permissions.value = Array.from(loginResult.permissions)
-      activeTimeout.value = undefined // activeTimeout 字段在新API中不存在
+      // activeTimeout 字段在新API中不存在
+      activeTimeout.value = void 0
     }
 
     return {

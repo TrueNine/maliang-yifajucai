@@ -1,15 +1,15 @@
-export { AccountApi } from './AccountApi'
-export { AclV2Api } from './AclV2Api'
-export { AddressV2Api } from './AddressV2Api'
-export { AuditV2Api } from './AuditV2Api'
-export { AuthApi } from './AuthApi'
-export { BlackListV2Api } from './BlackListV2Api'
-export { CertV2Api } from './CertV2Api'
-export { CommonApi } from './CommonApi'
-export { JobSeekerV2Api } from './JobSeekerV2Api'
-export { JobV2Api } from './JobV2Api'
-export { SensitiveMockApi } from './SensitiveMockApi'
-export { ServerCacheConfigV2Api } from './ServerCacheConfigV2Api'
-export { TaxVideoV2Api } from './TaxVideoV2Api'
-export { UserInfoV2Api } from './UserInfoV2Api'
-export { WechatPublicAccountApi } from './WechatPublicAccountApi'
+export {AccountApi} from './AccountApi';
+export {AclV2Api} from './AclV2Api';
+export {AddressV2Api} from './AddressV2Api';
+export {AuditV2Api} from './AuditV2Api';
+export {AuthApi} from './AuthApi';
+export {BlackListV2Api} from './BlackListV2Api';
+export {CertV2Api} from './CertV2Api';
+export {CommonApi} from './CommonApi';
+export {JobSeekerV2Api} from './JobSeekerV2Api';
+export {JobV2Api} from './JobV2Api';
+export {SensitiveMockApi} from './SensitiveMockApi';
+export {ServerCacheConfigV2Api} from './ServerCacheConfigV2Api';
+export {TaxVideoV2Api} from './TaxVideoV2Api';
+export {UserInfoV2Api} from './UserInfoV2Api';
+export {WechatPublicAccountApi} from './WechatPublicAccountApi';

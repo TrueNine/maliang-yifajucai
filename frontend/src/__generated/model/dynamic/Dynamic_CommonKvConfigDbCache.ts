@@ -1,19 +1,19 @@
 /**
  * # 数据库缓存
- *
+ * 
  */
 export interface Dynamic_CommonKvConfigDbCache {
-  id?: string
-  crd?: string | undefined
-  mrd?: string | undefined
-  rlv?: number
-  ldf?: string | undefined
+  id?: string;
+  crd?: string | undefined;
+  mrd?: string | undefined;
+  rlv?: number;
+  ldf?: string | undefined;
   /**
    * 存储 key
    */
-  k?: string
+  k?: string;
   /**
    * 存储 value
    */
-  v?: string | undefined
+  v?: string | undefined;
 }

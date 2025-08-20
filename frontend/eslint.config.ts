@@ -19,7 +19,7 @@ export default eslint9({
     },
   },
   ignores: [
-    '!__generated/**',
+    'src/__generated/**',
     '.lingma/**',
   ],
 })
