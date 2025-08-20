@@ -1,5 +1,6 @@
 package com.tnmaster.application.service
 
+import com.tnmaster.config.TestCasbinConfig
 import com.tnmaster.repositories.IUserAccountRepo
 import com.tnmaster.security.UserContextHolder
 import com.tnmaster.service.AuthService
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.test.context.ActiveProfiles
 import java.sql.Connection
 import java.time.Duration
 import javax.sql.DataSource
@@ -25,6 +28,8 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Import(TestCasbinConfig::class)
 class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
 
   @Resource
@@ -47,8 +52,30 @@ class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOss
 
   @BeforeEach
   fun setUp() {
+    // 验证Casbin配置是否正常工作
+    verifyCasbinSetup()
+    
     // 初始化测试数据
     initializeTestData()
+  }
+  
+  /**
+   * 验证Casbin配置是否正常工作
+   */
+  private fun verifyCasbinSetup() {
+    try {
+      // 测试基本的权限检查功能
+      val hasPermission = permissionService.checkPermission("USER", "READ_USER", "allow")
+      println("Casbin setup verification - USER has READ_USER permission: $hasPermission")
+      
+      // 测试角色检查功能
+      val hasRole = permissionService.hasRole("test_user_123", "USER")
+      println("Casbin setup verification - test_user_123 has USER role: $hasRole")
+      
+    } catch (e: Exception) {
+      println("Warning: Casbin setup verification failed: ${e.message}")
+      e.printStackTrace()
+    }
   }
 
   @AfterEach
@@ -103,14 +130,24 @@ class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOss
    */
   private fun addTestUserRole(account: String, role: String) {
     try {
-      // 添加用户角色
-      permissionService.addRoleForUser(account, role)
+      // 确保角色权限存在
+      val hasReadPermission = permissionService.checkPermission(role, "READ_USER", "allow")
+      val hasWritePermission = permissionService.checkPermission(role, "WRITE_USER", "allow")
+      
+      if (!hasReadPermission) {
+        permissionService.addPolicy(role, "READ_USER", "allow")
+      }
+      if (!hasWritePermission) {
+        permissionService.addPolicy(role, "WRITE_USER", "allow")
+      }
 
-      // 为测试用户添加测试期望的权限
-      permissionService.addPolicy(role, "READ_USER", "allow")
-      permissionService.addPolicy(role, "WRITE_USER", "allow")
+      // 添加用户角色（如果不存在）
+      if (!permissionService.hasRole(account, role)) {
+        permissionService.addRoleForUser(account, role)
+      }
     } catch (e: Exception) {
-      // 忽略异常，可能角色已存在
+      println("Warning: Could not add test user role: ${e.message}")
+      // 继续执行，测试配置应该已经预设了基本权限
     }
   }
 
@@ -120,13 +157,15 @@ class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOss
   private fun removeTestUserRole(account: String, role: String) {
     try {
       // 移除用户角色
-      permissionService.removeRoleForUser(account, role)
+      if (permissionService.hasRole(account, role)) {
+        permissionService.removeRoleForUser(account, role)
+      }
 
-      // 移除角色权限
-      permissionService.removePolicy(role, "READ_USER", "allow")
-      permissionService.removePolicy(role, "WRITE_USER", "allow")
+      // 注意：不要移除角色权限，因为其他测试可能需要它们
+      // 只移除用户和角色的关联关系
     } catch (e: Exception) {
-      // 忽略异常
+      println("Warning: Could not remove test user role: ${e.message}")
+      // 忽略异常，清理失败不应该影响其他测试
     }
   }
 
@@ -242,6 +281,26 @@ class AuthServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOss
     // In real scenario, Redis TTL would handle this
     // For test, we can verify the disable state exists
     assertTrue(authService.isUserDisabled(testAccount))
+  }
+
+  @Test
+  fun casbin_permission_system_works_correctly() {
+    // Test basic Casbin functionality
+    
+    // Test role checking
+    val hasUserRole = permissionService.hasRole("test_user_123", "USER")
+    assertTrue(hasUserRole, "test_user_123 should have USER role")
+    
+    // Test permission checking
+    val hasReadPermission = permissionService.checkPermission("USER", "READ_USER", "allow")
+    assertTrue(hasReadPermission, "USER role should have READ permission")
+    
+    val hasWritePermission = permissionService.checkPermission("USER", "WRITE_USER", "allow")
+    assertTrue(hasWritePermission, "USER role should have write permission")
+    
+    // Test user roles retrieval
+    val userRoles = permissionService.getUserRoles("test_user_123")
+    assertTrue(userRoles.contains("USER"), "User roles should contain USER: $userRoles")
   }
 
   @Test
