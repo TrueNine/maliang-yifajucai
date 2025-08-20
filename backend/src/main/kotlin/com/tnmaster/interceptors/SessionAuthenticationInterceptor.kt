@@ -40,7 +40,10 @@ class SessionAuthenticationInterceptor(
       "/swagger-ui/**",
       "/v3/api-docs/**",
       "/error",
-      "/favicon.ico"
+      "/favicon.ico",
+      "/jimmer.html",
+      "/jimmer.yaml",
+      "/ts.zip"
     )
   }
 

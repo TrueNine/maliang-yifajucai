@@ -30,7 +30,7 @@ class ApiCallRecordService(
     withContext(Dispatchers.IO) {
       async {
         log.info("DEBUG: 使用的RedisTemplate: {}", redisTemplate::class.java.name)
-        log.info("DEBUG: RedisTemplate的valueSerializer: {}", redisTemplate.valueSerializer?.javaClass?.name)
+        log.info("DEBUG: RedisTemplate的valueSerializer: {}", redisTemplate.valueSerializer.javaClass.name)
         redisTemplate.expire(CACHE_KEY, CACHE_DURATION)
         redisTemplate.opsForSet().add(CACHE_KEY, record)
       }
