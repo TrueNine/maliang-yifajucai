@@ -1,38 +1,38 @@
 export const JobSeekerStateTyping_CONSTANTS = [
   /**
    * 无状态
-   * 
+   *
    * 等同于空
    */
-  'NONE', 
+  'NONE',
   /**
    * 等待入职
    */
-  'WAITING', 
+  'WAITING',
   /**
    * 已入职
    */
-  'SUCCESS', 
+  'SUCCESS',
   /**
    * 已撤离
-   * 
+   *
    * 例如：去了别的平台等
    */
-  'LEAVE', 
+  'LEAVE',
   /**
    * 不可用
-   * 
+   *
    * 例如：被拉黑，被劝退
    */
-  'UNAVAILABLE', 
+  'UNAVAILABLE',
   /**
    * 其他状态
-   * 
+   *
    * 其他未来扩展状态
    */
-  'OTHER'
-] as const;
+  'OTHER',
+] as const
 /**
  * 求职者状态
  */
-export type JobSeekerStateTyping = typeof JobSeekerStateTyping_CONSTANTS[number];
+export type JobSeekerStateTyping = typeof JobSeekerStateTyping_CONSTANTS[number]

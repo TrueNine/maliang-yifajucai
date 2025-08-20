@@ -1,4 +1,4 @@
 export interface PermissionsAdminPostDto {
-  name: string;
-  doc?: string | undefined;
+  name: string
+  doc?: string | undefined
 }

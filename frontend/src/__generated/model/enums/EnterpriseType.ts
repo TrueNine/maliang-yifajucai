@@ -1,19 +1,19 @@
 export const EnterpriseType_CONSTANTS = [
-  'NONE', 
+  'NONE',
   /**
    * 中介
    */
-  'MIDDLEMAN', 
+  'MIDDLEMAN',
   /**
    * 企业
    */
-  'ENTERPRISE', 
+  'ENTERPRISE',
   /**
    * 其他
    */
-  'OTHER'
-] as const;
+  'OTHER',
+] as const
 /**
  * 企业类别
  */
-export type EnterpriseType = typeof EnterpriseType_CONSTANTS[number];
+export type EnterpriseType = typeof EnterpriseType_CONSTANTS[number]
