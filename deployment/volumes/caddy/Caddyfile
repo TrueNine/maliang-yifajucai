@@ -1,17 +1,14 @@
 yifajucai.com, http://yifajucai.com, http://150.5.173.213 {
 	encode gzip
-	
-	# API 反向代理
-	handle /api/* {
-		reverse_proxy api:8080
+
+	handle /apis/* {
+		reverse_proxy http://api:8080
 	}
-	
-	# MinIO 对象存储资源代理
+
 	handle /resources_oss/* {
-		reverse_proxy minio:9000
+		reverse_proxy http://minio:9000
 	}
-	
-	# 前端静态资源
+
 	handle {
 		root * /srv
 		try_files {path} /index.html
