@@ -7,7 +7,7 @@ import com.tnmaster.repositories.IAttachmentRepo
 import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.domain.IReadableAttachment
 import io.github.truenine.composeserver.logger
-import io.github.truenine.composeserver.oss.ObjectStorageService
+import io.github.truenine.composeserver.oss.IObjectStorageService
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.AttachmentTyping
 import io.github.truenine.composeserver.toId
@@ -23,7 +23,7 @@ import io.github.truenine.composeserver.enums.MediaTypes as MimeTypes
 @Service
 class AttachmentService(
   val attRepo: IAttachmentRepo,
-  private val oss: ObjectStorageService,
+  private val oss: IObjectStorageService,
 ) {
   companion object {
     @JvmStatic

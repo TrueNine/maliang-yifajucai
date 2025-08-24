@@ -13,7 +13,8 @@ import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.servlet.toReadableAttachment
 import io.github.truenine.composeserver.domain.IPage
 import io.github.truenine.composeserver.generator.IOrderCodeGenerator
-import io.github.truenine.composeserver.oss.ObjectStorageService
+import io.github.truenine.composeserver.logger
+import io.github.truenine.composeserver.oss.IObjectStorageService
 import io.github.truenine.composeserver.oss.PutObjectRequest
 import io.github.truenine.composeserver.rds.annotations.ACID
 import io.github.truenine.composeserver.rds.enums.AuditTyping
@@ -23,7 +24,6 @@ import io.github.truenine.composeserver.rds.enums.CertPointTyping.*
 import io.github.truenine.composeserver.rds.enums.CertTyping
 import io.github.truenine.composeserver.rds.enums.CertTyping.*
 import io.github.truenine.composeserver.rds.toFetcher
-import io.github.truenine.composeserver.slf4j
 import io.github.truenine.composeserver.toId
 import kotlinx.coroutines.runBlocking
 import org.babyfish.jimmer.Input
@@ -45,7 +45,7 @@ import io.github.truenine.composeserver.enums.MediaTypes as MimeTypes
 class CertService(
   private val userInfoRepo: IUserInfoRepo,
   private val certRepo: ICertRepo,
-  private val oss: ObjectStorageService,
+  private val oss: IObjectStorageService,
   private val bankCardRepo: IBankCardRepo,
   private val attService: AttachmentService,
   @param:Qualifier("bizCode") private val bizCoder: IOrderCodeGenerator,
@@ -636,7 +636,7 @@ class CertService(
    * @throws IllegalArgumentException 当输入参数不合法时抛出
    */
   @ACID
-  private fun postCertWaterMarkerImageAttachments(
+  internal fun postCertWaterMarkerImageAttachments(
     data: Triple<List<CertAdminPostDto>, List<MultipartFile>, RefId>,
     createInfo: CertCreatedInfoDto,
   ): List<Cert> {
@@ -743,7 +743,7 @@ class CertService(
         )
       }
 
-      val saved = certRepo.insert(
+      val saved = certRepo.saveCommand(
         Cert(base = createInfo.toEntity()) {
           groupCode = code
           createIp = createInfo.createIp
@@ -759,7 +759,8 @@ class CertService(
           attId = att.id
           wmAttId = wmAtt.id
           createUserId = userAccountId
-        })
+        }, SaveMode.INSERT_ONLY
+      ).execute().modifiedEntity
       certRepo.findById(saved.id, CertView::class.toFetcher()).get()
     }
   }
@@ -799,7 +800,7 @@ class CertService(
 
   companion object {
     @JvmStatic
-    private val log = slf4j<CertService>()
+    private val log = logger<CertService>()
 
     @JvmStatic
     private fun generateWatermark(
