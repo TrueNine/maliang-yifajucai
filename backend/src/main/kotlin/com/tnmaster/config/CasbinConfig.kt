@@ -21,7 +21,7 @@ class CasbinConfig {
     val modelResource = ClassPathResource("casbin/model.conf")
     val enforcer = Enforcer(
       Model.newModelFromString(
-        modelResource.inputStream.readAllBytes().contentToString()
+        modelResource.inputStream.readAllBytes().decodeToString()
       )
       , casbinDatabaseAdapter
     )

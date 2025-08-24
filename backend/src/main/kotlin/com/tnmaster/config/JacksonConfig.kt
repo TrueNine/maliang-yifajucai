@@ -12,14 +12,17 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.depend.jackson.autoconfig.JacksonAutoConfiguration
+import io.github.truenine.composeserver.logger
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.Resource
 import org.springframework.context.annotation.Configuration
 
+private val log = logger<JacksonConfig>()
+
 @Configuration
 class JacksonConfig {
 
-  @Resource
+  @Resource(name = JacksonAutoConfiguration.DEFAULT_OBJECT_MAPPER_BEAN_NAME)
   private lateinit var objectMapper: ObjectMapper
 
   @Resource(name = JacksonAutoConfiguration.NON_IGNORE_OBJECT_MAPPER_BEAN_NAME)
@@ -32,9 +35,9 @@ class JacksonConfig {
     configureObjectMapper(nonJsonIgnoreObjectMapper)
 
     // 添加调试日志
-    println("Enhanced Jackson配置完成 - 已注册Kotlin模块、JSR310模块和多态类型支持")
-    println("ObjectMapper模块数量: ${objectMapper.registeredModuleIds.size}")
-    println("NonJsonIgnoreObjectMapper模块数量: ${nonJsonIgnoreObjectMapper.registeredModuleIds.size}")
+    log.debug("Enhanced Jackson配置完成 - 已注册Kotlin模块、JSR310模块和多态类型支持")
+    log.debug("ObjectMapper模块数量: ${objectMapper.registeredModuleIds.size}")
+    log.debug("NonJsonIgnoreObjectMapper模块数量: ${nonJsonIgnoreObjectMapper.registeredModuleIds.size}")
   }
 
   private fun configureObjectMapper(mapper: ObjectMapper) {
