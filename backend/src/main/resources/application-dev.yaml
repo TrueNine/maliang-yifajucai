@@ -12,9 +12,9 @@ compose:
     endpoint: ${GLOBAL_DOMAIN}
     exposed-base-url: http://${GLOBAL_DOMAIN}:9000
     minio:
-      port: ${MINIO_PORT:9000}
-      secret-key: ${MINIO_PASSWORD:minio123}
-      access-key: ${MINIO_USER:minio}
+      port: ${MINIO_PORT}
+      secret-key: ${MINIO_PASSWORD}
+      access-key: ${MINIO_USER}
       enable-ssl: false
 
 spring:
@@ -54,11 +54,6 @@ jimmer:
             eliminated by server-side developers
           version: 1.0
   dialect: org.babyfish.jimmer.sql.dialect.PostgresDialect
-# 应用配置
-app:
-  interceptors:
-    casbin-admin:
-      enabled: true
 logging:
   config: classpath:logback-dev.xml
   level:

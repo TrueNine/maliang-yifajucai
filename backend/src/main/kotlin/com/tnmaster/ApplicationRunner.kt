@@ -22,5 +22,9 @@ internal class TnMasterRunner
  * @param args command-line arguments passed to the application
  */
 fun main(args: Array<String>) {
+  System.getenv().forEach {
+    println(it)
+    println("")
+  }
   runApplication<TnMasterRunner>(*args)
 }
