@@ -79,7 +79,8 @@ dependencies {
   runtimeOnly(cs.org.flywaydb.flyway.database.postgresql)
   runtimeOnly(cs.org.postgresql.postgresql)
 
-  testImplementation(cs.io.github.truenine.composeserver.testtoolkit)
+  testImplementation(cs.io.github.truenine.composeserver.testtoolkit.testcontainers)
+  testImplementation(cs.io.github.truenine.composeserver.testtoolkit.springmvc)
 
   testImplementation(cs.org.testcontainers.testcontainers)
   testImplementation(cs.org.testcontainers.postgresql)
