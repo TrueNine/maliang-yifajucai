@@ -1,4 +1,4 @@
-yifajucai.truenine.org, http://yifajucai.truenine.org, http://150.5.173.213 {
+yifajucai.com, http://yifajucai.com, http://150.5.173.213 {
 	encode gzip
 	
 	# API 反向代理
