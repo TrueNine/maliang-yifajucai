@@ -24,9 +24,7 @@ services:
       - frontend-network
       - backend-network
   api:
-    build:
-      context: .
-      dockerfile: ./volumes/ms-playwright/Dockerfile
+    image: eclipse-temurin:24.0.2_12-jdk-alpine-3.22
     container_name: ${PROJECT_NAME}_java
     hostname: api
     restart: always
