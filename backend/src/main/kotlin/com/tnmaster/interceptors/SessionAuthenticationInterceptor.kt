@@ -1,5 +1,6 @@
 package com.tnmaster.interceptors
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.tnmaster.enums.HttpHeaders
 import com.tnmaster.security.UserContextHolder
 import com.tnmaster.service.SessionService
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.servlet.HandlerInterceptor
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -24,6 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class SessionAuthenticationInterceptor(
   private val sessionService: SessionService,
+  private val objectMapper: ObjectMapper,
 ) : WebMvcConfigurer {
 
   companion object {
@@ -47,16 +50,57 @@ class SessionAuthenticationInterceptor(
     )
   }
 
+  /**
+   * 写入错误响应
+   */
+  private fun writeErrorResponse(response: HttpServletResponse, message: String) {
+    response.status = HttpStatus.BAD_REQUEST.value()
+    response.contentType = MediaType.APPLICATION_JSON_VALUE
+    response.characterEncoding = "UTF-8"
+
+    // 添加CORS头
+    response.setHeader("Access-Control-Allow-Origin", "*")
+    response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+    response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+    val errorResponse = mapOf(
+      "errorBy" to "BAD_REQUEST",
+      "code" to 400,
+      "msg" to message
+    )
+
+    try {
+      val json = objectMapper.writeValueAsString(errorResponse)
+      log.debug("Writing error response: {}", json)
+      response.writer.use {
+        it.write(json)
+        it.flush()
+      }
+    } catch (e: Exception) {
+      log.error("Failed to write error response", e)
+    }
+  }
+
   inner class InternalInterceptor : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
       try {
+        // 处理 OPTIONS 预检请求
+        if ("OPTIONS".equals(request.method, ignoreCase = true)) {
+          response.setHeader("Access-Control-Allow-Origin", "*")
+          response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+          response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+          response.setHeader("Access-Control-Max-Age", "3600")
+          response.status = HttpStatus.OK.value()
+          return true
+        }
+        
         // 从HTTP头中获取session ID
         val sessionId = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (sessionId.isNullOrBlank()) {
           log.debug("请求未提供session ID: {}", request.requestURI)
-          response.status = HttpStatus.UNAUTHORIZED.value()
+          writeErrorResponse(response, "请求未提供session ID")
           return false
         }
 
@@ -65,7 +109,7 @@ class SessionAuthenticationInterceptor(
 
         if (userPrincipal == null) {
           log.debug("无效的session ID: {}, URI: {}", sessionId, request.requestURI)
-          response.status = HttpStatus.UNAUTHORIZED.value()
+          writeErrorResponse(response, "无效的session ID")
           return false
         }
 
@@ -88,7 +132,7 @@ class SessionAuthenticationInterceptor(
 
       } catch (e: Exception) {
         log.error("认证过程中发生异常: URI={}", request.requestURI, e)
-        response.status = HttpStatus.UNAUTHORIZED.value()
+        writeErrorResponse(response, "认证过程中发生异常")
         return false
       }
     }

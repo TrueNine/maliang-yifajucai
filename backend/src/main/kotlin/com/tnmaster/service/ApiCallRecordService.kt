@@ -28,8 +28,8 @@ class ApiCallRecordService(
   suspend fun postToCache(@Valid record: ApiCallRecord) {
     withContext(Dispatchers.IO) {
       async {
-        log.info("DEBUG: 使用的RedisTemplate: {}", redisTemplate::class.java.name)
-        log.info("DEBUG: RedisTemplate的valueSerializer: {}", redisTemplate.valueSerializer.javaClass.name)
+        log.info("Storing API call record to cache - method: {}, path: {}, respCode: {}", 
+          record.reqMethod, record.reqPath, record.respCode)
         redisTemplate.expire(CACHE_KEY, CACHE_DURATION)
         redisTemplate.opsForSet().add(CACHE_KEY, record)
       }

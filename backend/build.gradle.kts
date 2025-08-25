@@ -30,7 +30,8 @@ repositories {
 sourceSets { main { resources { exclude("config/data/**") } } }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation(cs.org.springframework.boot.spring.boot.starter.actuator)
+
   developmentOnly(cs.org.springframework.boot.spring.boot.docker.compose)
   developmentOnly(cs.org.springframework.boot.spring.boot.starter.actuator)
 
@@ -44,8 +45,7 @@ dependencies {
   implementation(cs.org.casbin.casbin.spring.boot.starter)
 
   // AOP 支持
-  implementation("org.springframework.boot:spring-boot-starter-aop")
-
+  implementation(cs.org.springframework.boot.spring.boot.starter.aop)
 
   implementation(cs.org.springframework.boot.spring.boot.starter.data.redis)
   implementation(cs.org.jetbrains.kotlinx.kotlinx.coroutines.core)
@@ -101,7 +101,7 @@ kotlin {
     freeCompilerArgs = listOf(
       "-Xjsr305=strict",
       "-Xjvm-default=all",
-      "-Xannotation-default-target=param-property"
+      //"-Xannotation-default-target=param-property"
     )
   }
   jvmToolchain(24)

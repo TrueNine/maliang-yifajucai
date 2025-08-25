@@ -1,12 +1,8 @@
 package com.tnmaster.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.truenine.composeserver.depend.jackson.autoconfig.JacksonAutoConfiguration
 import io.lettuce.core.ClientOptions
 import io.lettuce.core.TimeoutOptions
 import io.lettuce.core.protocol.ProtocolVersion
-import org.babyfish.jimmer.jackson.ImmutableModule
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,7 +12,7 @@ import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
 
@@ -66,23 +62,15 @@ class RedisConfiguration {
     return LettuceConnectionFactory(config, lettuceConfig)
   }
 
-  @Bean(name =["yfjc_redisTemplate"])
+  @Bean(name = ["yfjc_redisTemplate"])
   @Primary
   fun redisTemplate(
     redisConnectionFactory: RedisConnectionFactory,
-    @Qualifier(JacksonAutoConfiguration.NON_IGNORE_OBJECT_MAPPER_BEAN_NAME)
-    objectMapper: ObjectMapper,
   ): RedisTemplate<String, *> {
-    val immModule = ImmutableModule()
-    val mapper = objectMapper.copy().apply {
-      registerModule(
-        immModule
-      )
-    }
     val template = RedisTemplate<String, Any>()
     template.connectionFactory = redisConnectionFactory
 
-    val serializer = Jackson2JsonRedisSerializer(mapper, Any::class.java)
+    val serializer = JdkSerializationRedisSerializer()
 
     // 配置序列化器
     template.keySerializer = StringRedisSerializer()
