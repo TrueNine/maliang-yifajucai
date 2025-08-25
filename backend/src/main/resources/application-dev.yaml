@@ -9,12 +9,12 @@ compose:
         app-secret: ${WXPA_APP_SECRET}
   oss:
     provider: minio
-    endpoint: ${GLOBAL_DOMAIN}
-    exposed-base-url: http://${GLOBAL_DOMAIN}:9000
+    endpoint: localhost
+    exposed-base-url: http://localhost:9000
     minio:
-      port: ${MINIO_PORT}
-      secret-key: ${MINIO_PASSWORD}
-      access-key: ${MINIO_USER}
+      port: 9000
+      secret-key: minio123
+      access-key: minio
       enable-ssl: false
 
 spring:
@@ -25,14 +25,15 @@ spring:
       lifecycle-management: start_and_stop
   data:
     redis:
-      password: ${REDIS_PASSWORD}
-      host: ${GLOBAL_IP}
-      port: ${REDIS_PORT}
+      password: redis123
+      host: 127.0.0.1
+      port: 6379
+      connect-timeout: 3s
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${GLOBAL_IP}:${PG_PORT}/${PG_DB}
-    username: ${PG_USER}
-    password: ${PG_PASSWORD}
+    url: jdbc:postgresql://127.0.0.1:5432/maliang
+    username: postgres
+    password: postgres
 jimmer:
   show-sql: true
   pretty-sql: true
