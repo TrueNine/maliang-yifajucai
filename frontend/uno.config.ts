@@ -1,6 +1,6 @@
 import type { StaticRule } from 'unocss'
 import { presetVarlet } from '@varlet/preset-unocss'
-import { defineConfig, presetIcons, presetMini, presetWind3, transformerCompileClass, transformerDirectives } from 'unocss'
+import { defineConfig, presetIcons, presetMini, presetWind3, presetWind4, transformerCompileClass, transformerDirectives } from 'unocss'
 import { StyleConfig } from './src/config'
 
 const breakpoints = {
@@ -41,6 +41,7 @@ export default defineConfig({
     presetIcons(),
     presetMini(),
     presetWind3(),
+    presetWind4(),
   ],
   theme: {
     breakpoints,
