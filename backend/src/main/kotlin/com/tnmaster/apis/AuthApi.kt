@@ -95,7 +95,7 @@ class AuthApi(
   fun loginByWxpaCode(@RequestParam code: String, @ApiIgnore request: HttpServletRequest, @ApiIgnore auth: AuthRequestInfo?): AuthService.AuthTokenView? {
     log.trace("loginByWxpaCode called, code={}, remoteAddr={}, userId={}", code, request.remoteAddr, auth?.userId)
     val result = authService.loginOrRegisteredByWxpaJsApiCodeOrThrow(code, authRequestInfo = auth, request = request)
-    log.debug("loginByWxpaCode result, code={}, userId={}, result={}", code, auth?.userId, result != null)
+    log.debug("loginByWxpaCode result, code: {}, userId: {}, result: {}", code, auth?.userId, result != null)
     return result
   }
 
