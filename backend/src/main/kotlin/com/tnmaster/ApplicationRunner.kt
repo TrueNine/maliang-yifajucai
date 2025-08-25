@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableAsync
 @EnableCaching
 @EnableScheduling
-@SpringBootApplication(exclude = [RedisAutoConfiguration::class, JacksonAutoConfiguration::class])
+@SpringBootApplication
 @EnableJimmerRepositories(basePackages = ["com.tnmaster.repositories"])
 internal class TnMasterRunner
 

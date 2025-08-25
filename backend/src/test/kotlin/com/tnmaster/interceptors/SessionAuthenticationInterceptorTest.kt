@@ -14,7 +14,7 @@ import kotlin.test.assertNotNull
 class SessionAuthenticationInterceptorTest {
 
   @Test
-  fun test_interceptor_creation() {
+  fun `拦截器能正常创建`() {
     // 简单测试验证拦截器可以正常创建
     val sessionService = mockk<SessionService>()
     val interceptor = SessionAuthenticationInterceptor(sessionService)

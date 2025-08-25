@@ -7,16 +7,16 @@ import jakarta.annotation.Resource
 import org.babyfish.jimmer.jackson.ImmutableModule
 import org.babyfish.jimmer.sql.kt.cfg.KCustomizer
 import org.babyfish.jimmer.sql.kt.cfg.KSqlClientDsl
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 
 @Component
-class JimmerConfig : KCustomizer {
-  @Resource(name = JacksonAutoConfiguration.DEFAULT_OBJECT_MAPPER_BEAN_NAME)
-  private lateinit var mapper: ObjectMapper
-  
-  @Resource(name = JacksonAutoConfiguration.NON_IGNORE_OBJECT_MAPPER_BEAN_NAME) 
-  private lateinit var nonMapper: ObjectMapper
-  
+class JimmerConfig(
+  private val mapper: ObjectMapper,
+  @Qualifier(JacksonAutoConfiguration.NON_IGNORE_OBJECT_MAPPER_BEAN_NAME)
+  private val nonMapper: ObjectMapper,
+) : KCustomizer {
+
   @PostConstruct
   fun configureJimmerObjectMappers() {
     val immModule = ImmutableModule()

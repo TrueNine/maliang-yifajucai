@@ -202,7 +202,7 @@ class CasbinDatabaseAdapterTest {
   }
 
   @Test
-  fun test_adapter_creation() {
+  fun `适配器能正常创建`() {
     // 简单测试验证适配器可以正常创建
     assertNotNull(adapter)
   }

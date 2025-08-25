@@ -159,7 +159,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
   }
 
   @Test
-  fun test_simple_object_serialization_to_redis() {
+  fun `简单对象序列化到Redis`() {
     // Given: 使用Map来测试Redis序列化功能，避免自定义数据类的类型问题
     val testData = mapOf(
       "id" to "test-123",
@@ -185,7 +185,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
   }
 
   @Test
-  fun test_string_serialization_to_redis() {
+  fun `字符串序列化到Redis`() {
     // Given: 简单的字符串数据
     val testValue = "test-string-value"
     val testKey = "test:string:data"
@@ -205,7 +205,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
   }
 
   @Test
-  fun test_objectmapper_sessiondata_serialization() {
+  fun `ObjectMapper的SessionData序列化`() {
     // Given: 直接测试ObjectMapper的SessionData序列化
     val testSessionData = SessionData(
       sessionId = "test-session-123",
@@ -243,7 +243,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
   }
 
   @Test
-  fun test_datetime_serialization_to_redis() {
+  fun `DateTime序列化到Redis`() {
     // Given: 测试datetime类型的序列化
     val testDatetime = datetime.now()
     val testKey = "test:datetime:data"
@@ -320,7 +320,7 @@ class SessionServiceTest : IDatabasePostgresqlContainer, ICacheRedisContainer, I
   }
 
   @Test
-  fun test_session_data_serialization_to_redis() {
+  fun `SessionData序列化到Redis`() {
     // Given: 创建一个简单的SessionData对象
     val testSessionData = SessionData(
       sessionId = "test-session-123",

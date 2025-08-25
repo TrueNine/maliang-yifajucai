@@ -25,7 +25,6 @@ import kotlin.test.assertTrue
 @ActiveProfiles("test")
 @Import(TestRedisConfiguration::class)
 @Testcontainers
-@DisplayName("Jackson Kotlin Configuration Validation")
 class JacksonKotlinConfigurationTest : BaseRedisTest() {
 
   @Autowired
@@ -33,8 +32,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   private lateinit var objectMapper: ObjectMapper
 
   @Test
-  @DisplayName("1. Validate Enhanced Kotlin Module Configuration")
-  fun validateKotlinModuleConfiguration() {
+  fun `验证增强Kotlin模块配置`() {
     val moduleIds = objectMapper.registeredModuleIds
 
     // Verify Kotlin module is registered
@@ -63,8 +61,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("2. Validate Kotlin Data Class Serialization")
-  fun validateKotlinDataClassSerialization() {
+  fun `验证Kotlin数据类序列化`() {
     // Test simple Kotlin data class
     data class SimpleKotlinClass(
       val id: Long,
@@ -97,8 +94,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("3. Validate Kotlin Data Class with Nullable Properties")
-  fun validateKotlinDataClassWithNullables() {
+  fun `验证含可空属性的Kotlin数据类`() {
     data class NullableKotlinClass(
       val id: Long,
       val name: String?,
@@ -125,8 +121,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("4. Validate Kotlin Data Class with Collections")
-  fun validateKotlinDataClassWithCollections() {
+  fun `验证含集合的Kotlin数据类`() {
     data class CollectionKotlinClass(
       val id: Long,
       val stringList: List<String>,
@@ -155,8 +150,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("5. Validate Polymorphic Type Handling with @class")
-  fun validatePolymorphicTypeHandling() {
+  fun `验证多态类型处理`() {
     // Define polymorphic types
     abstract class BaseEntity(open val id: Long, open val type: String)
 
@@ -205,8 +199,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("6. Validate SessionData Serialization")
-  fun validateSessionDataSerialization() {
+  fun `验证SessionData序列化`() {
     val sessionData = SessionData(
       sessionId = "test-session-123",
       account = "testuser",
@@ -236,8 +229,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("7. Validate Unknown Property Handling")
-  fun validateUnknownPropertyHandling() {
+  fun `验证未知属性处理`() {
     data class TestEntity(val id: Long, val name: String)
 
     // JSON with unknown properties
@@ -261,8 +253,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("8. Validate DateTime Serialization with Kotlin Data Classes")
-  fun validateDateTimeSerializationWithKotlin() {
+  fun `验证DateTime与Kotlin数据类序列化`() {
     data class DateTimeEntity(
       val id: Long,
       val createdAt: datetime,
@@ -290,8 +281,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("9. Validate Redis Integration with Enhanced Configuration")
-  fun validateRedisIntegrationWithEnhancedConfig() {
+  fun `验证Redis集成与增强配置`() {
     data class RedisTestEntity(
       val id: Long,
       val name: String,
@@ -331,8 +321,7 @@ class JacksonKotlinConfigurationTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("10. Validate Configuration Consistency")
-  fun validateConfigurationConsistency() {
+  fun `验证配置一致性`() {
     val config = objectMapper.deserializationConfig
 
     // Verify critical deserialization features

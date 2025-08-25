@@ -47,7 +47,6 @@ class TestRedisConfiguration {
    * Enhanced configuration for better Kotlin data class and builder support
    */
   @Bean
-  @Primary
   fun testRedisObjectMapper(): ObjectMapper {
     return ObjectMapper().apply {
       // Enhanced Kotlin module configuration for better data class and builder support
@@ -138,8 +137,7 @@ class TestRedisConfiguration {
    * 这个配置将覆盖生产环境的配置，确保测试环境的一致性
    * 使用高优先级确保在测试环境中完全覆盖生产配置
    */
-  @Bean("redisTemplate")
-  @Primary
+  @Bean("testRedisTemplate")
   fun testRedisTemplate(
     connectionFactory: RedisConnectionFactory,
     testRedisObjectMapper: ObjectMapper,
@@ -164,10 +162,8 @@ class TestRedisConfiguration {
    * 专门用于ApiCallRecord的RedisTemplate
    * 使用带错误处理的Redis序列化器以保持与主RedisTemplate的一致性
    * 这样可以正确处理@class类型信息和各种序列化异常
-   * 使用@Primary确保在测试环境中覆盖生产配置
    */
-  @Bean("apiCallRecordRedisTemplate")
-  @Primary
+  @Bean("testApiCallRecordRedisTemplate")
   fun testApiCallRecordRedisTemplate(
     connectionFactory: RedisConnectionFactory,
     testRedisObjectMapper: ObjectMapper,
@@ -192,7 +188,7 @@ class TestRedisConfiguration {
   /**
    * 额外的RedisTemplate bean，确保覆盖任何可能的默认配置
    */
-  @Bean("stringRedisTemplate")
+  @Bean("testStringRedisTemplate")
   fun testStringRedisTemplate(
     connectionFactory: RedisConnectionFactory,
     testRedisObjectMapper: ObjectMapper,

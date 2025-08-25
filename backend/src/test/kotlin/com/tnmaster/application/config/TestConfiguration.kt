@@ -1,6 +1,6 @@
 package com.tnmaster.application.config
 
-import io.github.truenine.composeserver.oss.ObjectStorageService
+import io.github.truenine.composeserver.oss.IObjectStorageService
 import io.mockk.mockk
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
@@ -26,7 +26,7 @@ class TestOssConfiguration {
 
   @Bean
   @Primary
-  fun mockObjectStorageService(): ObjectStorageService {
-    return mockk<ObjectStorageService>(relaxed = true)
+  fun mockObjectStorageService(): IObjectStorageService {
+    return mockk<IObjectStorageService>(relaxed = true)
   }
 }

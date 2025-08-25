@@ -60,7 +60,7 @@ class UserAuthServiceWxpaTest {
 
     @Disabled("需要重构为集成测试或修复内部方法调用的mock问题")
     @Test
-    fun should_successfully_login_registered_user_with_wechat_code() {
+    fun `通过微信授权码成功登录已注册用户`() {
       // Given
       val jsApiCode = "test_js_api_code"
       val openId = "test_open_id"
@@ -103,7 +103,7 @@ class UserAuthServiceWxpaTest {
 
     @Disabled("需要重构为集成测试或修复内部方法调用的mock问题")
     @Test
-    fun should_successfully_register_and_login_new_user_with_wechat_code() {
+    fun `通过微信授权码成功注册并登录新用户`() {
       // Given
       val jsApiCode = "test_js_api_code"
       val openId = "new_open_id"
@@ -149,7 +149,7 @@ class UserAuthServiceWxpaTest {
     }
 
     @Test
-    fun should_return_null_when_wechat_user_info_fetch_fails() {
+    fun `微信用户信息获取失败时返回null`() {
       // Given
       val jsApiCode = "invalid_code"
       every { wxpaService.getUserInfoByAuthCode(jsApiCode) } returns null
@@ -164,7 +164,7 @@ class UserAuthServiceWxpaTest {
 
     @Disabled("需要重构为集成测试或修复内部方法调用的mock问题")
     @Test
-    fun should_use_default_nickname_when_wechat_user_nickname_is_empty() {
+    fun `微信用户昵称为空时使用默认昵称`() {
       // Given
       val jsApiCode = "test_js_api_code"
       val openId = "test_open_id"

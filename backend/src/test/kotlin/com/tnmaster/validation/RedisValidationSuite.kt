@@ -30,7 +30,6 @@ import kotlin.test.*
 @ActiveProfiles("test")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Redis Validation Suite")
 class RedisValidationSuite : BaseRedisTest() {
 
   @Autowired
@@ -38,8 +37,7 @@ class RedisValidationSuite : BaseRedisTest() {
   private lateinit var objectMapper: ObjectMapper
 
   @Test
-  @DisplayName("1. Validate Redis Configuration")
-  fun validateRedisConfiguration() {
+  fun `验证Redis配置`() {
     // Verify RedisTemplate is properly configured
     assertNotNull(redisTemplate, "RedisTemplate should be configured")
     assertNotNull(redisTemplate.valueSerializer, "Value serializer should be configured")
@@ -57,8 +55,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("2. Validate ObjectMapper Configuration")
-  fun validateObjectMapperConfiguration() {
+  fun `验证ObjectMapper配置`() {
     val config = objectMapper.deserializationConfig
 
     // Check critical deserialization features
@@ -90,8 +87,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("3. Validate Basic Serialization")
-  fun validateBasicSerialization() {
+  fun `验证基础序列化`() {
     // Test simple objects
     val simpleMap = mapOf("key1" to "value1", "key2" to 42, "key3" to true)
     redisTemplate.opsForValue().set("validation:simple", simpleMap)
@@ -152,8 +148,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("4. Validate DateTime Serialization")
-  fun validateDateTimeSerialization() {
+  fun `验证DateTime序列化`() {
     val now = datetime.now()
     val futureTime = now.plusHours(1)
     val pastTime = now.minusHours(1)
@@ -218,8 +213,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("5. Validate Complex Object Serialization")
-  fun validateComplexObjectSerialization() {
+  fun `验证复杂对象序列化`() {
     val sessionData = SessionData(
       sessionId = "validation-session-123",
       account = "validation-user",
@@ -269,8 +263,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("6. Validate Polymorphic Type Handling")
-  fun validatePolymorphicTypeHandling() {
+  fun `验证多态类型处理`() {
     // Create objects of different types
     val stringValue = "test-string"
     val intValue = 42
@@ -337,8 +330,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("7. Validate Error Resilience")
-  fun validateErrorResilience() {
+  fun `验证错误弹性`() {
     // Test with JSON containing unknown properties
     val jsonWithUnknownProps = """
             {
@@ -370,8 +362,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("8. Validate Test Isolation")
-  fun validateTestIsolation() {
+  fun `验证测试隔离`() {
     // This test should not see any data from previous tests
     val allKeys = redisTemplate.keys("*")
     assertTrue(
@@ -391,8 +382,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("9. Validate Performance")
-  fun validatePerformance() {
+  fun `验证性能`() {
     val iterations = 100
     val testData = SessionData(
       sessionId = "perf-test-session",
@@ -428,8 +418,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("10. Validate Session Management Integration")
-  fun validateSessionManagementIntegration() {
+  fun `验证会话管理集成`() {
     // Create multiple sessions
     val sessions = listOf(
       SessionData(
@@ -484,8 +473,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("11. Validate Cleanup and Resource Management")
-  fun validateCleanupAndResourceManagement() {
+  fun `验证清理和资源管理`() {
     // Add test data
     val testKeys = (1..10).map { "cleanup:test:$it" }
     testKeys.forEach { key ->
@@ -519,8 +507,7 @@ class RedisValidationSuite : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("12. Comprehensive Integration Test")
-  fun comprehensiveIntegrationTest() {
+  fun `综合集成测试`() {
     // This test combines multiple aspects to ensure everything works together
 
     // 1. Create complex test scenario
@@ -613,8 +600,7 @@ class RedisValidationSuite : BaseRedisTest() {
    * Generate a summary report of all validation results
    */
   @Test
-  @DisplayName("13. Generate Validation Summary")
-  fun generateValidationSummary() {
+  fun `生成验证摘要`() {
     val summary = """
         
         ==========================================

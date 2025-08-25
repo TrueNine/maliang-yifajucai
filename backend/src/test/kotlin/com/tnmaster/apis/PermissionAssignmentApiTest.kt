@@ -16,7 +16,7 @@ import kotlin.test.assertNotNull
 class PermissionAssignmentApiTest {
 
   @Test
-  fun test_permission_assignment_api_basic_functionality() {
+  fun `权限分配API基本功能验证`() {
     // 简单测试验证权限服务可以正常创建
     val permissionService = mockk<PermissionService>()
     val permissionManagementApi = PermissionManagementApi(permissionService)

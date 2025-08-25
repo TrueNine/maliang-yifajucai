@@ -5,6 +5,7 @@ import io.github.truenine.composeserver.testtoolkit.testcontainers.IDatabasePost
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.data.redis.core.RedisTemplate
@@ -23,6 +24,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 abstract class BaseRedisTest : ICacheRedisContainer, IDatabasePostgresqlContainer {
 
   @Autowired
+  @Qualifier("testRedisTemplate")
   protected lateinit var redisTemplate: RedisTemplate<String, Any>
 
   @BeforeEach

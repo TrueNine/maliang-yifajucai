@@ -54,7 +54,6 @@ data class AdminEntity(
  * Unit test for validating enhanced Jackson configuration for Kotlin data classes
  * This test runs without Spring context to isolate Jackson configuration issues
  */
-@DisplayName("Jackson Kotlin Configuration Unit Test")
 class JacksonConfigurationUnitTest {
 
   private lateinit var objectMapper: ObjectMapper
@@ -115,8 +114,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("1. Validate Enhanced Kotlin Module Configuration")
-  fun validateKotlinModuleConfiguration() {
+  fun `验证增强Kotlin模块配置`() {
     val moduleIds = objectMapper.registeredModuleIds
 
     // Verify Kotlin module is registered
@@ -142,8 +140,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("2. Validate Kotlin Data Class Serialization")
-  fun validateKotlinDataClassSerialization() {
+  fun `验证Kotlin数据类序列化`() {
     // Test simple Kotlin data class
     data class SimpleKotlinClass(
       val id: Long,
@@ -173,8 +170,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("3. Validate Kotlin Data Class with Nullable Properties")
-  fun validateKotlinDataClassWithNullables() {
+  fun `验证含可空属性的Kotlin数据类`() {
     data class NullableKotlinClass(
       val id: Long,
       val name: String?,
@@ -201,8 +197,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("4. Validate Kotlin Data Class with Collections")
-  fun validateKotlinDataClassWithCollections() {
+  fun `验证含集合的Kotlin数据类`() {
     data class CollectionKotlinClass(
       val id: Long,
       val stringList: List<String>,
@@ -231,8 +226,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("5. Validate Polymorphic Type Handling with @class")
-  fun validatePolymorphicTypeHandling() {
+  fun `验证多态类型处理`() {
     val entities: List<BaseEntity> = listOf(
       UserEntity(1L, "user", "john_doe", "john@example.com"),
       AdminEntity(2L, "admin", "admin_user", setOf("read", "write", "delete"))
@@ -253,8 +247,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("6. Validate Unknown Property Handling")
-  fun validateUnknownPropertyHandling() {
+  fun `验证未知属性处理`() {
     data class TestEntity(val id: Long, val name: String)
 
     // JSON with unknown properties
@@ -278,8 +271,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("7. Validate DateTime Serialization with Kotlin Data Classes")
-  fun validateDateTimeSerializationWithKotlin() {
+  fun `验证DateTime与Kotlin数据类序列化`() {
     data class DateTimeEntity(
       val id: Long,
       val createdAt: datetime,
@@ -307,8 +299,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("8. Validate Configuration Consistency")
-  fun validateConfigurationConsistency() {
+  fun `验证配置一致性`() {
     val config = objectMapper.deserializationConfig
 
     // Verify critical deserialization features
@@ -350,8 +341,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("9. Validate Complex Nested Object Serialization")
-  fun validateComplexNestedObjectSerialization() {
+  fun `验证复杂嵌套对象序列化`() {
     data class Address(
       val street: String,
       val city: String,
@@ -397,8 +387,7 @@ class JacksonConfigurationUnitTest {
   }
 
   @Test
-  @DisplayName("10. Validate Builder Pattern Support")
-  fun validateBuilderPatternSupport() {
+  fun `验证构建者模式支持`() {
     // Test that Jackson can handle Kotlin data classes with default parameters
     data class ConfigurableEntity(
       val id: Long,

@@ -16,7 +16,7 @@ class StringUtilsTest {
   inner class IsBlankFunctionGroup {
 
     @Test
-    fun should_return_true_when_string_is_null() {
+    fun `字符串为null时返回true`() {
       // Given
       val input: String? = null
 
@@ -28,7 +28,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun should_return_true_when_string_is_empty() {
+    fun `字符串为空时返回true`() {
       // Given
       val input = ""
 
@@ -40,7 +40,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun should_return_true_when_string_contains_only_spaces() {
+    fun `字符串只包含空格时返回true`() {
       // Given
       val input = "   "
 
@@ -52,7 +52,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun should_return_false_when_string_contains_non_blank_characters() {
+    fun `字符串包含非空白字符时返回false`() {
       // Given
       val input = "  hello  "
 
@@ -80,7 +80,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun should_return_original_string_when_string_has_no_spaces() {
+    fun `字符串无空格时返回原字符串`() {
       // Given
       val input = "hello"
 
@@ -92,7 +92,7 @@ class StringUtilsTest {
     }
 
     @Test
-    fun should_return_empty_string_when_string_contains_only_spaces() {
+    fun `字符串只包含空格时返回空字符串`() {
       // Given
       val input = "   "
 

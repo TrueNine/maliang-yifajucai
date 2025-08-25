@@ -3,6 +3,7 @@ package com.tnmaster.application.apis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tnmaster.apis.AuthApi
 import com.tnmaster.application.config.TestWebMvcConfiguration
+import com.tnmaster.application.config.BaseRedisTest
 import com.tnmaster.entities.RoleGroup
 import com.tnmaster.entities.UserAccount
 import com.tnmaster.entities.UserInfo
@@ -33,11 +34,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import javax.sql.DataSource
 
 @RDBRollback
-@SpringBootTest
+@SpringBootTest(
+  properties = [
+    "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration"
+  ]
+)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Import(TestWebMvcConfiguration::class)
-class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMinioContainer {
+class AuthApiTest : BaseRedisTest(), IDatabasePostgresqlContainer, IOssMinioContainer {
   // 公共扩展函数，自动加 user-agent 和 ip
   fun MockHttpServletRequestBuilder.withCommonHeaders(
     userAgent: String = "tnmaster-test-agent",
@@ -75,6 +80,15 @@ class AuthApiTest : IDatabasePostgresqlContainer, ICacheRedisContainer, IOssMini
   @BeforeEach
   @ACID
   fun setupUser() {
+    // 清理可能存在的缓存数据，避免序列化错误
+    try {
+      redisTemplate.execute { connection ->
+        connection.serverCommands().flushAll()
+        connection
+      }
+    } catch (e: Exception) {
+      log.warn("Failed to flush Redis cache in test setup: ${e.message}")
+    }
     userAccountRepo.findUserAccountByAccount("user1")?.also {
       userAccountRepo.deleteById(it.id)
     }

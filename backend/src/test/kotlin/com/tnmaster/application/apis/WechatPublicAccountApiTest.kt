@@ -29,7 +29,7 @@ class WechatPublicAccountApiTest {
   inner class UserInfoFetchTests {
 
     @Test
-    fun should_successfully_get_user_info_by_code() {
+    fun `根据授权码成功获取用户信息`() {
       // Given
       val testCode = "test_auth_code_123"
       val expectedUserInfo = WxpaUserInfo(
@@ -52,7 +52,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun should_return_null_when_user_info_fetch_fails() {
+    fun `获取用户信息失败时返回null`() {
       // Given
       val testCode = "invalid_code"
       every { wxpaService.getUserInfoByAuthCode(testCode) } returns null
@@ -70,7 +70,7 @@ class WechatPublicAccountApiTest {
   inner class ServerVerificationTests {
 
     @Test
-    fun should_successfully_verify_server_configuration() {
+    fun `成功验证服务器配置`() {
       // Given
       val signature = "test_signature"
       val timestamp = "1234567890"
@@ -88,7 +88,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun should_throw_exception_when_server_verification_fails() {
+    fun `服务器验证失败时抛出异常`() {
       // Given
       val signature = "invalid_signature"
       val timestamp = "1234567890"
@@ -112,7 +112,7 @@ class WechatPublicAccountApiTest {
   inner class TokenStatusTests {
 
     @Test
-    fun should_successfully_get_token_status() {
+    fun `成功获取Token状态`() {
       // Given
       val expectedStatus = mapOf(
         "hasAccessToken" to true,
@@ -131,7 +131,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun should_successfully_refresh_tokens() {
+    fun `成功刷新Token`() {
       // Given
       every { wxpaService.forceRefreshTokens() } returns Unit
 
@@ -148,7 +148,7 @@ class WechatPublicAccountApiTest {
   inner class JsapiSignatureTests {
 
     @Test
-    fun should_successfully_generate_jsapi_signature() {
+    fun `成功生成JSAPI签名`() {
       // Given
       val testUrl = "https://example.com/test"
       val nonceString = "test_nonce_string"
@@ -173,7 +173,7 @@ class WechatPublicAccountApiTest {
     }
 
     @Test
-    fun should_return_null_when_jsapi_signature_generation_fails() {
+    fun `JSAPI签名生成失败时返回null`() {
       // Given
       val testUrl = "https://example.com/test"
       every { wxpaService.generateJsapiSignature(testUrl, null) } returns null

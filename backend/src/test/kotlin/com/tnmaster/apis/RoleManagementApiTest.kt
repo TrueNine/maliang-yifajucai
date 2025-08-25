@@ -14,7 +14,7 @@ import kotlin.test.assertNotNull
 class RoleManagementApiTest {
 
   @Test
-  fun test_permission_service_creation() {
+  fun `权限服务能正常创建`() {
     // 简单测试验证服务可以正常创建
     val permissionService = mockk<PermissionService>()
     assertNotNull(permissionService)

@@ -3,11 +3,15 @@ package com.tnmaster.config.redis
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.tnmaster.application.config.BaseRedisTest
+import com.tnmaster.application.config.TestOssConfiguration
+import jakarta.annotation.Resource
+import org.springframework.context.annotation.Import
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.serializer.SerializationException
+import org.springframework.test.context.TestPropertySource
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -18,10 +22,15 @@ import kotlin.test.assertTrue
  *
  * 测试RedisSerializationErrorHandler在各种异常情况下的处理能力
  */
-@DisplayName("Redis序列化错误处理器测试")
+@TestPropertySource(
+  properties = [
+    "spring.autoconfigure.exclude=io.github.truenine.composeserver.oss.minio.autoconfig.MinioAutoConfiguration"
+  ]
+)
+@Import(TestOssConfiguration::class)
 class RedisSerializationErrorHandlerTest : BaseRedisTest() {
 
-  @Autowired
+  @Resource
   private lateinit var errorHandler: RedisSerializationErrorHandler
 
   @BeforeEach
@@ -31,8 +40,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("处理UnrecognizedPropertyException")
-  fun handleUnrecognizedPropertyException() {
+  fun `处理UnrecognizedPropertyException`() {
     // Given: 创建一个模拟的UnrecognizedPropertyException
     val jsonWithUnknownProperty = """{"unknownProperty": "test", "knownProperty": "value"}"""
 
@@ -53,8 +61,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("处理InvalidTypeIdException")
-  fun handleInvalidTypeIdException() {
+  fun `处理InvalidTypeIdException`() {
     // Given: 创建模拟的InvalidTypeId异常
     val jsonWithInvalidClass = """{"@class": "com.nonexistent.InvalidClass", "data": "test"}"""
 
@@ -75,8 +82,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("处理SerializationException")
-  fun handleSerializationException() {
+  fun `处理SerializationException`() {
     // Given: 模拟一个SerializationException
     val testData = mapOf("key" to "value")
     val mockException = SerializationException("Simulated serialization error")
@@ -95,8 +101,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("错误统计功能")
-  fun errorStatisticsTracking() {
+  fun `错误统计功能`() {
     // Given: 初始状态
     var stats = errorHandler.getErrorStatistics()
     assertEquals(0L, stats["totalErrors"], "初始错误计数应该为0")
@@ -123,8 +128,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("Fallback反序列化测试")
-  fun fallbackDeserializationTest() {
+  fun `Fallback反序列化测试`() {
     // Given: 一个简单的JSON字符串
     val simpleJson = """
             {
@@ -155,8 +159,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("处理null和空数据")
-  fun handleNullAndEmptyData() {
+  fun `处理null和空数据`() {
     // Given: null数据
     val mockException = RuntimeException("Test exception")
 
@@ -173,8 +176,7 @@ class RedisSerializationErrorHandlerTest : BaseRedisTest() {
   }
 
   @Test
-  @DisplayName("日志记录功能")
-  fun loggingFunctionality() {
+  fun `日志记录功能`() {
     // Given: 一些错误
     repeat(5) {
       errorHandler.handleSerializationError(

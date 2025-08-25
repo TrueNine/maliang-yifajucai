@@ -1,5 +1,8 @@
 spring:
   # Test-specific configurations
+  main:
+    allow-bean-definition-overriding: true
+    
   jpa:
     hibernate:
       ddl-auto: create-drop

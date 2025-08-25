@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -18,7 +17,7 @@ import java.time.Duration
 @Service
 class ApiCallRecordService(
   private val jimmerApiCallRecordRepo: IApiCallRecordRepo,
-  @Qualifier("apiCallRecordRedisTemplate") private val redisTemplate: RedisTemplate<String, ApiCallRecord?>,
+  private val redisTemplate: RedisTemplate<String, ApiCallRecord?>,
 ) {
   companion object {
     private val log = logger<ApiCallRecordService>()
