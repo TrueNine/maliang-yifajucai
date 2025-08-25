@@ -32,12 +32,26 @@ spring:
       repositories:
         enabled: false # 关闭仓库扫描
       database: 0
+      connect-timeout: 3s
       lettuce:
         pool:
           enabled: true
           min-idle: 8
           max-idle: 16
           max-active: 32
+        cluster:
+          refresh:
+            adaptive: false
+      client-type: lettuce
+  # 关闭Redis健康检查避免认证问题
+  boot:
+    admin:
+      client:
+        enabled: false
+management:
+  health:
+    redis:
+      enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
