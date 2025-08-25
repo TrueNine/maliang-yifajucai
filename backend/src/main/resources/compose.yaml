@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:7-alpine
+    image: redis/redis-stack:7.2.0-v18
     environment:
       REDIS_PASSWORD: redis123
     command: [ "redis-server", "--requirepass", "redis123", "--appendonly", "yes" ]

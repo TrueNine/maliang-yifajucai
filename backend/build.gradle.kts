@@ -30,7 +30,9 @@ repositories {
 sourceSets { main { resources { exclude("config/data/**") } } }
 
 dependencies {
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
   developmentOnly(cs.org.springframework.boot.spring.boot.docker.compose)
+  developmentOnly(cs.org.springframework.boot.spring.boot.starter.actuator)
 
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
   implementation(platform(cs.org.springframework.boot.spring.boot.dependencies))
