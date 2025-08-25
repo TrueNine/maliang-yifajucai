@@ -31,37 +31,8 @@ spring:
     redis:
       repositories:
         enabled: false # 关闭仓库扫描
-      database: 0
-      connect-timeout: 3s
-      lettuce:
-        pool:
-          enabled: true
-          min-idle: 8
-          max-idle: 16
-          max-active: 32
-        cluster:
-          refresh:
-            adaptive: false
       client-type: lettuce
-  # 关闭Redis健康检查避免认证问题
-  boot:
-    admin:
-      client:
-        enabled: false
 management:
   health:
     redis:
-      enabled: false
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari:
-      minimum-idle: 5
-      maximum-pool-size: 15
-      leak-detection-threshold: 50000
-      idle-timeout: 300000
-      connection-timeout: 5000
-      connection-test-query: SELECT 1
-      read-only: false
-      max-lifetime: 600000
-      auto-commit: false
-      pool-name: MasterPool
+      enabled: true

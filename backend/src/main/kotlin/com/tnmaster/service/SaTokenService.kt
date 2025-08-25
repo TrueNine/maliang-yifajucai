@@ -6,7 +6,6 @@ import io.github.truenine.composeserver.RefId
 import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.logger
 import jakarta.servlet.http.HttpServletRequest
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
 
@@ -14,7 +13,6 @@ import java.time.Duration
 class AuthService(
   private val userAccountRepo: IUserAccountRepo,
   private val sessionService: SessionService,
-  private val redisTemplate: RedisTemplate<String, Any>,
 ) {
   companion object {
     private val log = logger<AuthService>()

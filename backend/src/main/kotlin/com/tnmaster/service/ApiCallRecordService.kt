@@ -2,13 +2,13 @@ package com.tnmaster.service
 
 import com.tnmaster.entities.ApiCallRecord
 import com.tnmaster.repositories.IApiCallRecordRepo
-import io.github.truenine.composeserver.datetime
 import io.github.truenine.composeserver.logger
 import jakarta.validation.Valid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.babyfish.jimmer.sql.ast.mutation.SaveMode
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -17,7 +17,7 @@ import java.time.Duration
 @Service
 class ApiCallRecordService(
   private val jimmerApiCallRecordRepo: IApiCallRecordRepo,
-  private val redisTemplate: RedisTemplate<String, ApiCallRecord?>,
+  @Qualifier("yfjc_redisTemplate") private val redisTemplate: RedisTemplate<String, ApiCallRecord?>,
 ) {
   companion object {
     private val log = logger<ApiCallRecordService>()
@@ -40,52 +40,48 @@ class ApiCallRecordService(
   /** 调度任务，过一段时间，统一写入数据库 */
   @Scheduled(fixedDelay = 1000 * 60 * 2, initialDelay = 1000 * 60)
   fun scheduledCacheSaveToDatabase() {
-    // 使用主RedisTemplate以获得错误处理功能
-    val mainRedisTemplate = redisTemplate as RedisTemplate<String, Any?>
-    val cacheData = mainRedisTemplate.opsForSet().members(CACHE_KEY)?.filterNotNull()
+    try {
+      log.info("Scheduled task: attempting to process cached API call records")
 
-    if (null != cacheData && cacheData.isNotEmpty()) {
-      cacheData.forEach { record ->
-        when (record) {
-          is ApiCallRecord -> {
-            log.debug("保存正常的ApiCallRecord到数据库")
-            jimmerApiCallRecordRepo.sql.save(record, SaveMode.INSERT_IF_ABSENT)
-          }
+      // 检查 Redis 连接健康状态
+      if (!checkRedisHealth()) {
+        log.warn("Redis connection unhealthy, skipping scheduled task")
+        return
+      }
 
-          is Map<*, *> -> {
-            log.warn("遇到反序列化错误的数据，尝试手动重建ApiCallRecord对象")
-            try {
-              val reconstructedRecord = reconstructApiCallRecordFromMap(record)
-              jimmerApiCallRecordRepo.sql.save(reconstructedRecord, SaveMode.INSERT_IF_ABSENT)
-            } catch (ex: Exception) {
-              log.error("重建ApiCallRecord失败，跳过此记录", ex)
+      val cacheData = redisTemplate.opsForSet().members(CACHE_KEY)?.filterNotNull()
+
+      if (null != cacheData && cacheData.isNotEmpty()) {
+        log.info("Processing {} cached API call records", cacheData.size)
+        cacheData.forEach { record ->
+          when (record) {
+            else -> {
+              log.debug("保存正常的ApiCallRecord到数据库")
+              jimmerApiCallRecordRepo.sql.save(record, SaveMode.INSERT_IF_ABSENT)
             }
           }
-
-          else -> {
-            log.warn("遇到未知类型的缓存数据: {}, 类型: {}", record, record.javaClass.simpleName)
-          }
         }
+        clearCachedRecords()
+        log.info("Successfully processed and cleared cached API call records")
+      } else {
+        log.debug("No cached API call records to process")
       }
-      clearCachedRecords()
+    } catch (ex: Exception) {
+      log.error("Scheduled task failed: unable to process cached API call records - {}", ex.message, ex)
     }
   }
 
   /**
-   * 从Map重建ApiCallRecord对象
+   * 检查 Redis 连接健康状态
    */
-  private fun reconstructApiCallRecordFromMap(map: Map<*, *>): ApiCallRecord {
-    return ApiCallRecord {
-      reqProtocol = map["reqProtocol"] as? String
-      reqMethod = map["reqMethod"] as? String
-      reqPath = map["reqPath"] as? String
-      reqDatetime = (map["reqDatetime"] as? String)?.let { datetime.parse(it) }
-      respDatetime = (map["respDatetime"] as? String)?.let { datetime.parse(it) }
-      respCode = map["respCode"] as? Int
-      deviceCode = map["deviceCode"] as? String
-      reqIp = map["reqIp"] as? String
-      loginIp = map["loginIp"] as? String
-      respResultEnc = map["respResultEnc"] as? String
+  private fun checkRedisHealth(): Boolean {
+    return try {
+      redisTemplate.hasKey("health-check") // 简单的连接测试
+      log.debug("Redis health check passed")
+      true
+    } catch (ex: Exception) {
+      log.error("Redis health check failed: {}", ex.message)
+      false
     }
   }
 

@@ -28,7 +28,23 @@ spring:
       password: redis123
       host: 127.0.0.1
       port: 6379
-      connect-timeout: 3s
+      database: 0
+      connect-timeout: 5s
+      timeout: 3s
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 32
+          max-idle: 16
+          min-idle: 8
+          max-wait: 3s
+        shutdown-timeout: 200ms
+  redis:
+    startup:
+      validation:
+        enabled: true
+        exit-on-failure: true
+        comprehensive-check: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://127.0.0.1:5432/maliang

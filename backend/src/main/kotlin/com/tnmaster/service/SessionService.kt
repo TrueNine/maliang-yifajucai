@@ -14,6 +14,7 @@ import io.github.truenine.composeserver.depend.servlet.deviceId
 import io.github.truenine.composeserver.depend.servlet.remoteRequestIp
 import io.github.truenine.composeserver.logger
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit
  */
 @Service
 class SessionService(
-  private val redisTemplate: RedisTemplate<String, Any>,
+  @Qualifier("yfjc_redisTemplate") private val redisTemplate: RedisTemplate<String, Any>,
   private val permissionService: PermissionService,
 ) {
   companion object {
